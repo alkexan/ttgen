@@ -1,0 +1,15 @@
+<program>       ::= <ident> "(" <ident> ["," <ident>]")" "=" <exp>
+<exp>           ::= <easy-exp> {<impl> <easy-exp>}
+<easy-exp>      ::= <term> {<sum> <term>}
+<term>          ::= <factor> {<mul> <factor>}
+<factor>        ::= <ident> | 
+                    <digit> |
+                    "(" <exp> ")" |
+                    "~" <factor> | 
+                    "++" <factor> | 
+                    "--" <factor>
+<ident>         ::= "[a-z][_a-zA-Z0-9]*"
+<impl>      	  ::= "->" | "+>"
+<sum>           ::= "|" | "#" | "+" | "-"
+<mul>           ::= "&" | "*"
+<digit>         ::= "$" | "1" | "0"
