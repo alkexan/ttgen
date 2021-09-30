@@ -1,16 +1,17 @@
 ﻿#include <iostream>
 #include <fstream>
-#include <sstream>
 #include <vector>
 #include <filesystem>
 
 #include "LexicalAnalyzer.hpp"
+#include "SyntaxAnalyzer.hpp"
 
 using namespace thl;
 
 namespace fs = std::filesystem;
 
 LexicalAnalyzer lexical;
+SyntaxAnalyzer syntax;
 
 int main(int argc, char* argv[])
 {
@@ -23,31 +24,18 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		size_t lineCount = 0;
-		while (!ifstream.eof())
+		if (lexical.parse(ifstream))
 		{
-			lineCount++;
-			std::string line;
-			std::getline(ifstream, line);
+			std::unique_ptr < LexemeTable > m_lexemTable = lexical.getLexemeTable();
 
-			if (lexical.parse(std::istringstream(line)))
+			for (auto i = m_lexemTable->begin(); i < m_lexemTable->end(); i++)
 			{
-				std::unique_ptr < TokenTable > m_tokenTable = lexical.getTokenTable();
-
-				std::cout << line << std::endl;
-
-				for (auto i = m_tokenTable->begin(); i < m_tokenTable->end(); i++)
-				{
-					std::cout << tokenToString(i->token()) << ":";
-				}
+				std::cout << tokenToString(i->token()) << ":";
 			}
-			else
-			{
-				std::cout << lineCount << ","
-					<< lexical.getError().getPos() << ":"
-					<< lexical.getError().getMsg();
-			}
-			
+
+			syntax.setLexemeTable(std::move(m_lexemTable));
+			syntax.setConstTable(std::move(lexical.getConstTable()));
+			syntax.setIdentTable(std::move(lexical.getIdentTable()));
 		}
 	}
 

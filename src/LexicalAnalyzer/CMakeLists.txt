@@ -8,8 +8,8 @@ project (lexical_analyzer CXX)
 add_library(lexical_analyzer STATIC 
 	"LexicalAnalyzer.cpp" 
 	"LexicalAnalyzer.hpp"
-	"LexicalError.hpp" 
-	"LexicalError.cpp")
+	 
+	)
 
 # Add extern library
 target_link_libraries(lexical_analyzer util)

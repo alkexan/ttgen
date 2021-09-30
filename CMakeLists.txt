@@ -7,7 +7,6 @@ project (ttgen_project CXX)
 # CXX standart
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(GENERATE_DOC_DOXY 0)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS 1)
 
 # Set compilers options

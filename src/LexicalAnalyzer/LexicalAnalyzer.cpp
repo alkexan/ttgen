@@ -6,18 +6,18 @@
 using namespace thl;
 
 LexicalAnalyzer::LexicalAnalyzer() :
-	m_tokenTable(std::make_unique<TokenTable>()),
+	m_lineCount (0),
+	m_lexemTable(std::make_unique<LexemeTable>()),
 	m_constTable(std::make_unique<ConstTable>()),
-	m_identTable(std::make_unique<IdentTable>()),
-	m_error(0, "")
+	m_identTable(std::make_unique<IdentTable>())
 {}
 
 LexicalAnalyzer::~LexicalAnalyzer()
 {}
 
-std::unique_ptr<TokenTable> thl::LexicalAnalyzer::getTokenTable()
+std::unique_ptr<LexemeTable> thl::LexicalAnalyzer::getLexemeTable()
 {
-	return std::move(m_tokenTable);
+	return std::move(m_lexemTable);
 }
 
 std::unique_ptr<ConstTable> thl::LexicalAnalyzer::getConstTable()
@@ -30,20 +30,15 @@ std::unique_ptr<IdentTable> thl::LexicalAnalyzer::getIdentTable()
 	return std::move(m_identTable);
 }
 
-LexicalError thl::LexicalAnalyzer::getError() const
-{
-	return m_error;
-}
-
 bool thl::LexicalAnalyzer::parse(std::istream& istream)
 {
-	if (m_tokenTable.get() == nullptr)
+	if (m_lexemTable.get() == nullptr)
 	{
-		m_tokenTable = std::make_unique<TokenTable>();
+		m_lexemTable = std::make_unique<LexemeTable>();
 	}
 	else
 	{
-		m_tokenTable->clear();
+		m_lexemTable->clear();
 	}
 	if (m_constTable.get() == nullptr)
 	{
@@ -60,8 +55,26 @@ bool thl::LexicalAnalyzer::parse(std::istream& istream)
 	else
 	{
 		m_identTable->clear();
+	}	
+
+	bool result = true;
+	m_lineCount = 0;
+
+	while (!istream.eof() && result != false)
+	{
+		m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1));
+		
+		m_lineCount++;
+		std::string line;
+		std::getline(istream, line);
+		result = parseLine(std::istringstream(line));
 	}
 
+	return result;
+}
+
+bool thl::LexicalAnalyzer::parseLine(std::istringstream& istream)
+{
 	bool result = true;
 	std::string line;
 	int m_lastChar = istream.get();
@@ -69,7 +82,12 @@ bool thl::LexicalAnalyzer::parse(std::istream& istream)
 	while (m_lastChar != -1 && result == true)
 	{
 		// identifier: [a-z][_a-zA-Z0-9]*
-		if (isalpha(m_lastChar))
+		if (isspace(m_lastChar))
+		{
+			m_lastChar = istream.get(); 
+			continue;
+		}
+		else if (isalpha(m_lastChar))
 		{
 			std::string identifierStr;
 			identifierStr += m_lastChar;
@@ -81,30 +99,26 @@ bool thl::LexicalAnalyzer::parse(std::istream& istream)
 				m_lastChar = istream.get();
 			}
 
-			m_tokenTable->push_back(TokenCell(Token::IDENTIFIER, m_identTable->size()));
+			m_lexemTable->push_back(Lexeme(Token::IDENTIFIER, (int)m_identTable->size()));
 			m_identTable->push_back(identifierStr);
 
 			continue;
 		}
 		else if (m_lastChar == '(')
 		{
-			m_tokenTable->push_back(TokenCell(Token::OPEN_BRACKET, -1));
+			m_lexemTable->push_back(Lexeme(Token::OPEN_BRACKET, -1));
 		}
 		else if (m_lastChar == ',')
 		{
-			m_tokenTable->push_back(TokenCell(Token::DELIMITER, -1));
+			m_lexemTable->push_back(Lexeme(Token::DELIMITER, -1));
 		}
 		else if (m_lastChar == ')')
 		{
-			m_tokenTable->push_back(TokenCell(Token::CLOSE_BRACKET, -1));
-		}
-		else if (m_lastChar == '=')
-		{
-			m_tokenTable->push_back(TokenCell(Token::ASSIGMENT, -1));
+			m_lexemTable->push_back(Lexeme(Token::CLOSE_BRACKET, -1));
 		}
 		else if (m_lastChar == '$' || m_lastChar == '0' || m_lastChar == '1')
 		{
-			m_tokenTable->push_back(TokenCell(Token::NUMBER, m_constTable->size()));
+			m_lexemTable->push_back(Lexeme(Token::NUMBER, (int)m_constTable->size()));
 
 			switch (m_lastChar)
 			{
@@ -119,21 +133,36 @@ bool thl::LexicalAnalyzer::parse(std::istream& istream)
 					break;
 			}
 		}
+		else if (m_lastChar == ':')
+		{
+			m_lastChar = istream.get();
+			if (m_lastChar == '=')
+			{
+				m_lexemTable->push_back(Lexeme(Token::ASSIGMENT, -1));
+			}
+			else
+			{
+				std::cerr <<  "(" << m_lineCount << "," 
+					<< istream.tellg() << ") Error: " 
+					<< "Unknown identifier";
+				result = false;
+			}
+		}
 		else if (m_lastChar == '-')
 		{
 			m_lastChar = istream.get();
 
 			if (m_lastChar == '-')
 			{
-				m_tokenTable->push_back(TokenCell(Token::DECREMENT, -1));
+				m_lexemTable->push_back(Lexeme(Token::DECREMENT, -1));
 			}
 			else if (m_lastChar == '>')
 			{
-				m_tokenTable->push_back(TokenCell(Token::IMPLICATION, -1));
+				m_lexemTable->push_back(Lexeme(Token::IMPLICATION, -1));
 			}
 			else
 			{
-				m_tokenTable->push_back(TokenCell(Token::SUB, -1));
+				m_lexemTable->push_back(Lexeme(Token::SUB, -1));
 				continue;
 			}
 		}
@@ -143,53 +172,51 @@ bool thl::LexicalAnalyzer::parse(std::istream& istream)
 
 			if (m_lastChar == '+')
 			{
-				m_tokenTable->push_back(TokenCell(Token::INCREMENT, -1));
+				m_lexemTable->push_back(Lexeme(Token::INCREMENT, -1));
 			}
 			else if (m_lastChar == '>')
 			{
-				m_tokenTable->push_back(TokenCell(Token::IMPLICATIONB, -1));
+				m_lexemTable->push_back(Lexeme(Token::IMPLICATIONB, -1));
 			}
 			else
 			{
-				m_tokenTable->push_back(TokenCell(Token::ADD, -1));
+				m_lexemTable->push_back(Lexeme(Token::ADD, -1));
 				continue;
 			}
 		}
 		else if (m_lastChar == '~')
 		{
-			m_tokenTable->push_back(TokenCell(Token::NOT, -1));
+			m_lexemTable->push_back(Lexeme(Token::NOT, -1));
 		}
 		else if (m_lastChar == '*')
 		{
-			m_tokenTable->push_back(TokenCell(Token::MUL, -1));
+			m_lexemTable->push_back(Lexeme(Token::MUL, -1));
 		}
 		else if (m_lastChar == '&')
 		{
-			m_tokenTable->push_back(TokenCell(Token::AND, -1));
+			m_lexemTable->push_back(Lexeme(Token::AND, -1));
 		}
 		else if (m_lastChar == '|')
 		{
-			m_tokenTable->push_back(TokenCell(Token::OR, -1));
+			m_lexemTable->push_back(Lexeme(Token::OR, -1));
 		}
 		else if (m_lastChar == '#')
 		{
-			m_tokenTable->push_back(TokenCell(Token::XOR, -1));
-		}
-		else if (m_lastChar == ' ')
-		{
-			m_tokenTable->push_back(TokenCell(Token::SPACE, -1));
+			m_lexemTable->push_back(Lexeme(Token::XOR, -1));
 		}
 		else if (m_lastChar == '\n')
 		{
-			m_tokenTable->push_back(TokenCell(Token::ENDL, -1));
+			m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1));
 		}
 		else if (m_lastChar == EOF)
 		{
-			m_tokenTable->push_back(TokenCell(Token::ENDF, -1));
+			m_lexemTable->push_back(Lexeme(Token::ENDF, -1));
 		}
 		else
 		{
-			m_error = LexicalError(istream.tellg(), "Unknown identifier");
+			std::cerr << "(" << m_lineCount << ","
+				<< istream.tellg() << ") Error: "
+				<< "Unknown identifier";
 			result = false;
 		}
 

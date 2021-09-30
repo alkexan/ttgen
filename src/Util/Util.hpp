@@ -20,9 +20,8 @@ namespace thl
         OPEN_BRACKET,
         CLOSE_BRACKET,
 
-        SPACE,
         DELIMITER,
-        ENDL,
+        NEW_LINE,
         ASSIGMENT,
 
         IMPLICATION,
@@ -40,23 +39,43 @@ namespace thl
         XOR,
     };
 
-    class TokenCell
+    class Lexeme
     {
     public:
-        TokenCell(Token token, int attr) : m_token(token), m_attr(attr)
+        Lexeme(Token token, int attr) : m_token(token), m_attr(attr),
+            m_textPos(std::make_pair(0, 0))
         {}
-        TokenCell(std::pair<Token, int> pair) : m_token(pair.first), m_attr(pair.second)
+        Lexeme(std::pair<Token, int> tokenPair) : m_token(tokenPair.first), m_attr(tokenPair.second),
+            m_textPos(std::make_pair(0, 0))
         {}
 
-        inline Token token() const;
-        inline int attr() const;
+        inline Token token() const
+        {
+            return m_token;
+        }
+
+        inline int attr() const
+        {
+            return m_attr;
+        }
+
+        inline void setTextPosition(std::pair<int, int> textPos)
+        {
+            m_textPos = textPos;
+        }
+
+        inline std::pair<int, int> getTextPosition() const
+        {
+            return m_textPos;
+        }
 
     private:
         Token m_token;
         int m_attr;
+        std::pair<int, int> m_textPos;
     };
 
-    typedef std::vector<TokenCell> TokenTable;
+    typedef std::vector<Lexeme> LexemeTable;
     typedef std::vector<std::string> IdentTable;
     typedef std::vector<int> ConstTable;
 
@@ -83,7 +102,7 @@ namespace thl
             case thl::Token::DELIMITER:
                 result = "DELIMITER";
                 break;
-            case thl::Token::ENDL:
+            case thl::Token::NEW_LINE:
                 result = "END_LINE";
                 break;
             case thl::Token::ASSIGMENT:
@@ -127,16 +146,6 @@ namespace thl
                 break;
         }
         return result;
-    }
-
-    inline Token TokenCell::token() const
-    {
-        return m_token;
-    }
-
-    inline int TokenCell::attr() const
-    {
-        return m_attr;
     }
 }
 

@@ -1,8 +1,8 @@
 <program>       ::= <function> {'\n' <function>}
-<function>      ::=  <prototype> ":=" <exp>
+<function>      ::= <prototype> ":=" <exp>
 <prototype>     ::= <ident> "(" <ident> ["," <ident>]")"
-<exp>           ::= <easy-exp> {<impl> <easy-exp>}
-<easy-exp>      ::= <term> {<sum> <term>}
+<exp>           ::= <primary> {<impl> <primary>}
+<primary>       ::= <term> {<sum> <term>}
 <term>          ::= <factor> {<mul> <factor>}
 <factor>        ::= <ident> | 
                     <digit> |

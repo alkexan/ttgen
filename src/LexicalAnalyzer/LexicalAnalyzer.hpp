@@ -1,11 +1,10 @@
 #ifndef SRC__LEXICAL_ANALYZER__HPP
 #define SRC__LEXICAL_ANALYZER__HPP
 
-#include <istream>
 #include <memory>
+#include <sstream>
 
 #include "Util.hpp"
-#include "LexicalError.hpp"
 
 namespace thl
 {
@@ -15,20 +14,20 @@ namespace thl
 		LexicalAnalyzer();
 		~LexicalAnalyzer();
 
-		std::unique_ptr < TokenTable > getTokenTable();
+		std::unique_ptr < LexemeTable > getLexemeTable();
 		std::unique_ptr < ConstTable > getConstTable();
 		std::unique_ptr < IdentTable > getIdentTable();
-
-		LexicalError getError() const;
 
 		bool parse(std::istream& istream);
 
 	private:
-		std::unique_ptr < TokenTable > m_tokenTable;
+		size_t m_lineCount;
+
+		std::unique_ptr < LexemeTable > m_lexemTable;
 		std::unique_ptr < ConstTable > m_constTable;
 		std::unique_ptr < IdentTable > m_identTable;
 
-		LexicalError m_error;
+		bool parseLine(std::istringstream& istream);
 	};
 }
 
