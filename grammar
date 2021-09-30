@@ -1,4 +1,6 @@
-<program>       ::= <ident> "(" <ident> ["," <ident>]")" "=" <exp>
+<program>       ::= <function> {'\n' <function>}
+<function>      ::=  <prototype> ":=" <exp>
+<prototype>     ::= <ident> "(" <ident> ["," <ident>]")"
 <exp>           ::= <easy-exp> {<impl> <easy-exp>}
 <easy-exp>      ::= <term> {<sum> <term>}
 <term>          ::= <factor> {<mul> <factor>}
