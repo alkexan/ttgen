@@ -32,10 +32,13 @@ int main(int argc, char* argv[])
 			{
 				std::cout << tokenToString(i->token()) << ":";
 			}
+			std::cout << std::endl;
 
 			syntax.setLexemeTable(std::move(m_lexemTable));
 			syntax.setConstTable(std::move(lexical.getConstTable()));
 			syntax.setIdentTable(std::move(lexical.getIdentTable()));
+
+			syntax.parse();
 		}
 	}
 

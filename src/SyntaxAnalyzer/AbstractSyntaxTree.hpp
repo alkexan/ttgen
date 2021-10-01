@@ -9,8 +9,7 @@ namespace thl
 	class ExprAST
 	{
 	public:
-		virtual ~ExprAST()
-		{}
+		virtual ~ExprAST() = default;
 	};
 
 	/// NumberExprAST - Класс узла выражения для числовых литералов (Например {-1, 0, 1}).
@@ -38,31 +37,31 @@ namespace thl
 	};
 
 	/// BinaryExprAST - Класс узла выражения для бинарных операторов.
-	class BinaryExprAST : public ExprAST
+	class UnaryExprAST : public ExprAST
 	{
 	public:
-		BinaryExprAST(Token op, ExprAST* rhs)
-			: m_op(op), m_rhs(rhs)
+		UnaryExprAST(Token op, std::unique_ptr<ExprAST> rhs)
+			: m_op(op), m_rhs(std::move(rhs))
 		{}
 
 	private:
 		Token m_op;
-		ExprAST* m_rhs;
+		std::unique_ptr<ExprAST> m_rhs;
 
 	};
 
 	/// UnaryExprAST - Класс узла выражения для бинарных операторов.
-	class UnaryExprAST : public ExprAST
+	class BinaryExprAST : public ExprAST
 	{
 	public:
-		UnaryExprAST(Token op, ExprAST* lhs, ExprAST* rhs)
-			: m_op(op), m_lhs(lhs), m_rhs(rhs)
+		BinaryExprAST(Token op, std::unique_ptr<ExprAST> lhs, std::unique_ptr<ExprAST> rhs)
+			: m_op(op), m_lhs(std::move(lhs)), m_rhs(std::move(rhs))
 		{}
 
 	private:
 		Token m_op;
-		ExprAST* m_lhs;
-		ExprAST* m_rhs;
+		std::unique_ptr<ExprAST> m_lhs;
+		std::unique_ptr<ExprAST> m_rhs;
 
 	};
 
@@ -73,7 +72,7 @@ namespace thl
 	{
 	public:
 		PrototypeAST(const std::string& name, const std::vector<std::string>& args)
-			: m_name(name), m_args(args)
+			: m_name(name), m_args(std::move(args))
 		{}
 
 	private:
@@ -86,26 +85,26 @@ namespace thl
 	class FunctionAST
 	{
 	public:
-		FunctionAST(PrototypeAST* proto, ExprAST* body)
-			: m_proto(proto), m_body(body)
+		FunctionAST(std::unique_ptr<PrototypeAST> prototype, std::unique_ptr<ExprAST> body)
+			: m_prototype(std::move(prototype)), m_body(std::move(body))
 		{}
 
 	private:
-		PrototypeAST* m_proto;
-		ExprAST* m_body;
+		std::unique_ptr<PrototypeAST> m_prototype;
+		std::unique_ptr<ExprAST> m_body;
 	};
 
 	/// CallExprAST - Класс узла выражения для вызова функции.
 	class CallExprAST : public ExprAST
 	{
 	public:
-		CallExprAST(const std::string& callee, std::vector<ExprAST*>& args)
-			: m_callee(callee), m_args(args)
+		CallExprAST(const std::string& callee, std::vector<std::unique_ptr<ExprAST>>& args)
+			: m_callee(callee), m_args(std::move(args))
 		{}
 
 	private:
 		std::string m_callee;
-		std::vector<ExprAST*> m_args;
+		std::vector<std::unique_ptr<ExprAST>> m_args;
 
 	};
 }

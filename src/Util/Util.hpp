@@ -42,9 +42,14 @@ namespace thl
     class Lexeme
     {
     public:
+        Lexeme() : m_token(Token::ENDF), m_attr(-1),
+            m_textPos(std::make_pair(0, 0))
+        {}
+
         Lexeme(Token token, int attr) : m_token(token), m_attr(attr),
             m_textPos(std::make_pair(0, 0))
         {}
+
         Lexeme(std::pair<Token, int> tokenPair) : m_token(tokenPair.first), m_attr(tokenPair.second),
             m_textPos(std::make_pair(0, 0))
         {}
