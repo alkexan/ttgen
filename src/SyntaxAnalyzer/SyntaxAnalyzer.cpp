@@ -23,8 +23,14 @@ void thl::SyntaxAnalyzer::setIdentTable(std::unique_ptr<IdentTable> identTable)
 	m_identTable = std::move(identTable);
 }
 
+std::vector<std::unique_ptr<FunctionAST>> thl::SyntaxAnalyzer::getProgramAst()
+{
+	return std::move(m_programAst);
+}
+
 void thl::SyntaxAnalyzer::parse()
 {
+	m_programAst.clear();
 	Lexeme lexeme = getLexeme();
 
 	while (lexeme.token() != Token::ENDF)
@@ -36,7 +42,11 @@ void thl::SyntaxAnalyzer::parse()
 		else
 		{
 			auto function = std::move(parseFunction(lexeme));
-			if (!function)
+			if (function)
+			{
+				m_programAst.push_back(std::move(function));
+			}
+			else
 			{
 				// Пропускаем токен для восстановления после ошибки.
 				lexeme = getLexeme();

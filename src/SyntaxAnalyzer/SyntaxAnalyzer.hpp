@@ -20,15 +20,18 @@ namespace thl
         void setConstTable(std::unique_ptr < ConstTable > constTable);
         void setIdentTable(std::unique_ptr < IdentTable > identTable);
 
+        std::vector <std::unique_ptr < FunctionAST >> getProgramAst();
+
         // <program> :: = <function> { '\n' < function > }
         void parse();
 
     private:
-        //Lexeme m_currentLexeme;
 
         std::unique_ptr < LexemeTable > m_lexemTable;
         std::unique_ptr < ConstTable > m_constTable;
         std::unique_ptr < IdentTable > m_identTable;
+
+        std::vector <std::unique_ptr < FunctionAST >> m_programAst;
 
         // <function> ::=  <prototype> ":=" <exp>
         std::unique_ptr<FunctionAST> parseFunction(Lexeme lexeme);
