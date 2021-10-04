@@ -36,11 +36,7 @@ void thl::SyntaxAnalyzer::parse()
 		else
 		{
 			auto function = std::move(parseFunction(lexeme));
-			if (function)
-			{
-				std::cerr << "Parsed a function definition." << std::endl;
-			}
-			else
+			if (!function)
 			{
 				// Пропускаем токен для восстановления после ошибки.
 				lexeme = getLexeme();
@@ -112,7 +108,7 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Lexeme lexeme)
 
 				if (lexeme.token() != Token::DELIMITER && lexeme.token() != Token::CLOSE_BRACKET)
 				{
-					result = errorPrototype("Expected ')' or ',' in argument list");
+					errorPrototype("Expected ')' or ',' in argument list");
 					break;
 				}
 			} while (lexeme.token() == Token::DELIMITER);
@@ -141,19 +137,8 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseExpression(Lexeme lexeme)
 	{
 		lexeme = getLexeme();
 		Token token = lexeme.token();
-		if (lexeme.token() == Token::IMPLICATION)
+		if ((token == Token::IMPLICATION) || (token == Token::IMPLICATIONB))
 		{
-			std::cout << "->";
-			lexeme = getLexeme();
-			auto rhs = std::move(parseImplExpression(lexeme));
-			if (rhs)
-			{
-				result = std::make_unique<BinaryExprAST>(token, std::move(lhs), std::move(rhs));
-			}
-		}
-		else if (lexeme.token() == Token::IMPLICATIONB)
-		{
-			std::cout << "+>";
 			lexeme = getLexeme();
 			auto rhs = std::move(parseImplExpression(lexeme));
 			if (rhs)
@@ -184,39 +169,8 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseImplExpression(Lexeme lexeme)
 	{
 		lexeme = getLexeme();
 		Token token = lexeme.token();
-		if (lexeme.token() == Token::ADD)
+		if ((token == Token::ADD) || (token == Token::SUB) || (token == Token::OR) || (token == Token::XOR))
 		{
-			std::cout << "+";
-			lexeme = getLexeme();
-			auto rhs = std::move(parseTerm(lexeme));
-			if (rhs)
-			{
-				result = std::make_unique<BinaryExprAST>(token, std::move(lhs), std::move(rhs));
-			}
-		}
-		else if (lexeme.token() == Token::SUB)
-		{
-			std::cout << "-";
-			lexeme = getLexeme();
-			auto rhs = std::move(parseTerm(lexeme));
-			if (rhs)
-			{
-				result = std::make_unique<BinaryExprAST>(token, std::move(lhs), std::move(rhs));
-			}
-		}
-		else if (lexeme.token() == Token::OR)
-		{
-			std::cout << "|";
-			lexeme = getLexeme();
-			auto rhs = std::move(parseTerm(lexeme));
-			if (rhs)
-			{
-				result = std::make_unique<BinaryExprAST>(token, std::move(lhs), std::move(rhs));
-			}
-		}
-		else if (lexeme.token() == Token::XOR)
-		{
-			std::cout << "#";
 			lexeme = getLexeme();
 			auto rhs = std::move(parseTerm(lexeme));
 			if (rhs)
@@ -247,19 +201,8 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseTerm(Lexeme lexeme)
 	{
 		lexeme = getLexeme();
 		Token token = lexeme.token();
-		if (lexeme.token() == Token::MUL)
+		if ((token == Token::MUL) || (token == Token::AND))
 		{
-			std::cout << "*";
-			lexeme = getLexeme();
-			auto rhs = std::move(parseFactor(lexeme));
-			if (rhs)
-			{
-				result = std::make_unique<BinaryExprAST>(token, std::move(lhs), std::move(rhs));
-			}
-		}
-		else if (lexeme.token() == Token::AND)
-		{
-			std::cout << "&";
 			lexeme = getLexeme();
 			auto rhs = std::move(parseFactor(lexeme));
 			if (rhs)
@@ -317,29 +260,10 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseUnary(Lexeme lexeme)
 
 	switch (lexeme.token())
 	{
-		case Token::INCREMENT:
-		{
-			std::cout << "++";
-			Token unary = lexeme.token();
-			lexeme = getLexeme();
-			auto rhs = std::move(parseFactor(lexeme));
-
-			result = std::make_unique<UnaryExprAST>(unary, std::move(rhs));
-			break;
-		}
-		case Token::DECREMENT:
-		{
-			std::cout << "--";
-			Token unary = lexeme.token();
-			lexeme = getLexeme();
-			auto rhs = std::move(parseFactor(lexeme));
-
-			result = std::make_unique<UnaryExprAST>(unary, std::move(rhs));
-			break;
-		}
+		case Token::INCREMENT: // No Body
+		case Token::DECREMENT: // No Body
 		case Token::NOT:
 		{
-			std::cout << "~";
 			Token unary = lexeme.token();
 			lexeme = getLexeme();
 			auto rhs = std::move(parseFactor(lexeme));
@@ -349,7 +273,7 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseUnary(Lexeme lexeme)
 		}
 		default:
 		{
-			result = error("unknown token when expecting an expression");
+			error("unknown token when expecting an expression");
 			break;
 		}
 	}
@@ -359,7 +283,6 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseUnary(Lexeme lexeme)
 
 std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseParenExpr(Lexeme lexeme)
 {
-	std::cout << "(";
 	std::unique_ptr<ExprAST> result = nullptr;
 
 	lexeme = getLexeme();
@@ -369,12 +292,11 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseParenExpr(Lexeme lexeme)
 		lexeme = getLexeme();
 		if (lexeme.token() == Token::CLOSE_BRACKET)
 		{
-			std::cout << ")";
 			result = std::move(expression);
 		}
 		else
 		{
-			result = error("expected ')'");
+			error("expected ')'");
 		}
 	}
 
@@ -390,8 +312,6 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseName(Lexeme lexeme)
 	lexeme = getLexeme();
 	if (lexeme.token() == Token::OPEN_BRACKET)
 	{
-		std::cout << "(";
-
 		// Callable
 		std::vector<std::unique_ptr<ExprAST>> args;
 
@@ -410,18 +330,13 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseName(Lexeme lexeme)
 				{
 					args.push_back(std::move(arg));
 					lexeme = getLexeme();
-					std::cout << arg;
 				}
 			}
 
 			if (lexeme.token() != Token::DELIMITER && lexeme.token() != Token::CLOSE_BRACKET)
 			{
-				result = error("Expected ')' or ',' in argument list");
+				error("Expected ')' or ',' in argument list");
 				break;
-			}
-			else
-			{
-				std::cout << ",";
 			}
 
 		} while (lexeme.token() == Token::DELIMITER);
@@ -431,7 +346,6 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseName(Lexeme lexeme)
 		{
 			// success.
 			result = std::make_unique<CallExprAST>(idName, std::move(args));
-			std::cout << ")";
 		}
 	}
 	else
@@ -439,7 +353,6 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseName(Lexeme lexeme)
 		// Variable
 		result = std::make_unique<VariableExprAST>(idName);
 		lexeme = getLexeme(1);
-		std::cout << idName;
 	}
 
 	return std::move(result);

@@ -28,12 +28,6 @@ int main(int argc, char* argv[])
 		{
 			std::unique_ptr < LexemeTable > m_lexemTable = lexical.getLexemeTable();
 
-			for (auto i = m_lexemTable->begin(); i < m_lexemTable->end(); i++)
-			{
-				std::cout << tokenToString(i->token()) << ":";
-			}
-			std::cout << std::endl;
-
 			syntax.setLexemeTable(std::move(m_lexemTable));
 			syntax.setConstTable(std::move(lexical.getConstTable()));
 			syntax.setIdentTable(std::move(lexical.getIdentTable()));
