@@ -6,7 +6,7 @@
 using namespace thl;
 
 LexicalAnalyzer::LexicalAnalyzer() :
-	m_lineCount (0),
+	m_lineCount(0),
 	m_lexemTable(std::make_unique<LexemeTable>()),
 	m_constTable(std::make_unique<ConstTable>()),
 	m_identTable(std::make_unique<IdentTable>())
@@ -55,7 +55,7 @@ bool thl::LexicalAnalyzer::parse(std::istream& istream)
 	else
 	{
 		m_identTable->clear();
-	}	
+	}
 
 	bool result = true;
 	m_lineCount = 0;
@@ -63,7 +63,7 @@ bool thl::LexicalAnalyzer::parse(std::istream& istream)
 	while (!istream.eof() && result != false)
 	{
 		m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1));
-		
+
 		m_lineCount++;
 		std::string line;
 		std::getline(istream, line);
@@ -84,7 +84,7 @@ bool thl::LexicalAnalyzer::parseLine(std::istringstream& istream)
 		// identifier: [a-z][_a-zA-Z0-9]*
 		if (isspace(m_lastChar))
 		{
-			m_lastChar = istream.get(); 
+			m_lastChar = istream.get();
 			continue;
 		}
 		else if (isalpha(m_lastChar))
@@ -146,8 +146,8 @@ bool thl::LexicalAnalyzer::parseLine(std::istringstream& istream)
 			}
 			else
 			{
-				std::cerr <<  "(" << m_lineCount << "," 
-					<< istream.tellg() << ") Error: " 
+				std::cerr << "(" << m_lineCount << ","
+					<< istream.tellg() << ") Error: "
 					<< "Unknown identifier";
 				result = false;
 			}
@@ -207,6 +207,15 @@ bool thl::LexicalAnalyzer::parseLine(std::istringstream& istream)
 		else if (m_lastChar == '#')
 		{
 			m_lexemTable->push_back(Lexeme(Token::XOR, -1));
+		}
+		else if (m_lastChar == '/')
+		{
+			m_lastChar = istream.get();
+			// Комментарий до конца строки.
+			if (m_lastChar == '/')
+			{
+				break;
+			}
 		}
 		else if (m_lastChar == EOF)
 		{
