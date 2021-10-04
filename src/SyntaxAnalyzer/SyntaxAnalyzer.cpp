@@ -116,7 +116,7 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Lexeme lexeme)
 			if (lexeme.token() == Token::CLOSE_BRACKET)
 			{
 				// success.
-				result = std::make_unique<PrototypeAST>(functionName, std::move(args));
+				result = std::make_unique<PrototypeAST>(functionName, args);
 			}
 		}
 		else

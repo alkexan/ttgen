@@ -72,7 +72,7 @@ namespace thl
 	{
 	public:
 		PrototypeAST(const std::string& name, const std::vector<std::string>& args)
-			: m_name(name), m_args(std::move(args))
+			: m_name(name), m_args(args)
 		{}
 
 	private:

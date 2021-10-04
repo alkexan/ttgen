@@ -104,18 +104,6 @@ bool thl::LexicalAnalyzer::parseLine(std::istringstream& istream)
 
 			continue;
 		}
-		else if (m_lastChar == '(')
-		{
-			m_lexemTable->push_back(Lexeme(Token::OPEN_BRACKET, -1));
-		}
-		else if (m_lastChar == ',')
-		{
-			m_lexemTable->push_back(Lexeme(Token::DELIMITER, -1));
-		}
-		else if (m_lastChar == ')')
-		{
-			m_lexemTable->push_back(Lexeme(Token::CLOSE_BRACKET, -1));
-		}
 		else if (m_lastChar == '$' || m_lastChar == '0' || m_lastChar == '1')
 		{
 			m_lexemTable->push_back(Lexeme(Token::NUMBER, (int)m_constTable->size()));
@@ -132,6 +120,22 @@ bool thl::LexicalAnalyzer::parseLine(std::istringstream& istream)
 					m_constTable->push_back(1);
 					break;
 			}
+		}
+		else if (m_lastChar == '(')
+		{
+			m_lexemTable->push_back(Lexeme(Token::OPEN_BRACKET, -1));
+		}
+		else if (m_lastChar == ')')
+		{
+			m_lexemTable->push_back(Lexeme(Token::CLOSE_BRACKET, -1));
+		}
+		else if (m_lastChar == ',')
+		{
+			m_lexemTable->push_back(Lexeme(Token::DELIMITER, -1));
+		}
+		else if (m_lastChar == '\n')
+		{
+			m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1));
 		}
 		else if (m_lastChar == ':')
 		{
@@ -203,10 +207,6 @@ bool thl::LexicalAnalyzer::parseLine(std::istringstream& istream)
 		else if (m_lastChar == '#')
 		{
 			m_lexemTable->push_back(Lexeme(Token::XOR, -1));
-		}
-		else if (m_lastChar == '\n')
-		{
-			m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1));
 		}
 		else if (m_lastChar == EOF)
 		{
