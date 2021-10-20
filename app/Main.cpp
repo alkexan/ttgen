@@ -24,15 +24,18 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		if (lexical.parse(ifstream))
+		try
 		{
-			std::unique_ptr < LexemeTable > m_lexemTable = lexical.getLexemeTable();
-
-			syntax.setLexemeTable(std::move(m_lexemTable));
+			lexical.parse(ifstream);
+			
+			syntax.setLexemeTable(std::move(lexical.getLexemeTable()));
 			syntax.setConstTable(std::move(lexical.getConstTable()));
 			syntax.setIdentTable(std::move(lexical.getIdentTable()));
 
 			syntax.parse();
+		} catch (ParseException &exception)
+		{
+			std::cerr << exception.getError();
 		}
 	}
 

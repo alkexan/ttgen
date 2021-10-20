@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "Util.hpp"
+#include "ParseException.hpp"
 
 namespace thl
 {
@@ -18,7 +19,7 @@ namespace thl
 		std::unique_ptr < ConstTable > getConstTable();
 		std::unique_ptr < IdentTable > getIdentTable();
 
-		bool parse(std::istream& istream);
+		void parse(std::istream& istream);
 
 	private:
 		size_t m_lineCount;
@@ -27,7 +28,7 @@ namespace thl
 		std::unique_ptr < ConstTable > m_constTable;
 		std::unique_ptr < IdentTable > m_identTable;
 
-		bool parseLine(std::istringstream& istream);
+		void parseLine(std::istringstream& istream);
 	};
 }
 

@@ -30,7 +30,7 @@ std::unique_ptr<IdentTable> thl::LexicalAnalyzer::getIdentTable()
 	return std::move(m_identTable);
 }
 
-bool thl::LexicalAnalyzer::parse(std::istream& istream)
+void thl::LexicalAnalyzer::parse(std::istream& istream)
 {
 	if (m_lexemTable.get() == nullptr)
 	{
@@ -57,29 +57,25 @@ bool thl::LexicalAnalyzer::parse(std::istream& istream)
 		m_identTable->clear();
 	}
 
-	bool result = true;
 	m_lineCount = 0;
 
-	while (!istream.eof() && result != false)
+	while (!istream.eof())
 	{
 		m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1));
 
 		m_lineCount++;
 		std::string line;
 		std::getline(istream, line);
-		result = parseLine(std::istringstream(line));
+		parseLine(std::istringstream(line));
 	}
-
-	return result;
 }
 
-bool thl::LexicalAnalyzer::parseLine(std::istringstream& istream)
+void thl::LexicalAnalyzer::parseLine(std::istringstream& istream)
 {
-	bool result = true;
 	std::string line;
 	int m_lastChar = istream.get();
 
-	while (m_lastChar != -1 && result == true)
+	while (m_lastChar != -1)
 	{
 		// identifier: [a-z][_a-zA-Z0-9]*
 		if (isspace(m_lastChar))
@@ -146,10 +142,9 @@ bool thl::LexicalAnalyzer::parseLine(std::istringstream& istream)
 			}
 			else
 			{
-				std::cerr << "(" << m_lineCount << ","
-					<< istream.tellg() << ") Error: "
-					<< "Unknown identifier";
-				result = false;
+				throw ParseException("(" + std::to_string(m_lineCount) + "," + 
+					std::to_string(istream.tellg()) + ") Error: " + 
+					"Unknown identifier");
 			}
 		}
 		else if (m_lastChar == '-')
@@ -223,14 +218,12 @@ bool thl::LexicalAnalyzer::parseLine(std::istringstream& istream)
 		}
 		else
 		{
-			std::cerr << "(" << m_lineCount << ","
-				<< istream.tellg() << ") Error: "
-				<< "Unknown identifier";
-			result = false;
+			throw ParseException("(" + std::to_string(m_lineCount) + "," +
+				std::to_string(istream.tellg()) + ") Error: " +
+				"Unknown identifier");
+
 		}
 
 		m_lastChar = istream.get();
 	}
-
-	return result;
 }

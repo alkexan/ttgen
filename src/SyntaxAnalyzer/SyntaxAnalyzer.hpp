@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "Util.hpp"
+#include "ParseException.hpp"
 #include "AbstractSyntaxTree.hpp"
 
 namespace thl
@@ -103,22 +104,6 @@ namespace thl
             }
 
             return result;
-        }
-
-        inline std::unique_ptr<ExprAST> error(const char* str)
-        {
-            std::cerr << "Error:" << str << std::endl; 
-            return nullptr;
-        }
-        inline std::unique_ptr<PrototypeAST> errorPrototype(const char* Str)
-        {
-            error(Str); 
-            return nullptr;
-        }
-        inline std::unique_ptr<FunctionAST> errorFunction(const char* Str)
-        {
-            error(Str); 
-            return nullptr;
         }
     };
 

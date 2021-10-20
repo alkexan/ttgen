@@ -8,7 +8,7 @@ project (util CXX)
 add_library(util STATIC 
 	"Util.hpp"
 	"Util.cpp"
-)
+ "ParseException.hpp")
 
 # Include folders
 target_include_directories(util PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

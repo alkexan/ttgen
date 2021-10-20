@@ -79,7 +79,7 @@ std::unique_ptr<FunctionAST> thl::SyntaxAnalyzer::parseFunction(Lexeme lexeme)
 		}
 		else
 		{
-			errorFunction("Exepted exeption");
+			throw ParseException("Exepted exeption");
 		}
 	}
 	return std::move(result);
@@ -91,7 +91,7 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Lexeme lexeme)
 
 	if (lexeme.token() != Token::IDENTIFIER)
 	{
-		errorPrototype("Expected function name in prototype");
+		throw ParseException("Expected function name in prototype");
 	}
 	else
 	{
@@ -118,7 +118,7 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Lexeme lexeme)
 
 				if (lexeme.token() != Token::DELIMITER && lexeme.token() != Token::CLOSE_BRACKET)
 				{
-					errorPrototype("Expected ')' or ',' in argument list");
+					throw ParseException("Expected ')' or ',' in argument list");
 					break;
 				}
 			} while (lexeme.token() == Token::DELIMITER);
@@ -131,7 +131,7 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Lexeme lexeme)
 		}
 		else
 		{
-			errorPrototype("Expected '(' in prototype");
+			throw ParseException("Expected '(' in prototype");
 		}
 	}
 
@@ -283,7 +283,7 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseUnary(Lexeme lexeme)
 		}
 		default:
 		{
-			error("unknown token when expecting an expression");
+			throw ParseException("unknown token when expecting an expression");
 			break;
 		}
 	}
@@ -306,7 +306,7 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseParenExpr(Lexeme lexeme)
 		}
 		else
 		{
-			error("expected ')'");
+			throw ParseException("expected ')'");
 		}
 	}
 
@@ -345,7 +345,7 @@ std::unique_ptr<ExprAST> thl::SyntaxAnalyzer::parseName(Lexeme lexeme)
 
 			if (lexeme.token() != Token::DELIMITER && lexeme.token() != Token::CLOSE_BRACKET)
 			{
-				error("Expected ')' or ',' in argument list");
+				throw ParseException("Expected ')' or ',' in argument list");
 				break;
 			}
 
