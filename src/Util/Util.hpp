@@ -20,6 +20,7 @@ namespace thl
 		CLOSE_BRACKET,
 		DELIMITER,
 		NEW_LINE,
+		// not null operators
 		ASSIGMENT,
 		IMPLICATION,
 		IMPLICATIONB,
@@ -56,26 +57,26 @@ namespace thl
 	class Lexeme
 	{
 	public:
-		Lexeme() : m_token(Token::ENDF), m_attr(-1),
+		Lexeme() : m_token(Token::ENDF), m_attribute(-1),
 			m_textPos(std::make_pair(0, 0))
 		{}
 
-		Lexeme(Token token, int attr) : m_token(token), m_attr(attr),
+		Lexeme(Token token, int attr) : m_token(token), m_attribute(attr),
 			m_textPos(std::make_pair(0, 0))
 		{}
 
-		Lexeme(std::pair<Token, int> tokenPair) : m_token(tokenPair.first), m_attr(tokenPair.second),
+		Lexeme(std::pair<Token, int> tokenPair) : m_token(tokenPair.first), m_attribute(tokenPair.second),
 			m_textPos(std::make_pair(0, 0))
 		{}
 
-		inline Token token() const
+		inline Token getToken() const
 		{
 			return m_token;
 		}
 
-		inline int attr() const
+		inline int getAttribute() const
 		{
-			return m_attr;
+			return m_attribute;
 		}
 
 		inline void setTextPosition(std::pair<int, int> textPos)
@@ -90,7 +91,7 @@ namespace thl
 
 	private:
 		Token m_token;
-		int m_attr;
+		int m_attribute;
 		std::pair<int, int> m_textPos;
 	};
 
@@ -165,6 +166,12 @@ namespace thl
 				break;
 		}
 		return result;
+	}
+
+	template<typename Base, typename T>
+	inline bool instanceof(const T*)
+	{
+		return std::is_base_of<Base, T>::value;
 	}
 }
 

@@ -33,6 +33,8 @@ int main(int argc, char* argv[])
 			syntax.setIdentTable(std::move(lexical.getIdentTable()));
 
 			syntax.parse();
+
+
 		} catch (ParseException &exception)
 		{
 			std::cerr << exception.getError();

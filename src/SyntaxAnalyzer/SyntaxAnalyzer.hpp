@@ -7,6 +7,7 @@
 #include "Util.hpp"
 #include "ParseException.hpp"
 #include "AbstractSyntaxTree.hpp"
+#include "Ast.hpp"
 
 namespace thl
 {
@@ -41,35 +42,35 @@ namespace thl
         std::unique_ptr<PrototypeAST> parsePrototype(Lexeme lexeme);
 
         // <exp> ::= <implexp> {<impl> <implexp>}
-        std::unique_ptr<ExprAST> parseExpression(Lexeme lexeme);
+        std::unique_ptr<ExpressionAst> parseExpression(Lexeme lexeme);
 
         // <implexp> ::= <term> {<sum> <term>}
-        std::unique_ptr<ExprAST> parseImplExpression(Lexeme lexeme);
+        std::unique_ptr<ExpressionAst> parseImplExpression(Lexeme lexeme);
 
         // <term> ::= <factor> {<mul> <factor>}
-        std::unique_ptr<ExprAST> parseTerm(Lexeme lexeme);
+        std::unique_ptr<ExpressionAst> parseTerm(Lexeme lexeme);
 
         // <factor> ::= <unary> |
         //              <paren> | 
         //              <name> |
         //              <number>
-        std::unique_ptr<ExprAST> parseFactor(Lexeme lexeme);
+        std::unique_ptr<ExpressionAst> parseFactor(Lexeme lexeme);
 
         // <unary> ::= "~" <factor> | 
         //             "++" < factor > |
         //             "--" < factor >
-        std::unique_ptr<ExprAST> parseUnary(Lexeme lexeme);
+        std::unique_ptr<ExpressionAst> parseUnary(Lexeme lexeme);
 
         // parenexpr ::= '(' expression ')'
-        std::unique_ptr<ExprAST> parseParenExpr(Lexeme lexeme);
+        std::unique_ptr<ExpressionAst> parseParenExpr(Lexeme lexeme);
 
         // <name> ::= <ident> "(" <ident> {"," <ident>} ")" |
         //            <ident>
         // <ident> ::= "[a-z][_a-zA-Z0-9]*"
-        std::unique_ptr<ExprAST> parseName(Lexeme lexeme);
+        std::unique_ptr<ExpressionAst> parseName(Lexeme lexeme);
 
         // <number> ::= "$" | "1" | "0"
-        std::unique_ptr<ExprAST> parseNumber(Lexeme lexeme);
+        std::unique_ptr<ExpressionAst> parseNumber(Lexeme lexeme);
 
 
         inline Lexeme getLexeme(bool previous = 0)

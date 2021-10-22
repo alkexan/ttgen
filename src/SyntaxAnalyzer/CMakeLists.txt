@@ -8,7 +8,10 @@ project (syntax_analyzer CXX)
 add_library(syntax_analyzer STATIC 
 	"SyntaxAnalyzer.cpp"
 	"SyntaxAnalyzer.hpp"
- "AbstractSyntaxTree.hpp")
+	"AbstractSyntaxTree.hpp" 
+	"Ast.hpp" 
+	"Visitor.hpp"
+)
 
 # Add extern library
 target_link_libraries(syntax_analyzer util)

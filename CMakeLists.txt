@@ -23,9 +23,13 @@ endif()
 set(CXXFLAGS ${CXX_FLAGS_COMPILER})
 set(CMAKE_EXE_LINKER_FLAGS_INIT  ${CXX_FLAGS_LINKER})
 
-# include subprojects
-add_subdirectory (app)
-add_subdirectory (src)
+# Add LLVM
+find_package(LLVM REQUIRED CONFIG)
+message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
+message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
+message("LLVM_INCLUDE_DIRS=${LLVM_INCLUDE_DIRS}")
+
+include_directories(ttgen_project PUBLIC "${LLVM_INCLUDE_DIRS}")
 
 # generate documetation
 if (GENERATE_DOC_DOXY)
@@ -40,5 +44,9 @@ if (GENERATE_DOC_DOXY)
     endif (DOXYGEN_FOUND)
 
 endif (GENERATE_DOC_DOXY)
+
+# include subprojects
+add_subdirectory (app)
+add_subdirectory (src)
 
 # tests
