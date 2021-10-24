@@ -66,7 +66,8 @@ void thl::LexicalAnalyzer::parse(std::istream& istream)
 		m_lineCount++;
 		std::string line;
 		std::getline(istream, line);
-		parseLine(std::istringstream(line));
+		std::istringstream istream(line);
+		parseLine(istream);
 	}
 }
 
@@ -206,7 +207,7 @@ void thl::LexicalAnalyzer::parseLine(std::istringstream& istream)
 		else if (m_lastChar == '/')
 		{
 			m_lastChar = istream.get();
-			// Комментарий до конца строки.
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
 			if (m_lastChar == '/')
 			{
 				break;

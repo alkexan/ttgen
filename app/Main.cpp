@@ -5,6 +5,7 @@
 
 #include "LexicalAnalyzer.hpp"
 #include "SyntaxAnalyzer.hpp"
+#include "CodeGenerator.hpp"
 
 using namespace thl;
 
@@ -12,6 +13,7 @@ namespace fs = std::filesystem;
 
 LexicalAnalyzer lexical;
 SyntaxAnalyzer syntax;
+CodeGenerator codeGenerator;
 
 int main(int argc, char* argv[])
 {
@@ -34,6 +36,13 @@ int main(int argc, char* argv[])
 
 			syntax.parse();
 
+			auto programAst = std::move(syntax.getProgramAst());
+
+			for (int i = 0 ; i < programAst.size(); i++)
+			{
+				codeGenerator.visit(*programAst[i]);
+				std::cout << "\n";
+			}
 
 		} catch (ParseException &exception)
 		{
