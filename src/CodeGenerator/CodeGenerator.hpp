@@ -5,6 +5,7 @@
 #include "AbstractSyntaxTree.hpp"
 #include "ParseException.hpp"
 #include "Util.hpp"
+#include "TBoolean.hpp"
 
 namespace thl
 {
@@ -13,21 +14,24 @@ namespace thl
 	class CodeGenerator : public Visitor
 	{
 	public:
-		Value* visit(NumberExprAST& ast) override;
+		TBoolean visit(NumberExprAST& ast) override;
 
-		Value* visit(VariableExprAST& ast) override;
+		TBoolean visit(VariableExprAST& ast) override;
 
-		Value* visit(UnaryExprAST& ast) override;
+		TBoolean visit(UnaryExprAST& ast) override;
 
-		Value* visit(BinaryExprAST& ast) override;
+		TBoolean visit(BinaryExprAST& ast) override;
 
-		Value* visit(PrototypeAST& ast) override;
+		TBoolean visit(PrototypeAST& ast) override;
 
-		Value* visit(FunctionAST& ast) override;
+		TBoolean visit(FunctionAST& ast) override;
 
-		Value* visit(CallExprAST& ast) override;
+		TBoolean visit(CallExprAST& ast) override;
 
 	private:
+		std::map<std::string, std::vector<int>> m_values;
+		int m_valuePosition = 0;
+		int m_valuesCount = 0;
 
 	};
 

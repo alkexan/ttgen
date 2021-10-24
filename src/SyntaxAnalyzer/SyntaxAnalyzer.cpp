@@ -23,6 +23,21 @@ void thl::SyntaxAnalyzer::setIdentTable(std::unique_ptr<IdentTable> identTable)
 	m_identTable = std::move(identTable);
 }
 
+std::unique_ptr<LexemeTable> thl::SyntaxAnalyzer::getLexemeTable()
+{
+	return std::move(m_lexemTable);
+}
+
+std::unique_ptr<ConstTable> thl::SyntaxAnalyzer::getConstTable()
+{
+	return std::move(m_constTable);
+}
+
+std::unique_ptr<IdentTable> thl::SyntaxAnalyzer::getIdentTable()
+{
+	return std::move(m_identTable);
+}
+
 std::vector<std::unique_ptr<FunctionAST>> thl::SyntaxAnalyzer::getProgramAst()
 {
 	return std::move(m_programAst);

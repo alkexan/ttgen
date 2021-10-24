@@ -10,5 +10,7 @@ add_library(util STATIC
 	"Util.cpp"
  )
 
+ target_link_libraries(util tboolean)
+
 # Include folders
 target_include_directories(util PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

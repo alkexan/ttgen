@@ -36,6 +36,7 @@ int main(int argc, char* argv[])
 
 			syntax.parse();
 
+			auto lexemeTable = std::move(syntax.getLexemeTable());
 			auto programAst = std::move(syntax.getProgramAst());
 
 			for (int i = 0 ; i < programAst.size(); i++)

@@ -3,6 +3,7 @@
 
 #include <llvm/IR/Value.h>
 #include "Util.hpp"
+#include "TBoolean.hpp"
 
 namespace thl
 {
@@ -21,13 +22,13 @@ namespace thl
 	public:
 		virtual ~Visitor() = default;
 
-		virtual Value* visit(NumberExprAST& ast) = 0;
-		virtual Value* visit(VariableExprAST& ast) = 0;
-		virtual Value* visit(UnaryExprAST& ast) = 0;
-		virtual Value* visit(BinaryExprAST& ast) = 0;
-		virtual Value* visit(PrototypeAST& ast) = 0;
-		virtual Value* visit(FunctionAST& ast) = 0;
-		virtual Value* visit(CallExprAST& ast) = 0;
+		virtual TBoolean visit(NumberExprAST& ast) = 0;
+		virtual TBoolean visit(VariableExprAST& ast) = 0;
+		virtual TBoolean visit(UnaryExprAST& ast) = 0;
+		virtual TBoolean visit(BinaryExprAST& ast) = 0;
+		virtual TBoolean visit(PrototypeAST& ast) = 0;
+		virtual TBoolean visit(FunctionAST& ast) = 0;
+		virtual TBoolean visit(CallExprAST& ast) = 0;
 	};
 
 	/**
@@ -37,7 +38,7 @@ namespace thl
 	{
 	public:
 		virtual ~ExpressionAst() = default;
-		virtual Value* accept(Visitor& visitor) = 0;
+		virtual TBoolean accept(Visitor& visitor) = 0;
 	};
 
 	/**
@@ -49,7 +50,7 @@ namespace thl
 		NumberExprAST(int val) : m_val(val)
 		{}
 
-		Value* accept(Visitor& visitor) override
+		TBoolean accept(Visitor& visitor) override
 		{
 			return visitor.visit(*this);
 		}
@@ -73,7 +74,7 @@ namespace thl
 		VariableExprAST(const std::string& name) : m_name(name)
 		{}
 
-		Value* accept(Visitor& visitor) override
+		TBoolean accept(Visitor& visitor) override
 		{
 			return visitor.visit(*this);
 		}
@@ -98,7 +99,7 @@ namespace thl
 			: m_op(op), m_rhs(std::move(rhs))
 		{}
 
-		Value* accept(Visitor& visitor) override
+		TBoolean accept(Visitor& visitor) override
 		{
 			return visitor.visit(*this);
 		}
@@ -129,7 +130,7 @@ namespace thl
 			: m_op(op), m_lhs(std::move(lhs)), m_rhs(std::move(rhs))
 		{}
 
-		Value* accept(Visitor& visitor) override
+		TBoolean accept(Visitor& visitor) override
 		{
 			return visitor.visit(*this);
 		}
@@ -167,7 +168,7 @@ namespace thl
 			: m_name(name), m_args(args)
 		{}
 
-		Value* accept(Visitor& visitor) override
+		TBoolean accept(Visitor& visitor) override
 		{
 			return visitor.visit(*this);
 		}
@@ -198,7 +199,7 @@ namespace thl
 			: m_prototype(std::move(prototype)), m_body(std::move(body))
 		{}
 
-		Value* accept(Visitor& visitor) override
+		TBoolean accept(Visitor& visitor) override
 		{
 			return visitor.visit(*this);
 		}
@@ -228,7 +229,7 @@ namespace thl
 			: m_name(callee), m_args(std::move(args))
 		{}
 
-		Value* accept(Visitor& visitor) override
+		TBoolean accept(Visitor& visitor) override
 		{
 			return visitor.visit(*this);
 		}

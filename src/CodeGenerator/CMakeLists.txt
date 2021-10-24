@@ -12,6 +12,7 @@ add_library(code_generator STATIC
 
 # Add extern library
 target_link_libraries(code_generator util)
+target_link_libraries(code_generator tboolean)
 
 # Include folders
 target_include_directories(code_generator PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

@@ -3,89 +3,34 @@
 
 using namespace thl;
 
-Value* CodeGenerator::visit(NumberExprAST& ast)
+TBoolean CodeGenerator::visit(NumberExprAST& ast)
 {
-	//return ConstantInt::get(*m_theContext, APInt(8, ast.getValue(), true));
-
-	std::cout << ast.getValue();
-	return nullptr;
+	return ast.getValue();
 }
 
-Value* CodeGenerator::visit(VariableExprAST& ast)
+TBoolean CodeGenerator::visit(VariableExprAST& ast)
 {
-	//Value* V = m_namedValues[ast.getName()];
-	//if (!V)
-	//{
-	//	throw ParseException("Unknown variable name");
-	//}
-
-	//return V;
-
-	std::cout << ast.getName();
-	return nullptr;
+	return m_values[ast.getName()][m_valuePosition];
 }
 
-Value* CodeGenerator::visit(UnaryExprAST& ast)
+TBoolean CodeGenerator::visit(UnaryExprAST& ast)
 {
-	//Value* result = nullptr;
-	//Function* callee = nullptr;
-
-	//switch (ast.getOperator())
-	//{
-	//	case Token::NOT:
-	//	{
-	//		Function* callee = m_theModule->getFunction("operator~");
-	//		break;
-	//	}
-	//	case Token::DECREMENT:
-	//	{
-	//		Function* callee = m_theModule->getFunction("operator--");
-	//		break;
-	//	}
-	//	case Token::INCREMENT:
-	//	{
-	//		Function* callee = m_theModule->getFunction("operator++");
-	//		break;
-	//	}
-	//	default:
-	//	{
-	//		throw ParseException("Invalid unary operator");
-	//		break;
-	//	}
-	//}
-
-	//if (!callee)
-	//{
-	//	throw ParseException("Unknown function referenced");
-	//}
-	//else if (callee->arg_size() != 1)
-	//{
-	//	throw ParseException("Incorrect # arguments passed");
-	//}
-	//else
-	//{
-	//	Value* arg = ast.getRhs()->accept(*this);
-
-	//	result = m_builder->CreateCall(callee, arg, "calltmp");
-	//}
-
-	//return result;
-
+	TBoolean result = 0;
 	switch (ast.getOperator())
 	{
 		case Token::NOT:
 		{
-			std::cout << "~";
+			result = ~ast.getRhs()->accept(*this);
 			break;
 		}
 		case Token::DECREMENT:
 		{
-			std::cout << "--";
+			result = --ast.getRhs()->accept(*this);
 			break;
 		}
 		case Token::INCREMENT:
 		{
-			std::cout << "++";
+			result = ++ast.getRhs()->accept(*this);
 			break;
 		}
 		default:
@@ -94,60 +39,58 @@ Value* CodeGenerator::visit(UnaryExprAST& ast)
 			break;
 		}
 	}
-	ast.getRhs()->accept(*this);
-	
-	return nullptr;
+
+	return result;
 }
 
-Value* CodeGenerator::visit(BinaryExprAST& ast)
+TBoolean CodeGenerator::visit(BinaryExprAST& ast)
 {
-	ast.getLhs()->accept(*this);
-
+	TBoolean result = 0;
 	switch (ast.getOperator())
 	{
-		case Token::ASSIGMENT:
-		{
-			std::cout << ":=";
-			break;
-		}
 		case Token::IMPLICATION:
 		{
-			std::cout << "->";
+			result = ast.getLhs()->accept(*this).impl(ast.getRhs()->accept(*this));
 			break;
 		}
 		case Token::IMPLICATIONB:
 		{
-			std::cout << "+>";
+			result = ast.getLhs()->accept(*this).implb(ast.getRhs()->accept(*this));
 			break;
 		}
 		case Token::OR:
 		{
-			std::cout << "|";
+			result = ast.getLhs()->accept(*this) | ast.getRhs()->accept(*this);
 			break;
 		}
 		case Token::XOR:
 		{
-			std::cout << "#";
+			result = ast.getLhs()->accept(*this) ^ ast.getRhs()->accept(*this);
 			break;
 		}
 		case Token::SUB:
 		{
-			std::cout << "-";
+			result = ast.getLhs()->accept(*this) - ast.getRhs()->accept(*this);
 			break;
 		}
 		case Token::ADD:
 		{
-			std::cout << "+";
+			result = ast.getLhs()->accept(*this) + ast.getRhs()->accept(*this);
 			break;
 		}
 		case Token::AND:
 		{
-			std::cout << "&";
+			result = ast.getLhs()->accept(*this) & ast.getRhs()->accept(*this);
 			break;
 		}
 		case Token::MUL:
 		{
-			std::cout << "*";
+			result = ast.getLhs()->accept(*this) * ast.getRhs()->accept(*this);
+			break;
+		}
+		case Token::ASSIGMENT:
+		{
+			throw ParseException("ASSIGMENT operation");
 			break;
 		}
 		default:
@@ -156,55 +99,76 @@ Value* CodeGenerator::visit(BinaryExprAST& ast)
 			break;
 		}
 	}
-	ast.getRhs()->accept(*this);
 
-	return nullptr;
+	return result;
 }
 
-Value* CodeGenerator::visit(PrototypeAST& ast)
+TBoolean CodeGenerator::visit(PrototypeAST& ast)
 {
-	std::cout << ast.getName() << "(";
+
 	auto args = ast.getArgs();
+
 	for (int i = 0; i < args.size(); i++)
 	{
-		std::cout << args[i];
-		if (i == args.size() - 1)
+		int value = -1;
+		int k = 0;
+		int count = pow(3, args.size() - i - 1);
+
+		m_valuesCount = pow(3, args.size());
+		for (int j = 0; j < m_valuesCount; j++)
 		{
-			std::cout << ")";
-		}
-		else
-		{
-			std::cout << ", ";
+			m_values[args[i]].push_back(value);
+			k++;
+			if (k == count)
+			{
+				value++;
+				if (value > 1)
+				{
+					value = -1;
+				}
+				k = 0;
+			}
 		}
 	}
-	return nullptr;
+	return 0;
 }
 
-Value* CodeGenerator::visit(FunctionAST& ast)
+TBoolean CodeGenerator::visit(FunctionAST& ast)
 {
 	ast.getPrototype()->accept(*this);
-	std::cout << ":=";
-	ast.getBody()->accept(*this);
 
-	return nullptr;
+	std::cout << "|\t";
+	for (auto i = m_values.begin(); i != m_values.end(); i++)
+	{
+		std::cout << i->first << "\t|\t";
+	}
+	std::cout << "f\t|" << std::endl;
+
+	for (m_valuePosition = 0; m_valuePosition < m_valuesCount; m_valuePosition++)
+	{
+		auto mapIterator = m_values.begin();
+		std::cout << "|\t" << mapIterator->second[m_valuePosition];
+		mapIterator++;
+		std::cout << "\t|\t" << mapIterator->second[m_valuePosition];
+
+		TBoolean result = ast.getBody()->accept(*this);
+		std::cout << "\t|\t" << (int)result << "\t|" << std::endl;
+	}
+
+	m_values.clear();
+	m_valuePosition = 0;
+	m_valuesCount = 0;
+	return 0;
 }
 
-Value* CodeGenerator::visit(CallExprAST& ast)
+TBoolean CodeGenerator::visit(CallExprAST& ast)
 {
-	std::cout << ast.getName() << "(";
 
 	auto args = ast.getArgs();
 	for (int i = 0; i < args.size(); i++)
 	{
 		args[i]->accept(*this);
-		if (i == args.size() - 1)
-		{
-			std::cout << ")";
-		}
-		else
-		{
-			std::cout << ", ";
-		}
 	}
-	return nullptr;
+
+	return 0;
 }

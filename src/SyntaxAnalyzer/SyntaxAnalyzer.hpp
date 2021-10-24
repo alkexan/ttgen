@@ -22,6 +22,10 @@ namespace thl
         void setConstTable(std::unique_ptr < ConstTable > constTable);
         void setIdentTable(std::unique_ptr < IdentTable > identTable);
 
+        std::unique_ptr < LexemeTable > getLexemeTable();
+        std::unique_ptr < ConstTable > getConstTable();
+        std::unique_ptr < IdentTable > getIdentTable();
+
         std::vector <std::unique_ptr < FunctionAST >> getProgramAst();
 
         // <program> :: = <function> { '\n' < function > }
