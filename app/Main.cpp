@@ -17,7 +17,7 @@ CodeGenerator codeGenerator;
 
 int main(int argc, char* argv[])
 {
-	fs::path filePath = "E:/Alkexan/Documents/MEGA/MEGAsync/software_workspace/ttgen/test/test";
+	fs::path filePath = argv[1];
 	std::ifstream ifstream(filePath);
 	bool isContinue = ifstream.is_open();
 	if (!isContinue)

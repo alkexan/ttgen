@@ -7,7 +7,6 @@
 #include "Util.hpp"
 #include "ParseException.hpp"
 #include "AbstractSyntaxTree.hpp"
-#include "Ast.hpp"
 
 namespace thl
 {
