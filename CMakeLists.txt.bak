@@ -51,6 +51,4 @@ endif (GENERATE_DOC_DOXY)
 add_subdirectory (app)
 add_subdirectory (src)
 
-target_link_directories(clang-c-ast PUBLIC ${LLVM_LIBRARY_DIR})
-
 # tests

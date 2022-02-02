@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 		bool isContinue = ifstream.is_open();
 		if (!isContinue)
 		{
-			std::cout << "failed to open \n";
+			std::cerr << "failed to open \n";
 		}
 		else
 		{
@@ -53,6 +53,10 @@ int main(int argc, char* argv[])
 			}
 		}
 	}
+	else 
+    {
+			std::cerr << "missing arguments \n";
+    }
 
 	return 0;
 }
