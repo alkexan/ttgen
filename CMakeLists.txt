@@ -25,14 +25,6 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_EXE_LINKER_FLAGS_INIT  ${CXX_FLAGS_LINKER})
 endif()
 
-# Add LLVM
-find_package(LLVM REQUIRED CONFIG)
-message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
-message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
-message(STATUS "LLVM_INCLUDE_DIRS=${LLVM_INCLUDE_DIRS}")
-
-include_directories(ttgen_project PUBLIC "${LLVM_INCLUDE_DIRS}")
-
 # generate documetation
 if (GENERATE_DOC_DOXY)
 
@@ -50,7 +42,5 @@ endif (GENERATE_DOC_DOXY)
 # include subprojects
 add_subdirectory (app)
 add_subdirectory (src)
-
-target_link_directories(clang-c-ast PUBLIC ${LLVM_LIBRARY_DIR})
 
 # tests

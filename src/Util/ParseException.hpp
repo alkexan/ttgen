@@ -2,20 +2,14 @@
 #define SRC__PARSE_EXCEPTION__HPP
 #include <string>
 
-class ParseException
-{
+class ParseException {
 private:
-    std::string m_error;
+  std::string m_error;
 
 public:
-    ParseException(std::string error)
-        : m_error(error)
-    {}
+  ParseException(std::string error) : m_error(error) {}
 
-    std::string getError() const
-    {
-        return m_error;
-    }
+  std::string getError() const { return m_error; }
 };
 
 #endif // SRC__PARSE_EXCEPTION__HPP

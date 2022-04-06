@@ -5,9 +5,11 @@
 # Visual Studio (Code)
 /.vs/
 /.vscode/
+/.cache/
 
 # Prerequisites
 *.d
+*.bak
 
 # Compiled Object files
 *.slo

@@ -1,254 +1,175 @@
 #ifndef SRC__ABSTRACT_SYNTAX_TREE__HPP
 #define SRC__ABSTRACT_SYNTAX_TREE__HPP
 
-#include <llvm/IR/Value.h>
-#include "Util.hpp"
 #include "TBoolean.hpp"
+#include "Util.hpp"
 
-namespace thl
-{
-	using namespace llvm;
-	
-	class NumberExprAST;
-	class VariableExprAST;
-	class UnaryExprAST;
-	class BinaryExprAST;
-	class PrototypeAST;
-	class FunctionAST;
-	class CallExprAST;
+#include <memory>
 
-	class Visitor
-	{
-	public:
-		virtual ~Visitor() = default;
+namespace thl {
+class NumberExprAST;
+class VariableExprAST;
+class UnaryExprAST;
+class BinaryExprAST;
+class PrototypeAST;
+class FunctionAST;
+class CallExprAST;
 
-		virtual TBoolean visit(NumberExprAST& ast) = 0;
-		virtual TBoolean visit(VariableExprAST& ast) = 0;
-		virtual TBoolean visit(UnaryExprAST& ast) = 0;
-		virtual TBoolean visit(BinaryExprAST& ast) = 0;
-		virtual TBoolean visit(PrototypeAST& ast) = 0;
-		virtual TBoolean visit(FunctionAST& ast) = 0;
-		virtual TBoolean visit(CallExprAST& ast) = 0;
-	};
+class Visitor {
+public:
+  virtual ~Visitor() = default;
 
-	/**
-	 * @brief ������� ����� ��� ���� ����� ���������.
-	*/
-	class ExpressionAst
-	{
-	public:
-		virtual ~ExpressionAst() = default;
-		virtual TBoolean accept(Visitor& visitor) = 0;
-	};
+  virtual TBoolean visit(NumberExprAST &ast) = 0;
+  virtual TBoolean visit(VariableExprAST &ast) = 0;
+  virtual TBoolean visit(UnaryExprAST &ast) = 0;
+  virtual TBoolean visit(BinaryExprAST &ast) = 0;
+  virtual TBoolean visit(PrototypeAST &ast) = 0;
+  virtual TBoolean visit(FunctionAST &ast) = 0;
+  virtual TBoolean visit(CallExprAST &ast) = 0;
+};
 
-	/**
-	 * @brief ����� ���� ��������� �������� ��������� (�������� {-1, 0, 1}).
-	*/
-	class NumberExprAST : public ExpressionAst
-	{
-	public:
-		NumberExprAST(int val) : m_val(val)
-		{}
+/**
+ * @brief ������� ����� ��� ���� ����� ���������.
+ */
+class ExpressionAst {
+public:
+  virtual ~ExpressionAst() = default;
+  virtual TBoolean accept(Visitor &visitor) = 0;
+};
 
-		TBoolean accept(Visitor& visitor) override
-		{
-			return visitor.visit(*this);
-		}
+/**
+ * @brief ����� ���� ��������� �������� ��������� (�������� {-1, 0, 1}).
+ */
+class NumberExprAST : public ExpressionAst {
+public:
+  NumberExprAST(int val) : m_val(val) {}
 
-		inline int getValue() const
-		{
-			return m_val;
-		}
+  TBoolean accept(Visitor &visitor) override { return visitor.visit(*this); }
 
-	private:
-		int m_val;
+  inline int getValue() const { return m_val; }
 
-	};
+private:
+  int m_val;
+};
 
-	/**
-	 * @brief ����� ���� ��������� ����������.
-	*/
-	class VariableExprAST : public ExpressionAst
-	{
-	public:
-		VariableExprAST(const std::string& name) : m_name(name)
-		{}
+/**
+ * @brief ����� ���� ��������� ����������.
+ */
+class VariableExprAST : public ExpressionAst {
+public:
+  VariableExprAST(const std::string &name) : m_name(name) {}
 
-		TBoolean accept(Visitor& visitor) override
-		{
-			return visitor.visit(*this);
-		}
+  TBoolean accept(Visitor &visitor) override { return visitor.visit(*this); }
 
-		inline std::string getName() const
-		{
-			return m_name;
-		}
+  inline std::string getName() const { return m_name; }
 
-	private:
-		std::string m_name;
+private:
+  std::string m_name;
+};
 
-	};
+/**
+ * @brief ����� ���� ��������� ������� ����������.
+ */
+class UnaryExprAST : public ExpressionAst {
+public:
+  UnaryExprAST(Token op, std::unique_ptr<ExpressionAst> rhs)
+      : m_op(op), m_rhs(std::move(rhs)) {}
 
-	/**
-	 * @brief ����� ���� ��������� ������� ����������.
-	*/
-	class UnaryExprAST : public ExpressionAst
-	{
-	public:
-		UnaryExprAST(Token op, std::unique_ptr<ExpressionAst> rhs)
-			: m_op(op), m_rhs(std::move(rhs))
-		{}
+  TBoolean accept(Visitor &visitor) override { return visitor.visit(*this); }
 
-		TBoolean accept(Visitor& visitor) override
-		{
-			return visitor.visit(*this);
-		}
+  inline Token getOperator() const { return m_op; }
 
-		inline Token getOperator() const
-		{
-			return m_op;
-		}
+  inline ExpressionAst *getRhs() const { return m_rhs.get(); }
 
-		inline ExpressionAst* getRhs() const
-		{
-			return m_rhs.get();
-		}
+private:
+  Token m_op;
+  std::unique_ptr<ExpressionAst> m_rhs;
+};
 
-	private:
-		Token m_op;
-		std::unique_ptr<ExpressionAst> m_rhs;
+/**
+ * @brief ����� ���� ��������� �������� ����������.
+ */
+class BinaryExprAST : public ExpressionAst {
+public:
+  BinaryExprAST(Token op, std::unique_ptr<ExpressionAst> lhs,
+                std::unique_ptr<ExpressionAst> rhs)
+      : m_op(op), m_lhs(std::move(lhs)), m_rhs(std::move(rhs)) {}
 
-	};
+  TBoolean accept(Visitor &visitor) override { return visitor.visit(*this); }
 
-	/**
-	 * @brief ����� ���� ��������� �������� ����������.
-	*/
-	class BinaryExprAST : public ExpressionAst
-	{
-	public:
-		BinaryExprAST(Token op, std::unique_ptr<ExpressionAst> lhs, std::unique_ptr<ExpressionAst> rhs)
-			: m_op(op), m_lhs(std::move(lhs)), m_rhs(std::move(rhs))
-		{}
+  inline Token getOperator() const { return m_op; }
 
-		TBoolean accept(Visitor& visitor) override
-		{
-			return visitor.visit(*this);
-		}
+  inline ExpressionAst *getLhs() const { return m_lhs.get(); }
 
-		inline Token getOperator() const
-		{
-			return m_op;
-		}
-		
-		inline ExpressionAst* getLhs() const
-		{
-			return m_lhs.get();
-		}
+  inline ExpressionAst *getRhs() const { return m_rhs.get(); }
 
-		inline ExpressionAst* getRhs() const
-		{
-			return m_rhs.get();
-		}
+private:
+  Token m_op;
+  std::unique_ptr<ExpressionAst> m_lhs;
+  std::unique_ptr<ExpressionAst> m_rhs;
+};
 
-	private:
-		Token m_op;
-		std::unique_ptr<ExpressionAst> m_lhs;
-		std::unique_ptr<ExpressionAst> m_rhs;
+/**
+ * @brief ����� "���������" �������, ������� ������ � ��� �
+ * ����� ����������.
+ */
+class PrototypeAST : public ExpressionAst {
+public:
+  PrototypeAST(const std::string &name, const std::vector<std::string> &args)
+      : m_name(name), m_args(args) {}
 
-	};
+  TBoolean accept(Visitor &visitor) override { return visitor.visit(*this); }
 
-	/**
-	 * @brief ����� "���������" �������, ������� ������ � ��� � 
-	 * ����� ����������.
-	*/
-	class PrototypeAST : public ExpressionAst
-	{
-	public:
-		PrototypeAST(const std::string& name, const std::vector<std::string>& args)
-			: m_name(name), m_args(args)
-		{}
+  inline std::string getName() const { return m_name; }
 
-		TBoolean accept(Visitor& visitor) override
-		{
-			return visitor.visit(*this);
-		}
+  inline std::vector<std::string> getArgs() const { return m_args; }
 
-		inline std::string getName() const
-		{
-			return m_name;
-		}
+private:
+  std::string m_name;
+  std::vector<std::string> m_args;
+};
 
-		inline std::vector<std::string> getArgs() const
-		{
-			return m_args;
-		}
+/**
+ * @brief ����� ����������� ����� �������
+ */
+class FunctionAST : public ExpressionAst {
+public:
+  FunctionAST(std::unique_ptr<PrototypeAST> prototype,
+              std::unique_ptr<ExpressionAst> body)
+      : m_prototype(std::move(prototype)), m_body(std::move(body)) {}
 
-	private:
-		std::string m_name;
-		std::vector<std::string> m_args;
+  TBoolean accept(Visitor &visitor) override { return visitor.visit(*this); }
 
-	};
+  inline ExpressionAst *getPrototype() const { return m_prototype.get(); }
 
-	/**
-	 * @brief ����� ����������� ����� �������
-	*/
-	class FunctionAST : public ExpressionAst
-	{
-	public:
-		FunctionAST(std::unique_ptr<PrototypeAST> prototype, std::unique_ptr<ExpressionAst> body)
-			: m_prototype(std::move(prototype)), m_body(std::move(body))
-		{}
+  inline ExpressionAst *getBody() const { return m_body.get(); }
 
-		TBoolean accept(Visitor& visitor) override
-		{
-			return visitor.visit(*this);
-		}
+private:
+  std::unique_ptr<PrototypeAST> m_prototype;
+  std::unique_ptr<ExpressionAst> m_body;
+};
 
-		inline ExpressionAst* getPrototype() const
-		{
-			return m_prototype.get();
-		}
+/**
+ * @brief ����� ���� ��������� ������ �������.
+ */
+class CallExprAST : public ExpressionAst {
+public:
+  CallExprAST(const std::string &callee,
+              std::vector<std::unique_ptr<ExpressionAst>> args)
+      : m_name(callee), m_args(std::move(args)) {}
 
-		inline ExpressionAst* getBody() const
-		{
-			return m_body.get();
-		}
+  TBoolean accept(Visitor &visitor) override { return visitor.visit(*this); }
 
-	private:
-		std::unique_ptr<PrototypeAST> m_prototype;
-		std::unique_ptr<ExpressionAst> m_body;
-	};
+  inline std::string getName() const { return m_name; }
 
-	/**
-	 * @brief ����� ���� ��������� ������ �������.
-	*/
-	class CallExprAST : public ExpressionAst
-	{
-	public:
-		CallExprAST(const std::string& callee, std::vector<std::unique_ptr<ExpressionAst>> args)
-			: m_name(callee), m_args(std::move(args))
-		{}
+  inline std::vector<std::unique_ptr<ExpressionAst>> getArgs() {
+    return std::move(m_args);
+  }
 
-		TBoolean accept(Visitor& visitor) override
-		{
-			return visitor.visit(*this);
-		}
-
-		inline std::string getName() const
-		{
-			return m_name;
-		}
-
-		inline std::vector<std::unique_ptr<ExpressionAst>> getArgs()
-		{
-			return std::move(m_args);
-		}
-
-	private:
-		std::string m_name;
-		std::vector<std::unique_ptr<ExpressionAst>> m_args;
-
-	};
-}
+private:
+  std::string m_name;
+  std::vector<std::unique_ptr<ExpressionAst>> m_args;
+};
+} // namespace thl
 
 #endif // SRC__ABSTRACT_SYNTAX_TREE__HPP
