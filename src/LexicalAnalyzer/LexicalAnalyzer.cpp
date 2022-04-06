@@ -114,7 +114,7 @@ void thl::LexicalAnalyzer::parseLine(std::istringstream &istream) {
 
       if (m_lastChar == '-') {
         m_lexemTable->push_back(Lexeme(Token::DECREMENT, -1));
-      } else if (m_lastChar == '>') {
+      } else if (m_lastChar == '|') {
         m_lexemTable->push_back(Lexeme(Token::IMPLICATION, -1));
       } else {
         m_lexemTable->push_back(Lexeme(Token::SUB, -1));
@@ -125,7 +125,7 @@ void thl::LexicalAnalyzer::parseLine(std::istringstream &istream) {
 
       if (m_lastChar == '+') {
         m_lexemTable->push_back(Lexeme(Token::INCREMENT, -1));
-      } else if (m_lastChar == '>') {
+      } else if (m_lastChar == '|') {
         m_lexemTable->push_back(Lexeme(Token::IMPLICATIONB, -1));
       } else {
         m_lexemTable->push_back(Lexeme(Token::ADD, -1));
