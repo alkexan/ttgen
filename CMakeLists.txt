@@ -25,9 +25,13 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_EXE_LINKER_FLAGS_INIT  ${CXX_FLAGS_LINKER})
 endif()
 
+# boost package
+find_package(Boost 1.76.0 COMPONENTS program_options REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+message(STATUS "${Boost_LIBRARIES}")
+
 # generate documetation
 if (GENERATE_DOC_DOXY)
-
     find_package(Doxygen)
     if (DOXYGEN_FOUND)
         message(STATUS "PROJECT_SOURCE_DIR = ${PROJECT_SOURCE_DIR}")
@@ -36,7 +40,6 @@ if (GENERATE_DOC_DOXY)
     else (DOXYGEN_FOUND)
         message(STATUS "WARNING: Doxygen not found - Reference manual will not be created")
     endif (DOXYGEN_FOUND)
-
 endif (GENERATE_DOC_DOXY)
 
 # include subprojects
