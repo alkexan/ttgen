@@ -1,0 +1,9 @@
+#ifndef VERSION_H
+#define VERSION_H
+
+/*
+ * These values are automatically set according to their cmake variables.
+ */
+#define VERSION "${VERSION}"
+
+#endif /* VERSION_H */

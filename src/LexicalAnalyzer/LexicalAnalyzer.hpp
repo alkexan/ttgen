@@ -17,7 +17,7 @@ public:
   std::unique_ptr<ConstTable> getConstTable();
   std::unique_ptr<IdentTable> getIdentTable();
 
-  void parse(std::istream &istream);
+  void parse(std::string &line);
 
 private:
   size_t m_lineCount;

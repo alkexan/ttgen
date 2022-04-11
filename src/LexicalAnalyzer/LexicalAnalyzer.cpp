@@ -1,6 +1,5 @@
 #include "LexicalAnalyzer.hpp"
 
-#include <cctype>
 #include <iostream>
 
 using namespace thl;
@@ -24,7 +23,9 @@ std::unique_ptr<IdentTable> thl::LexicalAnalyzer::getIdentTable() {
   return std::move(m_identTable);
 }
 
-void thl::LexicalAnalyzer::parse(std::istream &istream) {
+void thl::LexicalAnalyzer::parse(std::string &line) {
+  m_lineCount++;
+
   if (m_lexemTable.get() == nullptr) {
     m_lexemTable = std::make_unique<LexemeTable>();
   } else {
@@ -41,21 +42,10 @@ void thl::LexicalAnalyzer::parse(std::istream &istream) {
     m_identTable->clear();
   }
 
-  m_lineCount = 0;
+  bool skipLine = false;
+  std::istringstream istream(line);
+  m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1));
 
-  while (!istream.eof()) {
-    m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1));
-
-    m_lineCount++;
-    std::string line;
-    std::getline(istream, line);
-    std::istringstream istream(line);
-    parseLine(istream);
-  }
-}
-
-void thl::LexicalAnalyzer::parseLine(std::istringstream &istream) {
-  std::string line;
   int m_lastChar = istream.get();
 
   while (m_lastChar != -1) {
@@ -143,8 +133,8 @@ void thl::LexicalAnalyzer::parseLine(std::istringstream &istream) {
       m_lexemTable->push_back(Lexeme(Token::XOR, -1));
     } else if (m_lastChar == '/') {
       m_lastChar = istream.get();
-      // ����������� �� ����� ������.
       if (m_lastChar == '/') {
+        skipLine = true;
         break;
       }
     } else if (m_lastChar == EOF) {
@@ -156,5 +146,9 @@ void thl::LexicalAnalyzer::parseLine(std::istringstream &istream) {
     }
 
     m_lastChar = istream.get();
+  }
+
+  if (!skipLine) {
+    std::cout << line << std::endl;
   }
 }

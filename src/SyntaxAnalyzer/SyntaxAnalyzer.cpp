@@ -39,6 +39,7 @@ std::vector<std::unique_ptr<FunctionAST>> thl::SyntaxAnalyzer::getProgramAst() {
 
 void thl::SyntaxAnalyzer::parse() {
   m_programAst.clear();
+  m_lexIterator = m_lexemTable->begin();
   Lexeme lexeme = getLexeme();
 
   while (lexeme.getToken() != Token::ENDF) {

@@ -4,6 +4,11 @@ cmake_minimum_required(VERSION 3.12)
 # set language and the project name
 project (ttgen_project CXX)
 
+# generate version
+exec_program("git" "${PROJECT_SOURCE_DIR}" ARGS "describe" "--tags" OUTPUT_VARIABLE VERSION )
+message(STATUS "Version build: " ${VERSION} )
+configure_file("version.h.in" "${PROJECT_SOURCE_DIR}/version.h")
+
 # CXX standart
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -27,7 +32,6 @@ endif()
 
 # boost package
 find_package(Boost 1.76.0 COMPONENTS program_options REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
 message(STATUS "${Boost_LIBRARIES}")
 
 # generate documetation
@@ -41,6 +45,8 @@ if (GENERATE_DOC_DOXY)
         message(STATUS "WARNING: Doxygen not found - Reference manual will not be created")
     endif (DOXYGEN_FOUND)
 endif (GENERATE_DOC_DOXY)
+
+include_directories(${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR})
 
 # include subprojects
 add_subdirectory (app)

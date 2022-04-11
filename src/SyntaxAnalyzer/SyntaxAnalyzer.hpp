@@ -33,6 +33,8 @@ private:
   std::unique_ptr<ConstTable> m_constTable;
   std::unique_ptr<IdentTable> m_identTable;
 
+  std::vector<thl::Lexeme>::iterator m_lexIterator;
+
   std::vector<std::unique_ptr<FunctionAST>> m_programAst;
 
   // <function> ::=  <prototype> ":=" <exp>
@@ -73,21 +75,17 @@ private:
   std::unique_ptr<ExpressionAst> parseNumber(Lexeme lexeme);
 
   inline Lexeme getLexeme(bool previous = 0) {
-    static auto lexemIt = m_lexemTable->begin();
-    static int couner = 0;
     Lexeme result;
 
     if (previous) {
-      if (lexemIt != m_lexemTable->begin()) {
-        result = *(--lexemIt);
-        couner--;
+      if (m_lexIterator != m_lexemTable->begin()) {
+        result = *(--m_lexIterator);
       } else {
         result = Lexeme(Token::NEW_LINE, -1);
       }
     } else {
-      if (lexemIt != m_lexemTable->end()) {
-        result = *(lexemIt++);
-        couner++;
+      if (m_lexIterator != m_lexemTable->end()) {
+        result = *(m_lexIterator++);
       } else {
         result = Lexeme(Token::ENDF, -1);
       }

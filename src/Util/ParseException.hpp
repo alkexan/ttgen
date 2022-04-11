@@ -3,13 +3,13 @@
 #include <string>
 
 class ParseException {
-private:
-  std::string m_error;
-
 public:
   ParseException(std::string error) : m_error(error) {}
 
   std::string getError() const { return m_error; }
+
+private:
+  std::string m_error;
 };
 
 #endif // SRC__PARSE_EXCEPTION__HPP

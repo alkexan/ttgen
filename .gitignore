@@ -2,6 +2,9 @@
 /build/
 /out/
 
+# Temp files
+version.h
+
 # Visual Studio (Code)
 /.vs/
 /.vscode/
