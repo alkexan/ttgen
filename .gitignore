@@ -1,6 +1,7 @@
 # Build Folders
 /build/
 /out/
+/install/
 
 # Temp files
 version.h

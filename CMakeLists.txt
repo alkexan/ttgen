@@ -53,3 +53,10 @@ add_subdirectory (app)
 add_subdirectory (src)
 
 # tests
+
+# cpack
+include(CPack)
+set(CPACK_PACKAGE_NAME "ttgen")
+set(CPACK_SET_DESTDIR ON)
+set(CPACK_PACKAGE_VERSION "${VERSION}") 
+set(CPACK_PACKAGE_DESCRIPTION "The Truth Table Generator")
