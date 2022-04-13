@@ -1,21 +1,24 @@
-<program>       ::= <function> {"\n" <function>}
-<function>      ::= <prototype> ":=" <exp>
-<prototype>     ::= <ident> "(" <ident> {"," <ident>}")"
-<exp>           ::= <implexp> {<impl> <implexp>}
-<implexp>       ::= <term> {<sum> <term>}
+<program>       ::= <function> {<endl> <function>}
+<function>      ::= <prototype> <assert> <stmt>
+<prototype>     ::= <ident> <open-brack> <ident> {<delimiter> <ident>}<close-brack>
+<stmt>          ::= <exp> {<impl> <exp>}
+<exp>           ::= <term> {<sum> <term>}
 <term>          ::= <factor> {<mul> <factor>}
-<factor>        ::= <unary> |
+<factor>        ::= <unary> <factor> |
                     <paren> |
-                    <name> | 
+                    <call>  | 
+                    <ident> |
                     <digit>
-<paren>         ::= "(" <exp> ")"
-<unary>         ::= "~" <factor> | 
-                    "++" <factor> | 
-                    "--" <factor>
-<name>          ::= <ident> "(" <exp> {"," <exp>} ")" |
-                    <ident>
-<ident>         ::= "[a-z][_a-zA-Z0-9]*"
-<impl>      	  ::= "->" | "+>"
+<paren>         ::= <open-brack> <stmt> <close-brack>
+<call>          ::= <ident> <open-brack> <stmt> {<delimiter> <stmt>} <close-brack>
+<unary>         ::= "~" | "++" | "--"
+<endl>          ::= "\n"
+<assert>        ::= ":="
+<open-brack>    ::= "("
+<delimiter>     ::= ","
+<close-brack>   ::= ")"
+<impl>      	::= "-|" | "+|" | "->" | "+>"
 <sum>           ::= "|" | "#" | "+" | "-"
 <mul>           ::= "&" | "*"
+<ident>         ::= "[a-z][_a-zA-Z0-9]*"
 <digit>         ::= "$" | "-?[0-1]"
