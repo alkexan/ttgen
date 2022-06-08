@@ -3,19 +3,27 @@
 #include "CodeGenerator.hpp"
 #include "LexicalAnalyzer.hpp"
 #include "SyntaxAnalyzer.hpp"
+#include <string>
 
 using namespace thl;
 
 class Parser {
 public:
-  Parser(const std::string &sourceName);
-  void setFile(const std::string &sourceName);
+  Parser();
+  Parser(const std::string &parseData, bool isFile);
+
+  void setParseData(const std::string &parseData, bool isFile);
   void parse();
 
 private:
-  std::string m_fileName;
+  bool m_isFile;
+
+  std::string m_parseData;
 
   LexicalAnalyzer m_lexical;
   SyntaxAnalyzer m_syntax;
   CodeGenerator m_codeGenerator;
+
+  void parseFile(std::string &fileName);
+  void parseLine(std::string &line);
 };

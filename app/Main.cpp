@@ -13,6 +13,9 @@
 
 namespace po = boost::program_options;
 
+Parser parser;
+std::string sourceName;
+
 int main(int argc, char *argv[]) {
   po::options_description desc("General options");
   std::string task_type;
@@ -28,16 +31,25 @@ int main(int argc, char *argv[]) {
   } else if (vm.count("version")) {
     std::cout << VERSION << std::endl;
   } else if (vm.count("source")) {
-    std::string sourceName = vm["source"].as<std::string>();
+    sourceName = vm["source"].as<std::string>();
     if (sourceName.size() == 0) {
       std::cout << "The source file is not set. Use --help for more information"
                 << std::endl;
     } else {
-      Parser parser = Parser(sourceName);
+      parser.setParseData(sourceName, true);
       parser.parse();
     }
   } else {
-    std::cout << desc << std::endl;
+    while (true) {
+      std::cout << ">> ";
+      std::cin >> sourceName;
+      if (sourceName == "!q") {
+        break;
+      }
+
+      parser.setParseData(sourceName, false);
+      parser.parse();
+    }
   }
 
   return 0;
