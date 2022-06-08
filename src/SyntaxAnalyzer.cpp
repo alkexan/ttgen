@@ -50,7 +50,6 @@ void thl::SyntaxAnalyzer::parse() {
       if (function) {
         m_programAst.push_back(std::move(function));
       } else {
-        // ���������� ����� ��� �������������� ����� ������.
         lexeme = getLexeme();
       }
     }

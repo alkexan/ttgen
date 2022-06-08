@@ -44,11 +44,10 @@ void thl::LexicalAnalyzer::parse(std::string &line) {
 
   bool skipLine = false;
   std::istringstream istream(line);
-  m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1));
 
   int m_lastChar = istream.get();
 
-  while (m_lastChar != -1) {
+  while (!istream.eof()) {
     // identifier: [a-z][_a-zA-Z0-9]*
     if (isspace(m_lastChar)) {
       m_lastChar = istream.get();
@@ -137,8 +136,6 @@ void thl::LexicalAnalyzer::parse(std::string &line) {
         skipLine = true;
         break;
       }
-    } else if (m_lastChar == EOF) {
-      m_lexemTable->push_back(Lexeme(Token::ENDF, -1));
     } else {
       throw ParseException("(" + std::to_string(m_lineCount) + "," +
                            std::to_string(istream.tellg()) +
@@ -150,5 +147,6 @@ void thl::LexicalAnalyzer::parse(std::string &line) {
 
   if (!skipLine) {
     std::cout << line << std::endl;
+    m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1));
   }
 }
