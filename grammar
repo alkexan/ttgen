@@ -1,4 +1,5 @@
-<program>       ::= <function> {<endl> <function>}
+<program>       ::= <function> {<endl> <function>} {<endl> <operator>}
+<operator>      ::= "calc" "(" <ident> ")" | "table" "(" <ident> ")"
 <function>      ::= <prototype> <assert> <stmt>
 <prototype>     ::= <ident> <open-brack> <ident> {<delimiter> <ident>}<close-brack>
 <stmt>          ::= <exp> {<impl> <exp>}
