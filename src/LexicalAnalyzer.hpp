@@ -13,6 +13,10 @@ public:
   LexicalAnalyzer();
   ~LexicalAnalyzer();
 
+  void setLexemeTable(std::unique_ptr<LexemeTable> lexemTable);
+  void setConstTable(std::unique_ptr<ConstTable> constTable);
+  void setIdentTable(std::unique_ptr<IdentTable> identTable);
+
   std::unique_ptr<LexemeTable> getLexemeTable();
   std::unique_ptr<ConstTable> getConstTable();
   std::unique_ptr<IdentTable> getIdentTable();

@@ -11,6 +11,21 @@ LexicalAnalyzer::LexicalAnalyzer()
 
 LexicalAnalyzer::~LexicalAnalyzer() {}
 
+void thl::LexicalAnalyzer::setLexemeTable(
+    std::unique_ptr<LexemeTable> lexemTable) {
+  m_lexemTable = std::move(lexemTable);
+}
+
+void thl::LexicalAnalyzer::setConstTable(
+    std::unique_ptr<ConstTable> constTable) {
+  m_constTable = std::move(constTable);
+}
+
+void thl::LexicalAnalyzer::setIdentTable(
+    std::unique_ptr<IdentTable> identTable) {
+  m_identTable = std::move(identTable);
+}
+
 std::unique_ptr<LexemeTable> thl::LexicalAnalyzer::getLexemeTable() {
   return std::move(m_lexemTable);
 }
@@ -25,23 +40,6 @@ std::unique_ptr<IdentTable> thl::LexicalAnalyzer::getIdentTable() {
 
 void thl::LexicalAnalyzer::parse(std::string &line) {
   m_lineCount++;
-
-  if (m_lexemTable.get() == nullptr) {
-    m_lexemTable = std::make_unique<LexemeTable>();
-  } else {
-    m_lexemTable->clear();
-  }
-  if (m_constTable.get() == nullptr) {
-    m_constTable = std::make_unique<ConstTable>();
-  } else {
-    m_constTable->clear();
-  }
-  if (m_identTable.get() == nullptr) {
-    m_identTable = std::make_unique<IdentTable>();
-  } else {
-    m_identTable->clear();
-  }
-
   getTokens(line);
 }
 
@@ -69,7 +67,7 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
     [ ]*"\n"   { m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1)); break; }
     nul        { m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1)); break; }
 
-    [ ]+       {
+    varname       {
       m_lexemTable->push_back(Lexeme(Token::IDENTIFIER,
         (int)m_identTable->size()));
       std::string s;

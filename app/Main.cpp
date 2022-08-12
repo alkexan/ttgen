@@ -13,8 +13,8 @@
 
 namespace po = boost::program_options;
 
-Parser parser;
-std::string sourceName;
+static Parser parser;
+static std::string sourceName;
 
 int main(int argc, char *argv[]) {
   po::options_description desc("General options");
@@ -36,8 +36,7 @@ int main(int argc, char *argv[]) {
       std::cout << "The source file is not set. Use --help for more information"
                 << std::endl;
     } else {
-      parser.setParseData(sourceName, true);
-      parser.parse();
+      parser.parse(sourceName, true);
     }
   } else {
     while (true) {
@@ -47,8 +46,7 @@ int main(int argc, char *argv[]) {
         break;
       }
 
-      parser.setParseData(sourceName, false);
-      parser.parse();
+      parser.parse(sourceName, false);
     }
   }
 

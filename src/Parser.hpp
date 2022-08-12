@@ -4,21 +4,22 @@
 #include "LexicalAnalyzer.hpp"
 #include "SyntaxAnalyzer.hpp"
 #include <string>
+#include <memory>
 
 using namespace thl;
 
 class Parser {
 public:
   Parser();
-  Parser(const std::string &parseData, bool isFile);
 
-  void setParseData(const std::string &parseData, bool isFile);
-  void parse();
+  void parse(std::string &parseData, bool isFile);
 
 private:
-  bool m_isFile;
+  std::unique_ptr<LexemeTable> m_lexemTable;
+  std::unique_ptr<ConstTable> m_constTable;
+  std::unique_ptr<IdentTable> m_identTable;
 
-  std::string m_parseData;
+  std::vector<std::unique_ptr<FunctionAST>> m_programAst;
 
   LexicalAnalyzer m_lexical;
   SyntaxAnalyzer m_syntax;
