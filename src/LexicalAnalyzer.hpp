@@ -26,7 +26,7 @@ private:
   std::unique_ptr<ConstTable> m_constTable;
   std::unique_ptr<IdentTable> m_identTable;
 
-  void parseLine(std::istringstream &istream);
+  void getTokens(std::string &line);
 };
 } // namespace thl
 

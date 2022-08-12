@@ -42,6 +42,10 @@ void thl::LexicalAnalyzer::parse(std::string &line) {
     m_identTable->clear();
   }
 
+  getTokens(line);
+}
+
+void thl::LexicalAnalyzer::getTokens(std::string &line) {
   bool skipLine = false;
   std::istringstream istream(line);
 
