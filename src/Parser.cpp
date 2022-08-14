@@ -42,12 +42,12 @@ void Parser::parseLine(std::string &line) {
     m_lexical.setIdentTable(std::move(m_identTable));
     m_lexical.parse(line);
 
-    m_syntax.setLexemeTable(std::move(m_lexical.getTokenTable()));
+    m_syntax.setTokenTable(std::move(m_lexical.getTokenTable()));
     m_syntax.setConstTable(std::move(m_lexical.getConstTable()));
     m_syntax.setIdentTable(std::move(m_lexical.getIdentTable()));
     m_syntax.parse();
 
-    m_tokenTable = std::move(m_syntax.getLexemeTable());
+    m_tokenTable = std::move(m_syntax.getTokenTable());
     m_programAst = std::move(m_syntax.getProgramAst());
 
     for (int i = 0; i < m_programAst.size(); i++) {

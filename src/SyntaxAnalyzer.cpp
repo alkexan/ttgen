@@ -6,7 +6,7 @@ SyntaxAnalyzer::SyntaxAnalyzer() {}
 
 SyntaxAnalyzer::~SyntaxAnalyzer() {}
 
-void thl::SyntaxAnalyzer::setLexemeTable(
+void thl::SyntaxAnalyzer::setTokenTable(
     std::unique_ptr<TokenTable> lexemTable) {
   m_tokenTable = std::move(lexemTable);
 }
@@ -21,7 +21,7 @@ void thl::SyntaxAnalyzer::setIdentTable(
   m_identTable = std::move(identTable);
 }
 
-std::unique_ptr<TokenTable> thl::SyntaxAnalyzer::getLexemeTable() {
+std::unique_ptr<TokenTable> thl::SyntaxAnalyzer::getTokenTable() {
   return std::move(m_tokenTable);
 }
 

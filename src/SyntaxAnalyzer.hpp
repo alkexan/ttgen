@@ -15,11 +15,11 @@ public:
   SyntaxAnalyzer();
   ~SyntaxAnalyzer();
 
-  void setLexemeTable(std::unique_ptr<TokenTable> lexemTable);
+  void setTokenTable(std::unique_ptr<TokenTable> lexemTable);
   void setConstTable(std::unique_ptr<ConstTable> constTable);
   void setIdentTable(std::unique_ptr<IdentTable> identTable);
 
-  std::unique_ptr<TokenTable> getLexemeTable();
+  std::unique_ptr<TokenTable> getTokenTable();
   std::unique_ptr<ConstTable> getConstTable();
   std::unique_ptr<IdentTable> getIdentTable();
 
