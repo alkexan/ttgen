@@ -2,7 +2,7 @@
 cmake_minimum_required (VERSION 3.12)
 
 # Set language and the project name
-project (src CXX)
+project (ttgen_lib CXX)
 
 find_program(RE2C re2c)
 if(RE2C)
@@ -20,7 +20,7 @@ else()
 endif()
 
 # Compile library
-add_library(src OBJECT 
+add_library(ttgen_lib STATIC 
 	"Util.hpp"
 	"Util.cpp"
 	"TBoolean.cpp"
@@ -36,4 +36,4 @@ add_library(src OBJECT
  )
 
 # Include folders
-target_include_directories(src PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(ttgen_lib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
