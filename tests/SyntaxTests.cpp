@@ -18,7 +18,7 @@ auto tokenTable = std::make_unique<thl::TokenTable>();
 auto constTable = std::make_unique<thl::ConstTable>();
 auto identTable = std::make_unique<thl::IdentTable>();
 
-void prepareData() {
+void prepareData(std::string testString) {
   using namespace thl;
 
   LexicalAnalyzer lexical;
@@ -27,7 +27,6 @@ void prepareData() {
   lexical.setConstTable(std::move(constTable));
   lexical.setIdentTable(std::move(identTable));
 
-  std::string testString = "f(x):=x";
   lexical.parse(testString);
 
   tokenTable = std::move(lexical.getTokenTable());
@@ -35,10 +34,12 @@ void prepareData() {
   identTable = std::move(lexical.getIdentTable());
 }
 
-BOOST_AUTO_TEST_CASE(TestSyntax) {
+BOOST_AUTO_TEST_SUITE(TestSyntax)
+
+BOOST_AUTO_TEST_CASE(SyntaxSimple) {
   using namespace thl;
 
-  prepareData();
+  prepareData("f(x):=x");
 
   SyntaxAnalyzer syntax;
 
@@ -48,3 +49,49 @@ BOOST_AUTO_TEST_CASE(TestSyntax) {
 
   syntax.parse();
 }
+
+BOOST_AUTO_TEST_CASE(SyntaxSimpleWithSpaces) {
+  using namespace thl;
+
+  prepareData("f(x) := x");
+
+  SyntaxAnalyzer syntax;
+
+  syntax.setTokenTable(std::move(tokenTable));
+  syntax.setConstTable(std::move(constTable));
+  syntax.setIdentTable(std::move(identTable));
+
+  syntax.parse();
+}
+
+
+BOOST_AUTO_TEST_CASE(TwoParamsSimple) {
+  using namespace thl;
+
+  prepareData("f(x,y):=x&y");
+
+  SyntaxAnalyzer syntax;
+
+  syntax.setTokenTable(std::move(tokenTable));
+  syntax.setConstTable(std::move(constTable));
+  syntax.setIdentTable(std::move(identTable));
+
+  syntax.parse();
+}
+
+
+BOOST_AUTO_TEST_CASE(TwoParamsSimpleWithSpaces) {
+  using namespace thl;
+
+  prepareData("f(x, y) := x");
+
+  SyntaxAnalyzer syntax;
+
+  syntax.setTokenTable(std::move(tokenTable));
+  syntax.setConstTable(std::move(constTable));
+  syntax.setIdentTable(std::move(identTable));
+
+  syntax.parse();
+}
+
+BOOST_AUTO_TEST_SUITE_END()
