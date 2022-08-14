@@ -58,15 +58,17 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
     re2c:define:YYCURSOR = p;
     re2c:define:YYMARKER = q;
     re2c:yyfill:enable = 0;
+    
     nul = "\000";
     varname = [a-zA-Z0-9_-]+;
+    
     [ ]*"#"[^\000\n]*"\n" { continue; }
-    [ ]*"\r\n" { m_lexemTable->push_back(Lexeme(Token::ENDL, -1)); break; }
-    [ ]*"\n"   { m_lexemTable->push_back(Lexeme(Token::ENDL, -1)); break; }
-    nul        { m_lexemTable->push_back(Lexeme(Token::ENDL, -1)); break; }
+    [ ]*"\r\n" { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); break; }
+    [ ]*"\n"   { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); break; }
+    nul        { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); break; }
 
     varname       {
-      m_lexemTable->push_back(Lexeme(Token::IDENTIFIER,
+      m_tokenTable->push_back(Token(TokenType::IDENTIFIER,
         (int)m_identTable->size()));
       std::string s;
       s.assign(start, p - start);
@@ -74,37 +76,37 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
       break;
     }
 
-    ":="       { m_lexemTable->push_back(Lexeme(Token::ASSIGMENT, -1)); break; }
-    "("        { m_lexemTable->push_back(Lexeme(Token::OPEN_BRACKET, -1)); break; }
-    ")"        { m_lexemTable->push_back(Lexeme(Token::CLOSE_BRACKET, -1)); break; }
-    ","        { m_lexemTable->push_back(Lexeme(Token::DELIMITER, -1)); break; }
+    ":="       { m_tokenTable->push_back(Token(TokenType::ASSIGMENT, -1)); break; }
+    "("        { m_tokenTable->push_back(Token(TokenType::OPEN_BRACKET, -1)); break; }
+    ")"        { m_tokenTable->push_back(Token(TokenType::CLOSE_BRACKET, -1)); break; }
+    ","        { m_tokenTable->push_back(Token(TokenType::DELIMITER, -1)); break; }
 
-    "--"       { m_lexemTable->push_back(Lexeme(Token::DECREMENT, -1)); break; }
-    "->"       { m_lexemTable->push_back(Lexeme(Token::IMPLICATION, -1)); break; }
-    "-"        { m_lexemTable->push_back(Lexeme(Token::SUB, -1)); break; }
+    "--"       { m_tokenTable->push_back(Token(TokenType::DECREMENT, -1)); break; }
+    "->"       { m_tokenTable->push_back(Token(TokenType::IMPLICATION, -1)); break; }
+    "-"        { m_tokenTable->push_back(Token(TokenType::SUB, -1)); break; }
 
-    "++"       { m_lexemTable->push_back(Lexeme(Token::DECREMENT, -1)); break; }
-    "+>"       { m_lexemTable->push_back(Lexeme(Token::IMPLICATION, -1)); break; }
-    "+"        { m_lexemTable->push_back(Lexeme(Token::SUB, -1)); break; }
+    "++"       { m_tokenTable->push_back(Token(TokenType::DECREMENT, -1)); break; }
+    "+>"       { m_tokenTable->push_back(Token(TokenType::IMPLICATION, -1)); break; }
+    "+"        { m_tokenTable->push_back(Token(TokenType::SUB, -1)); break; }
 
-    "~"        { m_lexemTable->push_back(Lexeme(Token::NOT, -1)); break; }
-    "*"        { m_lexemTable->push_back(Lexeme(Token::MUL, -1)); break; }
-    "&"        { m_lexemTable->push_back(Lexeme(Token::AND, -1)); break; }
-    "|"        { m_lexemTable->push_back(Lexeme(Token::OR, -1)); break; }
-    "#"        { m_lexemTable->push_back(Lexeme(Token::XOR, -1)); break; }
+    "~"        { m_tokenTable->push_back(Token(TokenType::NOT, -1)); break; }
+    "*"        { m_tokenTable->push_back(Token(TokenType::MUL, -1)); break; }
+    "&"        { m_tokenTable->push_back(Token(TokenType::AND, -1)); break; }
+    "|"        { m_tokenTable->push_back(Token(TokenType::OR, -1)); break; }
+    "#"        { m_tokenTable->push_back(Token(TokenType::XOR, -1)); break; }
 
     "$"        {
-      m_lexemTable->push_back(Lexeme(Token::NUMBER, (int)m_constTable->size()));
+      m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
       m_constTable->push_back(-1);
       break;
     }
     "0>"       {
-      m_lexemTable->push_back(Lexeme(Token::NUMBER, (int)m_constTable->size()));
+      m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
       m_constTable->push_back(0);
       break;
     }
     "1"        {
-      m_lexemTable->push_back(Lexeme(Token::NUMBER, (int)m_constTable->size()));
+      m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
       m_constTable->push_back(1);
       break;
     }

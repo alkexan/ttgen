@@ -28,15 +28,15 @@ BOOST_AUTO_TEST_CASE(TestLexical) {
 
   std::string testString = "f(x):=x";
   lexical.parse(testString);
-  
+
   lexical.printResult();
 
   tokenTable = std::move(lexical.getTokenTable());
-  BOOST_CHECK((*tokenTable)[0].getToken() == TokenType::IDENTIFIER);
-  BOOST_CHECK((*tokenTable)[1].getToken() == TokenType::OPEN_BRACKET);
-  BOOST_CHECK((*tokenTable)[2].getToken() == TokenType::IDENTIFIER);
-  BOOST_CHECK((*tokenTable)[3].getToken() == TokenType::CLOSE_BRACKET);
-  BOOST_CHECK((*tokenTable)[4].getToken() == TokenType::ASSIGMENT);
-  BOOST_CHECK((*tokenTable)[5].getToken() == TokenType::IDENTIFIER);
-  BOOST_CHECK((*tokenTable)[6].getToken() == TokenType::ENDL);
+  BOOST_CHECK((*tokenTable)[0].getType() == TokenType::IDENTIFIER);
+  BOOST_CHECK((*tokenTable)[1].getType() == TokenType::OPEN_BRACKET);
+  BOOST_CHECK((*tokenTable)[2].getType() == TokenType::IDENTIFIER);
+  BOOST_CHECK((*tokenTable)[3].getType() == TokenType::CLOSE_BRACKET);
+  BOOST_CHECK((*tokenTable)[4].getType() == TokenType::ASSIGMENT);
+  BOOST_CHECK((*tokenTable)[5].getType() == TokenType::IDENTIFIER);
+  BOOST_CHECK((*tokenTable)[6].getType() == TokenType::ENDL);
 }

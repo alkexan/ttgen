@@ -3,8 +3,8 @@
 #include "CodeGenerator.hpp"
 #include "LexicalAnalyzer.hpp"
 #include "SyntaxAnalyzer.hpp"
-#include <string>
 #include <memory>
+#include <string>
 
 using namespace thl;
 
@@ -15,7 +15,7 @@ public:
   void parse(std::string &parseData, bool isFile);
 
 private:
-  std::unique_ptr<TokenTable> m_lexemTable;
+  std::unique_ptr<TokenTable> m_tokenTable;
   std::unique_ptr<ConstTable> m_constTable;
   std::unique_ptr<IdentTable> m_identTable;
 

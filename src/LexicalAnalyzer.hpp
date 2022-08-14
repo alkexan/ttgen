@@ -37,31 +37,28 @@ private:
   void getTokens(std::string &line);
 
   inline std::string getTokenAttr(Token token);
-
 };
 
-
 /*
-[pos] <tokenType>: attr
+[pos] <token>: attr
 */
 
 inline void LexicalAnalyzer::printResult() {
   for (Token token : *m_tokenTable) {
     std::cout << "[" << token.getTextPosition().first << ", "
-     << token.getTextPosition().second << "] "
-     << token.toString() << getTokenAttr(token)
-     << std::endl;
+              << token.getTextPosition().second << "] " << token.toString()
+              << getTokenAttr(token) << std::endl;
   }
 }
 
 inline std::string LexicalAnalyzer::getTokenAttr(Token token) {
   std::string result = "";
 
-  switch (token.getToken()) {
+  switch (token.getType()) {
   case TokenType::IDENTIFIER:
     result = ": " + (*m_identTable)[token.getAttribute()];
     break;
-  case TokenType::NUMBER:{
+  case TokenType::NUMBER: {
     auto attr = (*m_constTable)[token.getAttribute()];
     result = ": " + std::to_string(attr);
     break;

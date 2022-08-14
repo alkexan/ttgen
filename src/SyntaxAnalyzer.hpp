@@ -29,7 +29,7 @@ public:
   void parse();
 
 private:
-  std::unique_ptr<TokenTable> m_lexemTable;
+  std::unique_ptr<TokenTable> m_tokenTable;
   std::unique_ptr<ConstTable> m_constTable;
   std::unique_ptr<IdentTable> m_identTable;
 
@@ -74,26 +74,28 @@ private:
   // <number> ::= "$" | "1" | "0"
   std::unique_ptr<ExpressionAst> parseNumber(Token lexeme);
 
-  inline Token getLexeme(bool previous = 0) {
-    Token result;
-
-    if (previous) {
-      if (m_lexIterator != m_lexemTable->begin()) {
-        result = *(--m_lexIterator);
-      } else {
-        result = Token(TokenType::ENDL, -1);
-      }
-    } else {
-      if (m_lexIterator != m_lexemTable->end()) {
-        result = *(m_lexIterator++);
-      } else {
-        result = Token(TokenType::ENDF, -1);
-      }
-    }
-
-    return result;
-  }
+  inline Token getToken(bool previous = 0);
 };
+
+inline Token SyntaxAnalyzer::getToken(bool previous) {
+  Token result;
+
+  if (previous) {
+    if (m_lexIterator != m_tokenTable->begin()) {
+      result = *(--m_lexIterator);
+    } else {
+      result = Token(TokenType::ENDL, -1);
+    }
+  } else {
+    if (m_lexIterator != m_tokenTable->end()) {
+      result = *(m_lexIterator++);
+    } else {
+      result = Token(TokenType::ENDF, -1);
+    }
+  }
+
+  return result;
+}
 
 } // namespace thl
 

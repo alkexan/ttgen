@@ -8,7 +8,7 @@ SyntaxAnalyzer::~SyntaxAnalyzer() {}
 
 void thl::SyntaxAnalyzer::setLexemeTable(
     std::unique_ptr<TokenTable> lexemTable) {
-  m_lexemTable = std::move(lexemTable);
+  m_tokenTable = std::move(lexemTable);
 }
 
 void thl::SyntaxAnalyzer::setConstTable(
@@ -22,7 +22,7 @@ void thl::SyntaxAnalyzer::setIdentTable(
 }
 
 std::unique_ptr<TokenTable> thl::SyntaxAnalyzer::getLexemeTable() {
-  return std::move(m_lexemTable);
+  return std::move(m_tokenTable);
 }
 
 std::unique_ptr<ConstTable> thl::SyntaxAnalyzer::getConstTable() {
@@ -39,36 +39,36 @@ std::vector<std::unique_ptr<FunctionAST>> thl::SyntaxAnalyzer::getProgramAst() {
 
 void thl::SyntaxAnalyzer::parse() {
   m_programAst.clear();
-  m_lexIterator = m_lexemTable->begin();
-  Token lexeme = getLexeme();
+  m_lexIterator = m_tokenTable->begin();
+  Token token = getToken();
 
-  while (lexeme.getToken() != TokenType::ENDF) {
-    if (lexeme.getToken() == TokenType::ENDL) {
+  while (token.getType() != TokenType::ENDF) {
+    if (token.getType() == TokenType::ENDL) {
       // empty body
     } else {
-      auto function = std::move(parseFunction(lexeme));
+      auto function = std::move(parseFunction(token));
       if (function) {
         m_programAst.push_back(std::move(function));
       } else {
-        lexeme = getLexeme();
+        token = getToken();
       }
     }
 
-    lexeme = getLexeme();
+    token = getToken();
   }
 }
 
-std::unique_ptr<FunctionAST> thl::SyntaxAnalyzer::parseFunction(Token lexeme) {
+std::unique_ptr<FunctionAST> thl::SyntaxAnalyzer::parseFunction(Token token) {
   std::unique_ptr<FunctionAST> result = nullptr;
 
   // create Function Prototype Ast
-  auto prototype = std::move(parsePrototype(lexeme));
+  auto prototype = std::move(parsePrototype(token));
   if (prototype) {
     // create Expression Ast
-    lexeme = getLexeme();
-    if (lexeme.getToken() == TokenType::ASSIGMENT) {
-      lexeme = getLexeme();
-      auto exp = std::move(parseExpression(lexeme));
+    token = getToken();
+    if (token.getType() == TokenType::ASSIGMENT) {
+      token = getToken();
+      auto exp = std::move(parseExpression(token));
       if (exp) {
         // create Function Ast
         result =
@@ -81,37 +81,36 @@ std::unique_ptr<FunctionAST> thl::SyntaxAnalyzer::parseFunction(Token lexeme) {
   return std::move(result);
 }
 
-std::unique_ptr<PrototypeAST>
-thl::SyntaxAnalyzer::parsePrototype(Token lexeme) {
+std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Token token) {
   std::unique_ptr<PrototypeAST> result = nullptr;
 
-  if (lexeme.getToken() != TokenType::IDENTIFIER) {
+  if (token.getType() != TokenType::IDENTIFIER) {
     throw ParseException("Expected function name in prototype");
   } else {
-    std::string functionName = (*m_identTable)[lexeme.getAttribute()];
+    std::string functionName = (*m_identTable)[token.getAttribute()];
 
-    lexeme = getLexeme();
-    if (lexeme.getToken() == TokenType::OPEN_BRACKET) {
+    token = getToken();
+    if (token.getType() == TokenType::OPEN_BRACKET) {
       std::vector<std::string> args;
 
       do {
-        lexeme = getLexeme();
+        token = getToken();
 
-        if (lexeme.getToken() == TokenType::CLOSE_BRACKET) {
+        if (token.getType() == TokenType::CLOSE_BRACKET) {
           break;
-        } else if (lexeme.getToken() == TokenType::IDENTIFIER) {
-          args.push_back((*m_identTable)[lexeme.getAttribute()]);
-          lexeme = getLexeme();
+        } else if (token.getType() == TokenType::IDENTIFIER) {
+          args.push_back((*m_identTable)[token.getAttribute()]);
+          token = getToken();
         }
 
-        if (lexeme.getToken() != TokenType::DELIMITER &&
-            lexeme.getToken() != TokenType::CLOSE_BRACKET) {
+        if (token.getType() != TokenType::DELIMITER &&
+            token.getType() != TokenType::CLOSE_BRACKET) {
           throw ParseException("Expected ')' or ',' in argument list");
           break;
         }
-      } while (lexeme.getToken() == TokenType::DELIMITER);
+      } while (token.getType() == TokenType::DELIMITER);
 
-      if (lexeme.getToken() == TokenType::CLOSE_BRACKET) {
+      if (token.getType() == TokenType::CLOSE_BRACKET) {
         // success.
         result = std::make_unique<PrototypeAST>(functionName, args);
       }
@@ -124,23 +123,24 @@ thl::SyntaxAnalyzer::parsePrototype(Token lexeme) {
 }
 
 std::unique_ptr<ExpressionAst>
-thl::SyntaxAnalyzer::parseExpression(Token lexeme) {
+thl::SyntaxAnalyzer::parseExpression(Token token) {
   std::unique_ptr<ExpressionAst> result = nullptr;
 
-  auto lhs = std::move(parseImplExpression(lexeme));
+  auto lhs = std::move(parseImplExpression(token));
   if (lhs) {
-    lexeme = getLexeme();
-    TokenType getToken = lexeme.getToken();
-    if ((getToken == TokenType::IMPLICATION) || (getToken == TokenType::IMPLICATIONB)) {
-      lexeme = getLexeme();
-      auto rhs = std::move(parseImplExpression(lexeme));
+    token = getToken();
+    TokenType tokenType = token.getType();
+    if ((tokenType == TokenType::IMPLICATION) ||
+        (tokenType == TokenType::IMPLICATIONB)) {
+      token = getToken();
+      auto rhs = std::move(parseImplExpression(token));
       if (rhs) {
-        result = std::make_unique<BinaryExprAST>(getToken, std::move(lhs),
+        result = std::make_unique<BinaryExprAST>(tokenType, std::move(lhs),
                                                  std::move(rhs));
       }
-    } else if (lexeme.getToken() != TokenType::ENDF) {
+    } else if (token.getType() != TokenType::ENDF) {
       result = std::move(lhs);
-      lexeme = getLexeme(1);
+      token = getToken(1);
     } else {
       result = std::move(lhs);
     }
@@ -150,24 +150,24 @@ thl::SyntaxAnalyzer::parseExpression(Token lexeme) {
 }
 
 std::unique_ptr<ExpressionAst>
-thl::SyntaxAnalyzer::parseImplExpression(Token lexeme) {
+thl::SyntaxAnalyzer::parseImplExpression(Token token) {
   std::unique_ptr<ExpressionAst> result = nullptr;
 
-  auto lhs = std::move(parseTerm(lexeme));
+  auto lhs = std::move(parseTerm(token));
   if (lhs) {
-    lexeme = getLexeme();
-    TokenType getToken = lexeme.getToken();
-    if ((getToken == TokenType::ADD) || (getToken == TokenType::SUB) ||
-        (getToken == TokenType::OR) || (getToken == TokenType::XOR)) {
-      lexeme = getLexeme();
-      auto rhs = std::move(parseTerm(lexeme));
+    token = getToken();
+    TokenType tokenType = token.getType();
+    if ((tokenType == TokenType::ADD) || (tokenType == TokenType::SUB) ||
+        (tokenType == TokenType::OR) || (tokenType == TokenType::XOR)) {
+      token = getToken();
+      auto rhs = std::move(parseTerm(token));
       if (rhs) {
-        result = std::make_unique<BinaryExprAST>(getToken, std::move(lhs),
+        result = std::make_unique<BinaryExprAST>(tokenType, std::move(lhs),
                                                  std::move(rhs));
       }
-    } else if (lexeme.getToken() != TokenType::ENDF) {
+    } else if (token.getType() != TokenType::ENDF) {
       result = std::move(lhs);
-      lexeme = getLexeme(1);
+      token = getToken(1);
     } else {
       result = std::move(lhs);
     }
@@ -176,23 +176,23 @@ thl::SyntaxAnalyzer::parseImplExpression(Token lexeme) {
   return std::move(result);
 }
 
-std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseTerm(Token lexeme) {
+std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseTerm(Token token) {
   std::unique_ptr<ExpressionAst> result = nullptr;
 
-  auto lhs = std::move(parseFactor(lexeme));
+  auto lhs = std::move(parseFactor(token));
   if (lhs) {
-    lexeme = getLexeme();
-    TokenType getToken = lexeme.getToken();
-    if ((getToken == TokenType::MUL) || (getToken == TokenType::AND)) {
-      lexeme = getLexeme();
-      auto rhs = std::move(parseFactor(lexeme));
+    token = getToken();
+    TokenType tokenType = token.getType();
+    if ((tokenType == TokenType::MUL) || (tokenType == TokenType::AND)) {
+      token = getToken();
+      auto rhs = std::move(parseFactor(token));
       if (rhs) {
-        result = std::make_unique<BinaryExprAST>(getToken, std::move(lhs),
+        result = std::make_unique<BinaryExprAST>(tokenType, std::move(lhs),
                                                  std::move(rhs));
       }
-    } else if (lexeme.getToken() != TokenType::ENDF) {
+    } else if (token.getType() != TokenType::ENDF) {
       result = std::move(lhs);
-      lexeme = getLexeme(1);
+      token = getToken(1);
     } else {
       result = std::move(lhs);
     }
@@ -201,46 +201,46 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseTerm(Token lexeme) {
   return std::move(result);
 }
 
-std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseFactor(Token lexeme) {
+std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseFactor(Token token) {
   std::unique_ptr<ExpressionAst> result = nullptr;
 
-  switch (lexeme.getToken()) {
+  switch (token.getType()) {
   case TokenType::IDENTIFIER: {
-    result = std::move(parseName(lexeme));
+    result = std::move(parseName(token));
     break;
   }
   case TokenType::NUMBER: {
-    result = std::move(parseNumber(lexeme));
+    result = std::move(parseNumber(token));
     break;
   }
   case TokenType::OPEN_BRACKET: {
-    result = std::move(parseParenExpr(lexeme));
+    result = std::move(parseParenExpr(token));
     break;
   }
   default: {
-    result = std::move(parseUnary(lexeme));
+    result = std::move(parseUnary(token));
     break;
   }
   }
   return std::move(result);
 }
 
-std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseUnary(Token lexeme) {
+std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseUnary(Token token) {
   std::unique_ptr<ExpressionAst> result = nullptr;
 
-  switch (lexeme.getToken()) {
+  switch (token.getType()) {
   case TokenType::INCREMENT: // No Body
   case TokenType::DECREMENT: // No Body
   case TokenType::NOT: {
-    TokenType unary = lexeme.getToken();
-    lexeme = getLexeme();
-    auto rhs = std::move(parseFactor(lexeme));
+    TokenType unary = token.getType();
+    token = getToken();
+    auto rhs = std::move(parseFactor(token));
 
     result = std::make_unique<UnaryExprAST>(unary, std::move(rhs));
     break;
   }
   default: {
-    throw ParseException("unknown token when expecting an expression");
+    throw ParseException("unknown TokenType when expecting an expression");
     break;
   }
   }
@@ -249,14 +249,14 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseUnary(Token lexeme) {
 }
 
 std::unique_ptr<ExpressionAst>
-thl::SyntaxAnalyzer::parseParenExpr(Token lexeme) {
+thl::SyntaxAnalyzer::parseParenExpr(Token token) {
   std::unique_ptr<ExpressionAst> result = nullptr;
 
-  lexeme = getLexeme();
-  auto expression = std::move(parseExpression(lexeme));
+  token = getToken();
+  auto expression = std::move(parseExpression(token));
   if (expression) {
-    lexeme = getLexeme();
-    if (lexeme.getToken() == TokenType::CLOSE_BRACKET) {
+    token = getToken();
+    if (token.getType() == TokenType::CLOSE_BRACKET) {
       result = std::move(expression);
     } else {
       throw ParseException("expected ')'");
@@ -266,53 +266,53 @@ thl::SyntaxAnalyzer::parseParenExpr(Token lexeme) {
   return std::move(result);
 }
 
-std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseName(Token lexeme) {
+std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseName(Token token) {
   std::unique_ptr<ExpressionAst> result = nullptr;
 
-  std::string idName = (*m_identTable)[lexeme.getAttribute()];
+  std::string idName = (*m_identTable)[token.getAttribute()];
 
-  lexeme = getLexeme();
-  if (lexeme.getToken() == TokenType::OPEN_BRACKET) {
+  token = getToken();
+  if (token.getType() == TokenType::OPEN_BRACKET) {
     // Callable
     std::vector<std::unique_ptr<ExpressionAst>> args;
 
     do {
-      lexeme = getLexeme();
+      token = getToken();
 
-      if (lexeme.getToken() == TokenType::CLOSE_BRACKET) {
+      if (token.getType() == TokenType::CLOSE_BRACKET) {
         break;
-      } else if (lexeme.getToken() == TokenType::IDENTIFIER) {
-        auto arg = std::move(parseExpression(lexeme));
+      } else if (token.getType() == TokenType::IDENTIFIER) {
+        auto arg = std::move(parseExpression(token));
         if (arg) {
           args.push_back(std::move(arg));
-          lexeme = getLexeme();
+          token = getToken();
         }
       }
 
-      if (lexeme.getToken() != TokenType::DELIMITER &&
-          lexeme.getToken() != TokenType::CLOSE_BRACKET) {
+      if (token.getType() != TokenType::DELIMITER &&
+          token.getType() != TokenType::CLOSE_BRACKET) {
         throw ParseException("Expected ')' or ',' in argument list");
         break;
       }
 
-    } while (lexeme.getToken() == TokenType::DELIMITER);
+    } while (token.getType() == TokenType::DELIMITER);
 
-    if (lexeme.getToken() == TokenType::CLOSE_BRACKET) {
+    if (token.getType() == TokenType::CLOSE_BRACKET) {
       // success.
       result = std::make_unique<CallExprAST>(idName, std::move(args));
     }
   } else {
     // Variable
     result = std::make_unique<VariableExprAST>(idName);
-    lexeme = getLexeme(1);
+    token = getToken(1);
   }
 
   return std::move(result);
 }
 
-std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseNumber(Token lexeme) {
+std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseNumber(Token token) {
   auto result =
-      std::make_unique<NumberExprAST>((*m_constTable)[lexeme.getAttribute()]);
-  std::cout << (*m_constTable)[lexeme.getAttribute()];
+      std::make_unique<NumberExprAST>((*m_constTable)[token.getAttribute()]);
+  std::cout << (*m_constTable)[token.getAttribute()];
   return std::move(result);
 }

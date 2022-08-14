@@ -3,13 +3,13 @@
 #include <iostream>
 
 Parser::Parser() {
-    m_lexemTable = std::make_unique<TokenTable>();
-    m_constTable = std::make_unique<ConstTable>();
-    m_identTable = std::make_unique<IdentTable>();
+  m_tokenTable = std::make_unique<TokenTable>();
+  m_constTable = std::make_unique<ConstTable>();
+  m_identTable = std::make_unique<IdentTable>();
 }
 
 void Parser::parse(std::string &parseData, bool isFile) {
-  m_lexemTable->clear();
+  m_tokenTable->clear();
   m_constTable->clear();
   m_identTable->clear();
 
@@ -37,7 +37,7 @@ void Parser::parseFile(std::string &fileName) {
 
 void Parser::parseLine(std::string &line) {
   try {
-    m_lexical.setTokenTable(std::move(m_lexemTable));
+    m_lexical.setTokenTable(std::move(m_tokenTable));
     m_lexical.setConstTable(std::move(m_constTable));
     m_lexical.setIdentTable(std::move(m_identTable));
     m_lexical.parse(line);
@@ -47,7 +47,7 @@ void Parser::parseLine(std::string &line) {
     m_syntax.setIdentTable(std::move(m_lexical.getIdentTable()));
     m_syntax.parse();
 
-    m_lexemTable = std::move(m_syntax.getLexemeTable());
+    m_tokenTable = std::move(m_syntax.getLexemeTable());
     m_programAst = std::move(m_syntax.getProgramAst());
 
     for (int i = 0; i < m_programAst.size(); i++) {

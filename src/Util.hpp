@@ -55,17 +55,17 @@ static std::map<std::string, TokenType> operators = {
 class Token {
 public:
   Token()
-      : m_type(TokenType::ENDF), m_attribute(-1), m_textPos(std::make_pair(0, 0)) {
-  }
+      : m_type(TokenType::ENDF), m_attribute(-1),
+        m_textPos(std::make_pair(0, 0)) {}
 
-  Token(TokenType token, int attr)
-      : m_type(token), m_attribute(attr), m_textPos(std::make_pair(0, 0)) {}
+  Token(TokenType TokenType, int attr)
+      : m_type(TokenType), m_attribute(attr), m_textPos(std::make_pair(0, 0)) {}
 
   Token(std::pair<TokenType, int> tokenPair)
       : m_type(tokenPair.first), m_attribute(tokenPair.second),
         m_textPos(std::make_pair(0, 0)) {}
 
-  inline TokenType getToken() const { return m_type; }
+  inline TokenType getType() const { return m_type; }
 
   inline int getAttribute() const { return m_attribute; }
 
