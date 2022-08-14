@@ -60,7 +60,7 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
     re2c:yyfill:enable = 0;
     
     nul = "\000";
-    varname = [a-zA-Z0-9_-]+;
+    varname = [a-z][_a-zA-Z0-9]*;
     
     [ ]*"#"[^\000\n]*"\n" { continue; }
     [ ]*"\r\n" { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); break; }
