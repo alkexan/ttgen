@@ -11,9 +11,9 @@ LexicalAnalyzer::LexicalAnalyzer()
 
 LexicalAnalyzer::~LexicalAnalyzer() {}
 
-void thl::LexicalAnalyzer::setLexemeTable(
-    std::unique_ptr<LexemeTable> lexemTable) {
-  m_lexemTable = std::move(lexemTable);
+void thl::LexicalAnalyzer::setTokenTable(
+    std::unique_ptr<TokenTable> lexemTable) {
+  m_tokenTable = std::move(lexemTable);
 }
 
 void thl::LexicalAnalyzer::setConstTable(
@@ -26,8 +26,8 @@ void thl::LexicalAnalyzer::setIdentTable(
   m_identTable = std::move(identTable);
 }
 
-std::unique_ptr<LexemeTable> thl::LexicalAnalyzer::getLexemeTable() {
-  return std::move(m_lexemTable);
+std::unique_ptr<TokenTable> thl::LexicalAnalyzer::getTokenTable() {
+  return std::move(m_tokenTable);
 }
 
 std::unique_ptr<ConstTable> thl::LexicalAnalyzer::getConstTable() {
@@ -124,7 +124,7 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
 
   if (!skipLine) {
     std::cout << line << std::endl;
-    m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1));
+    m_tokenTable->push_back(Token(TokenType::NEW_LINE, -1));
   }
 
 }

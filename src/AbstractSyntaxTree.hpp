@@ -72,17 +72,17 @@ private:
  */
 class UnaryExprAST : public ExpressionAst {
 public:
-  UnaryExprAST(Token op, std::unique_ptr<ExpressionAst> rhs)
+  UnaryExprAST(TokenType op, std::unique_ptr<ExpressionAst> rhs)
       : m_op(op), m_rhs(std::move(rhs)) {}
 
   TBoolean accept(Visitor &visitor) override { return visitor.visit(*this); }
 
-  inline Token getOperator() const { return m_op; }
+  inline TokenType getOperator() const { return m_op; }
 
   inline ExpressionAst *getRhs() const { return m_rhs.get(); }
 
 private:
-  Token m_op;
+  TokenType m_op;
   std::unique_ptr<ExpressionAst> m_rhs;
 };
 
@@ -91,20 +91,20 @@ private:
  */
 class BinaryExprAST : public ExpressionAst {
 public:
-  BinaryExprAST(Token op, std::unique_ptr<ExpressionAst> lhs,
+  BinaryExprAST(TokenType op, std::unique_ptr<ExpressionAst> lhs,
                 std::unique_ptr<ExpressionAst> rhs)
       : m_op(op), m_lhs(std::move(lhs)), m_rhs(std::move(rhs)) {}
 
   TBoolean accept(Visitor &visitor) override { return visitor.visit(*this); }
 
-  inline Token getOperator() const { return m_op; }
+  inline TokenType getOperator() const { return m_op; }
 
   inline ExpressionAst *getLhs() const { return m_lhs.get(); }
 
   inline ExpressionAst *getRhs() const { return m_rhs.get(); }
 
 private:
-  Token m_op;
+  TokenType m_op;
   std::unique_ptr<ExpressionAst> m_lhs;
   std::unique_ptr<ExpressionAst> m_rhs;
 };

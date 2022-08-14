@@ -15,7 +15,7 @@ public:
   void parse(std::string &parseData, bool isFile);
 
 private:
-  std::unique_ptr<LexemeTable> m_lexemTable;
+  std::unique_ptr<TokenTable> m_lexemTable;
   std::unique_ptr<ConstTable> m_constTable;
   std::unique_ptr<IdentTable> m_identTable;
 

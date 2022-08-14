@@ -8,7 +8,7 @@
 #include <vector>
 
 namespace thl {
-enum class Token {
+enum class TokenType {
   ENDF = -1,
   // primary
   IDENTIFIER,
@@ -33,39 +33,39 @@ enum class Token {
   MUL,
 };
 
-static std::map<std::string, Token> operators = {
-    {"(", Token::OPEN_BRACKET},
-    {")", Token::CLOSE_BRACKET},
-    {",", Token::DELIMITER},
-    {"/n", Token::NEW_LINE},
-    {":=", Token::ASSIGMENT},
-    {"->", Token::IMPLICATION},
-    {"+>", Token::IMPLICATIONB},
-    {"~", Token::NOT},
-    {"--", Token::DECREMENT},
-    {"++", Token::INCREMENT},
-    {"|", Token::OR},
-    {"#", Token::XOR},
-    {"-", Token::SUB},
-    {"+", Token::ADD},
-    {"&", Token::AND},
-    {"*", Token::MUL},
+static std::map<std::string, TokenType> operators = {
+    {"(", TokenType::OPEN_BRACKET},
+    {")", TokenType::CLOSE_BRACKET},
+    {",", TokenType::DELIMITER},
+    {"/n", TokenType::NEW_LINE},
+    {":=", TokenType::ASSIGMENT},
+    {"->", TokenType::IMPLICATION},
+    {"+>", TokenType::IMPLICATIONB},
+    {"~", TokenType::NOT},
+    {"--", TokenType::DECREMENT},
+    {"++", TokenType::INCREMENT},
+    {"|", TokenType::OR},
+    {"#", TokenType::XOR},
+    {"-", TokenType::SUB},
+    {"+", TokenType::ADD},
+    {"&", TokenType::AND},
+    {"*", TokenType::MUL},
 };
 
-class Lexeme {
+class Token {
 public:
-  Lexeme()
-      : m_token(Token::ENDF), m_attribute(-1), m_textPos(std::make_pair(0, 0)) {
+  Token()
+      : m_type(TokenType::ENDF), m_attribute(-1), m_textPos(std::make_pair(0, 0)) {
   }
 
-  Lexeme(Token token, int attr)
-      : m_token(token), m_attribute(attr), m_textPos(std::make_pair(0, 0)) {}
+  Token(TokenType token, int attr)
+      : m_type(token), m_attribute(attr), m_textPos(std::make_pair(0, 0)) {}
 
-  Lexeme(std::pair<Token, int> tokenPair)
-      : m_token(tokenPair.first), m_attribute(tokenPair.second),
+  Token(std::pair<TokenType, int> tokenPair)
+      : m_type(tokenPair.first), m_attribute(tokenPair.second),
         m_textPos(std::make_pair(0, 0)) {}
 
-  inline Token getToken() const { return m_token; }
+  inline TokenType getToken() const { return m_type; }
 
   inline int getAttribute() const { return m_attribute; }
 
@@ -76,73 +76,73 @@ public:
   inline std::pair<int, int> getTextPosition() const { return m_textPos; }
 
 private:
-  Token m_token;
+  TokenType m_type;
   int m_attribute;
   std::pair<int, int> m_textPos;
 };
 
-typedef std::vector<Lexeme> LexemeTable;
+typedef std::vector<Token> TokenTable;
 typedef std::vector<std::string> IdentTable;
 typedef std::vector<int> ConstTable;
 
-inline std::string tokenToString(Token token) {
+inline std::string tokenToString(TokenType token) {
   std::string result = "";
   switch (token) {
-  case thl::Token::ENDF:
+  case thl::TokenType::ENDF:
     result = "ENDF";
     break;
-  case thl::Token::IDENTIFIER:
+  case thl::TokenType::IDENTIFIER:
     result = "IDENTIFIER";
     break;
-  case thl::Token::NUMBER:
+  case thl::TokenType::NUMBER:
     result = "NUMBER";
     break;
-  case thl::Token::OPEN_BRACKET:
+  case thl::TokenType::OPEN_BRACKET:
     result = "OPEN_BRACKET";
     break;
-  case thl::Token::CLOSE_BRACKET:
+  case thl::TokenType::CLOSE_BRACKET:
     result = "CLOSE_BRACKET";
     break;
-  case thl::Token::DELIMITER:
+  case thl::TokenType::DELIMITER:
     result = "DELIMITER";
     break;
-  case thl::Token::NEW_LINE:
+  case thl::TokenType::NEW_LINE:
     result = "END_LINE";
     break;
-  case thl::Token::ASSIGMENT:
+  case thl::TokenType::ASSIGMENT:
     result = "ASSIGMENT";
     break;
-  case thl::Token::IMPLICATION:
+  case thl::TokenType::IMPLICATION:
     result = "IMPLICATION";
     break;
-  case thl::Token::IMPLICATIONB:
+  case thl::TokenType::IMPLICATIONB:
     result = "IMPLICATIONB";
     break;
-  case thl::Token::DECREMENT:
+  case thl::TokenType::DECREMENT:
     result = "DECREMENT";
     break;
-  case thl::Token::INCREMENT:
+  case thl::TokenType::INCREMENT:
     result = "INCREMENT";
     break;
-  case thl::Token::SUB:
+  case thl::TokenType::SUB:
     result = "SUB";
     break;
-  case thl::Token::ADD:
+  case thl::TokenType::ADD:
     result = "ADD";
     break;
-  case thl::Token::NOT:
+  case thl::TokenType::NOT:
     result = "NOT";
     break;
-  case thl::Token::AND:
+  case thl::TokenType::AND:
     result = "AND";
     break;
-  case thl::Token::MUL:
+  case thl::TokenType::MUL:
     result = "MUL";
     break;
-  case thl::Token::OR:
+  case thl::TokenType::OR:
     result = "OR";
     break;
-  case thl::Token::XOR:
+  case thl::TokenType::XOR:
     result = "XOR";
     break;
   default:

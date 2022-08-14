@@ -13,6 +13,8 @@ LexicalAnalyzer::~LexicalAnalyzer() {}
 
 std::unique_ptr<LexemeTable> thl::LexicalAnalyzer::getLexemeTable() {
   return std::move(m_lexemTable);
+std::unique_ptr<TokenTable> thl::LexicalAnalyzer::getTokenTable() {
+  return std::move(m_tokenTable);
 }
 
 std::unique_ptr<ConstTable> thl::LexicalAnalyzer::getConstTable() {
@@ -66,13 +68,13 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
         m_lastChar = istream.get();
       }
 
-      m_lexemTable->push_back(
-          Lexeme(Token::IDENTIFIER, (int)m_identTable->size()));
+      m_tokenTable->push_back(
+          Token(TokenType::IDENTIFIER, (int)m_identTable->size()));
       m_identTable->push_back(identifierStr);
 
       continue;
     } else if (m_lastChar == '$' || m_lastChar == '0' || m_lastChar == '1') {
-      m_lexemTable->push_back(Lexeme(Token::NUMBER, (int)m_constTable->size()));
+      m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
 
       switch (m_lastChar) {
       case '$':
@@ -86,17 +88,17 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
         break;
       }
     } else if (m_lastChar == '(') {
-      m_lexemTable->push_back(Lexeme(Token::OPEN_BRACKET, -1));
+      m_tokenTable->push_back(Token(TokenType::OPEN_BRACKET, -1));
     } else if (m_lastChar == ')') {
-      m_lexemTable->push_back(Lexeme(Token::CLOSE_BRACKET, -1));
+      m_tokenTable->push_back(Token(TokenType::CLOSE_BRACKET, -1));
     } else if (m_lastChar == ',') {
-      m_lexemTable->push_back(Lexeme(Token::DELIMITER, -1));
+      m_tokenTable->push_back(Token(TokenType::DELIMITER, -1));
     } else if (m_lastChar == '\n') {
-      m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1));
+      m_tokenTable->push_back(Token(TokenType::NEW_LINE, -1));
     } else if (m_lastChar == ':') {
       m_lastChar = istream.get();
       if (m_lastChar == '=') {
-        m_lexemTable->push_back(Lexeme(Token::ASSIGMENT, -1));
+        m_tokenTable->push_back(Token(TokenType::ASSIGMENT, -1));
       } else {
         throw ParseException("(" + std::to_string(m_lineCount) + "," +
                              std::to_string(istream.tellg()) +
@@ -106,34 +108,34 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
       m_lastChar = istream.get();
 
       if (m_lastChar == '-') {
-        m_lexemTable->push_back(Lexeme(Token::DECREMENT, -1));
+        m_tokenTable->push_back(Token(TokenType::DECREMENT, -1));
       } else if (m_lastChar == '>') {
-        m_lexemTable->push_back(Lexeme(Token::IMPLICATION, -1));
+        m_tokenTable->push_back(Token(TokenType::IMPLICATION, -1));
       } else {
-        m_lexemTable->push_back(Lexeme(Token::SUB, -1));
+        m_tokenTable->push_back(Token(TokenType::SUB, -1));
         continue;
       }
     } else if (m_lastChar == '+') {
       m_lastChar = istream.get();
 
       if (m_lastChar == '+') {
-        m_lexemTable->push_back(Lexeme(Token::INCREMENT, -1));
+        m_tokenTable->push_back(Token(TokenType::INCREMENT, -1));
       } else if (m_lastChar == '>') {
-        m_lexemTable->push_back(Lexeme(Token::IMPLICATIONB, -1));
+        m_tokenTable->push_back(Token(TokenType::IMPLICATIONB, -1));
       } else {
-        m_lexemTable->push_back(Lexeme(Token::ADD, -1));
+        m_tokenTable->push_back(Token(TokenType::ADD, -1));
         continue;
       }
     } else if (m_lastChar == '~') {
-      m_lexemTable->push_back(Lexeme(Token::NOT, -1));
+      m_tokenTable->push_back(Token(TokenType::NOT, -1));
     } else if (m_lastChar == '*') {
-      m_lexemTable->push_back(Lexeme(Token::MUL, -1));
+      m_tokenTable->push_back(Token(TokenType::MUL, -1));
     } else if (m_lastChar == '&') {
-      m_lexemTable->push_back(Lexeme(Token::AND, -1));
+      m_tokenTable->push_back(Token(TokenType::AND, -1));
     } else if (m_lastChar == '|') {
-      m_lexemTable->push_back(Lexeme(Token::OR, -1));
+      m_tokenTable->push_back(Token(TokenType::OR, -1));
     } else if (m_lastChar == '#') {
-      m_lexemTable->push_back(Lexeme(Token::XOR, -1));
+      m_tokenTable->push_back(Token(TokenType::XOR, -1));
     } else if (m_lastChar == '/') {
       m_lastChar = istream.get();
       if (m_lastChar == '/') {
@@ -151,6 +153,6 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
 
   if (!skipLine) {
     std::cout << line << std::endl;
-    m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1));
+    m_tokenTable->push_back(Token(TokenType::NEW_LINE, -1));
   }
 }

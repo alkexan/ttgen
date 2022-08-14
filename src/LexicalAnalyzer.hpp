@@ -13,11 +13,11 @@ public:
   LexicalAnalyzer();
   ~LexicalAnalyzer();
 
-  void setLexemeTable(std::unique_ptr<LexemeTable> lexemTable);
+  void setTokenTable(std::unique_ptr<TokenTable> lexemTable);
   void setConstTable(std::unique_ptr<ConstTable> constTable);
   void setIdentTable(std::unique_ptr<IdentTable> identTable);
 
-  std::unique_ptr<LexemeTable> getLexemeTable();
+  std::unique_ptr<TokenTable> getTokenTable();
   std::unique_ptr<ConstTable> getConstTable();
   std::unique_ptr<IdentTable> getIdentTable();
 
@@ -26,7 +26,7 @@ public:
 private:
   size_t m_lineCount;
 
-  std::unique_ptr<LexemeTable> m_lexemTable;
+  std::unique_ptr<TokenTable> m_tokenTable;
   std::unique_ptr<ConstTable> m_constTable;
   std::unique_ptr<IdentTable> m_identTable;
 

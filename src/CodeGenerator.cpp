@@ -14,15 +14,15 @@ TBoolean CodeGenerator::visit(VariableExprAST &ast) {
 TBoolean CodeGenerator::visit(UnaryExprAST &ast) {
   TBoolean result = 0;
   switch (ast.getOperator()) {
-  case Token::NOT: {
+  case TokenType::NOT: {
     result = ~ast.getRhs()->accept(*this);
     break;
   }
-  case Token::DECREMENT: {
+  case TokenType::DECREMENT: {
     result = --ast.getRhs()->accept(*this);
     break;
   }
-  case Token::INCREMENT: {
+  case TokenType::INCREMENT: {
     result = ++ast.getRhs()->accept(*this);
     break;
   }
@@ -38,39 +38,39 @@ TBoolean CodeGenerator::visit(UnaryExprAST &ast) {
 TBoolean CodeGenerator::visit(BinaryExprAST &ast) {
   TBoolean result = 0;
   switch (ast.getOperator()) {
-  case Token::IMPLICATION: {
+  case TokenType::IMPLICATION: {
     result = ast.getLhs()->accept(*this).impl(ast.getRhs()->accept(*this));
     break;
   }
-  case Token::IMPLICATIONB: {
+  case TokenType::IMPLICATIONB: {
     result = ast.getLhs()->accept(*this).implb(ast.getRhs()->accept(*this));
     break;
   }
-  case Token::OR: {
+  case TokenType::OR: {
     result = ast.getLhs()->accept(*this) | ast.getRhs()->accept(*this);
     break;
   }
-  case Token::XOR: {
+  case TokenType::XOR: {
     result = ast.getLhs()->accept(*this) ^ ast.getRhs()->accept(*this);
     break;
   }
-  case Token::SUB: {
+  case TokenType::SUB: {
     result = ast.getLhs()->accept(*this) - ast.getRhs()->accept(*this);
     break;
   }
-  case Token::ADD: {
+  case TokenType::ADD: {
     result = ast.getLhs()->accept(*this) + ast.getRhs()->accept(*this);
     break;
   }
-  case Token::AND: {
+  case TokenType::AND: {
     result = ast.getLhs()->accept(*this) & ast.getRhs()->accept(*this);
     break;
   }
-  case Token::MUL: {
+  case TokenType::MUL: {
     result = ast.getLhs()->accept(*this) * ast.getRhs()->accept(*this);
     break;
   }
-  case Token::ASSIGMENT: {
+  case TokenType::ASSIGMENT: {
     throw ParseException("ASSIGMENT operation");
     break;
   }

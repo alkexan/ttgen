@@ -3,7 +3,7 @@
 #include <iostream>
 
 Parser::Parser() {
-    m_lexemTable = std::make_unique<LexemeTable>();
+    m_lexemTable = std::make_unique<TokenTable>();
     m_constTable = std::make_unique<ConstTable>();
     m_identTable = std::make_unique<IdentTable>();
 }
@@ -37,12 +37,12 @@ void Parser::parseFile(std::string &fileName) {
 
 void Parser::parseLine(std::string &line) {
   try {
-    m_lexical.setLexemeTable(std::move(m_lexemTable));
+    m_lexical.setTokenTable(std::move(m_lexemTable));
     m_lexical.setConstTable(std::move(m_constTable));
     m_lexical.setIdentTable(std::move(m_identTable));
     m_lexical.parse(line);
 
-    m_syntax.setLexemeTable(std::move(m_lexical.getLexemeTable()));
+    m_syntax.setLexemeTable(std::move(m_lexical.getTokenTable()));
     m_syntax.setConstTable(std::move(m_lexical.getConstTable()));
     m_syntax.setIdentTable(std::move(m_lexical.getIdentTable()));
     m_syntax.parse();
