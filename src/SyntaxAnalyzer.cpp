@@ -43,7 +43,7 @@ void thl::SyntaxAnalyzer::parse() {
   Token lexeme = getLexeme();
 
   while (lexeme.getToken() != TokenType::ENDF) {
-    if (lexeme.getToken() == TokenType::NEW_LINE) {
+    if (lexeme.getToken() == TokenType::ENDL) {
       // empty body
     } else {
       auto function = std::move(parseFunction(lexeme));

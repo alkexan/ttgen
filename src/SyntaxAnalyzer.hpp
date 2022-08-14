@@ -81,7 +81,7 @@ private:
       if (m_lexIterator != m_lexemTable->begin()) {
         result = *(--m_lexIterator);
       } else {
-        result = Token(TokenType::NEW_LINE, -1);
+        result = Token(TokenType::ENDL, -1);
       }
     } else {
       if (m_lexIterator != m_lexemTable->end()) {

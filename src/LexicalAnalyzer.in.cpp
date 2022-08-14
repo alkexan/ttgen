@@ -61,9 +61,9 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
     nul = "\000";
     varname = [a-zA-Z0-9_-]+;
     [ ]*"#"[^\000\n]*"\n" { continue; }
-    [ ]*"\r\n" { m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1)); break; }
-    [ ]*"\n"   { m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1)); break; }
-    nul        { m_lexemTable->push_back(Lexeme(Token::NEW_LINE, -1)); break; }
+    [ ]*"\r\n" { m_lexemTable->push_back(Lexeme(Token::ENDL, -1)); break; }
+    [ ]*"\n"   { m_lexemTable->push_back(Lexeme(Token::ENDL, -1)); break; }
+    nul        { m_lexemTable->push_back(Lexeme(Token::ENDL, -1)); break; }
 
     varname       {
       m_lexemTable->push_back(Lexeme(Token::IDENTIFIER,
@@ -122,7 +122,7 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
 
   if (!skipLine) {
     std::cout << line << std::endl;
-    m_tokenTable->push_back(Token(TokenType::NEW_LINE, -1));
+    m_tokenTable->push_back(Token(TokenType::ENDL, -1));
   }
 
 }

@@ -17,7 +17,7 @@ enum class TokenType {
   OPEN_BRACKET,
   CLOSE_BRACKET,
   DELIMITER,
-  NEW_LINE,
+  ENDL,
   // not null operators
   ASSIGMENT,
   IMPLICATION,
@@ -37,7 +37,7 @@ static std::map<std::string, TokenType> operators = {
     {"(", TokenType::OPEN_BRACKET},
     {")", TokenType::CLOSE_BRACKET},
     {",", TokenType::DELIMITER},
-    {"/n", TokenType::NEW_LINE},
+    {"/n", TokenType::ENDL},
     {":=", TokenType::ASSIGMENT},
     {"->", TokenType::IMPLICATION},
     {"+>", TokenType::IMPLICATIONB},
@@ -108,8 +108,8 @@ inline std::string Token::toString() {
   case thl::TokenType::DELIMITER:
     result = "DELIMITER";
     break;
-  case thl::TokenType::NEW_LINE:
-    result = "END_LINE";
+  case thl::TokenType::ENDL:
+    result = "ENDL";
     break;
   case thl::TokenType::ASSIGMENT:
     result = "ASSIGMENT";

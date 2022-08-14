@@ -88,7 +88,7 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
     } else if (m_lastChar == ',') {
       m_tokenTable->push_back(Token(TokenType::DELIMITER, -1));
     } else if (m_lastChar == '\n') {
-      m_tokenTable->push_back(Token(TokenType::NEW_LINE, -1));
+      m_tokenTable->push_back(Token(TokenType::ENDL, -1));
     } else if (m_lastChar == ':') {
       m_lastChar = istream.get();
       if (m_lastChar == '=') {
@@ -147,6 +147,6 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
 
   if (!skipLine) {
     std::cout << line << std::endl;
-    m_tokenTable->push_back(Token(TokenType::NEW_LINE, -1));
+    m_tokenTable->push_back(Token(TokenType::ENDL, -1));
   }
 }
