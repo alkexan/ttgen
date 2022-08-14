@@ -1,4 +1,4 @@
-﻿# Main CMakeList.txt
+# Main CMakeList.txt
 cmake_minimum_required(VERSION 3.12)
 
 # set language and the project name
@@ -53,6 +53,8 @@ add_subdirectory (app)
 add_subdirectory (src)
 
 # tests
+enable_testing ()
+add_subdirectory(tests)
 
 # cpack
 include(CPack)
