@@ -5,9 +5,7 @@
 using namespace thl;
 
 LexicalAnalyzer::LexicalAnalyzer()
-    : m_lineCount(0), m_lexemTable(std::make_unique<LexemeTable>()),
-      m_constTable(std::make_unique<ConstTable>()),
-      m_identTable(std::make_unique<IdentTable>()) {}
+    : m_lineCount(0) {}
 
 LexicalAnalyzer::~LexicalAnalyzer() {}
 
