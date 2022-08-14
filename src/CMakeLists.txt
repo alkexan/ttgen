@@ -20,7 +20,7 @@ else()
 endif()
 
 # Compile library
-add_library(src STATIC 
+add_library(src OBJECT 
 	"Util.hpp"
 	"Util.cpp"
 	"TBoolean.cpp"
