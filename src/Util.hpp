@@ -73,6 +73,8 @@ public:
     m_textPos = textPos;
   }
 
+  inline std::string toString();
+
   inline std::pair<int, int> getTextPosition() const { return m_textPos; }
 
 private:
@@ -85,9 +87,9 @@ typedef std::vector<Token> TokenTable;
 typedef std::vector<std::string> IdentTable;
 typedef std::vector<int> ConstTable;
 
-inline std::string tokenToString(TokenType token) {
+inline std::string Token::toString() {
   std::string result = "";
-  switch (token) {
+  switch (m_type) {
   case thl::TokenType::ENDF:
     result = "ENDF";
     break;
