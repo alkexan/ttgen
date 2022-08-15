@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
   } else {
     while (true) {
       std::cout << ">> ";
-      std::cin >> parseSource;
+      std::getline(std::cin, parseSource);
 
       if (parseSource == "!q") {
         break;
