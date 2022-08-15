@@ -1,17 +1,28 @@
 #include "Parser.hpp"
+#include "Util.hpp"
 #include <fstream>
 #include <iostream>
 
-Parser::Parser() {
-  m_tokenTable = std::make_unique<TokenTable>();
-  m_constTable = std::make_unique<ConstTable>();
-  m_identTable = std::make_unique<IdentTable>();
-}
+Parser::Parser() {}
 
 void Parser::parse(std::string &parseData, bool isFile) {
-  m_tokenTable->clear();
-  m_constTable->clear();
-  m_identTable->clear();
+  if (!m_tokenTable) {
+    m_tokenTable = std::make_unique<thl::TokenTable>();
+  } else {
+    m_tokenTable->clear();
+  }
+
+  if (!m_constTable) {
+    m_constTable = std::make_unique<thl::ConstTable>();
+  } else {
+    m_constTable->clear();
+  }
+
+  if (!m_identTable) {
+    m_identTable = std::make_unique<thl::IdentTable>();
+  } else {
+    m_identTable->clear();
+  }
 
   if (isFile) {
     parseFile(parseData);
@@ -41,6 +52,7 @@ void Parser::parseLine(std::string &line) {
     m_lexical.setConstTable(std::move(m_constTable));
     m_lexical.setIdentTable(std::move(m_identTable));
     m_lexical.parse(line);
+    m_lexical.printResult();
 
     m_syntax.setTokenTable(std::move(m_lexical.getTokenTable()));
     m_syntax.setConstTable(std::move(m_lexical.getConstTable()));
