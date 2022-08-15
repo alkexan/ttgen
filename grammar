@@ -1,4 +1,5 @@
-<program>       ::= <function> {<endl> <function>}
+<program>       ::= <function> {<endl> <function>} {<endl> <operator>}
+<operator>      ::= "calc" "(" <ident> ")" | "table" "(" <ident> ")"
 <function>      ::= <prototype> <assert> <stmt>
 <prototype>     ::= <ident> <open-brack> <ident> {<delimiter> <ident>}<close-brack>
 <stmt>          ::= <exp> {<impl> <exp>}
@@ -11,13 +12,16 @@
                     <digit>
 <paren>         ::= <open-brack> <stmt> <close-brack>
 <call>          ::= <ident> <open-brack> <stmt> {<delimiter> <stmt>} <close-brack>
-<unary>         ::= "~" | "++" | "--"
+<unary>         ::= <not> | <inc> | <dec>
+<not>         	::= "~"
+<inc>         	::= "++"
+<dec>         	::= "--"
 <endl>          ::= "\n"
 <assert>        ::= ":="
 <open-brack>    ::= "("
 <delimiter>     ::= ","
 <close-brack>   ::= ")"
-<impl>      	::= "-|" | "+|" | "->" | "+>"
+<impl>      	::= "->" | "+>"
 <sum>           ::= "|" | "#" | "+" | "-"
 <mul>           ::= "&" | "*"
 <ident>         ::= "[a-z][_a-zA-Z0-9]*"
