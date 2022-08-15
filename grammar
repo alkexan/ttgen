@@ -1,5 +1,6 @@
 <program>       ::= <function> {<endl> <function>} {<endl> <operator>}
-<operator>      ::= "calc" "(" <ident> ")" | "table" "(" <ident> ")"
+<cmd-stmt>      ::= <command> <cmd-del> <open-brack> <ident> <close-brack>
+<command>      	::= <calc> | <table>
 <function>      ::= <prototype> <assert> <stmt>
 <prototype>     ::= <ident> <open-brack> <ident> {<delimiter> <ident>}<close-brack>
 <stmt>          ::= <exp> {<impl> <exp>}
@@ -13,6 +14,9 @@
 <paren>         ::= <open-brack> <stmt> <close-brack>
 <call>          ::= <ident> <open-brack> <stmt> {<delimiter> <stmt>} <close-brack>
 <unary>         ::= <not> | <inc> | <dec>
+<calc-cmd>     	::= "calc"
+<tbl-cmd>	::= "table"
+<cmd-del>	::= ":"
 <not>         	::= "~"
 <inc>         	::= "++"
 <dec>         	::= "--"
