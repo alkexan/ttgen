@@ -11,27 +11,51 @@
 #include <string>
 #include <utility>
 
-BOOST_AUTO_TEST_SUITE(TestLexical)
+#define BOOST_TEST_MODULE TestLexical
 
-BOOST_AUTO_TEST_CASE(Simple) {
+std::unique_ptr<thl::TokenTable> tokenTable;
+std::unique_ptr<thl::ConstTable> constTable;
+std::unique_ptr<thl::IdentTable> identTable;
+
+void parseData(std::string testString) {
   using namespace thl;
 
   LexicalAnalyzer lexical;
 
-  auto tokenTable = std::make_unique<TokenTable>();
-  auto constTable = std::make_unique<ConstTable>();
-  auto identTable = std::make_unique<IdentTable>();
+  if (!tokenTable) {
+    tokenTable = std::make_unique<thl::TokenTable>();
+  } else {
+    tokenTable->clear();
+  }
+
+  if (!constTable) {
+    constTable = std::make_unique<thl::ConstTable>();
+  } else {
+    constTable->clear();
+  }
+
+  if (!identTable) {
+    identTable = std::make_unique<thl::IdentTable>();
+  } else {
+    identTable->clear();
+  }
 
   lexical.setTokenTable(std::move(tokenTable));
   lexical.setConstTable(std::move(constTable));
   lexical.setIdentTable(std::move(identTable));
 
-  std::string testString = "f(x):=x";
   lexical.parse(testString);
-
   lexical.printResult();
 
   tokenTable = std::move(lexical.getTokenTable());
+}
+
+BOOST_AUTO_TEST_SUITE(TestLexical)
+
+BOOST_AUTO_TEST_CASE(Simple) {
+  parseData("f(x):=x");
+
+  using namespace thl;
   BOOST_CHECK((*tokenTable)[0].getType() == TokenType::IDENTIFIER);
   BOOST_CHECK((*tokenTable)[1].getType() == TokenType::OPEN_BRACKET);
   BOOST_CHECK((*tokenTable)[2].getType() == TokenType::IDENTIFIER);
@@ -42,24 +66,9 @@ BOOST_AUTO_TEST_CASE(Simple) {
 }
 
 BOOST_AUTO_TEST_CASE(SimpleWithSpaces) {
+  parseData("f(x) := x");
+
   using namespace thl;
-
-  LexicalAnalyzer lexical;
-
-  auto tokenTable = std::make_unique<TokenTable>();
-  auto constTable = std::make_unique<ConstTable>();
-  auto identTable = std::make_unique<IdentTable>();
-
-  lexical.setTokenTable(std::move(tokenTable));
-  lexical.setConstTable(std::move(constTable));
-  lexical.setIdentTable(std::move(identTable));
-
-  std::string testString = "f(x) := x";
-  lexical.parse(testString);
-
-  lexical.printResult();
-
-  tokenTable = std::move(lexical.getTokenTable());
   BOOST_CHECK((*tokenTable)[0].getType() == TokenType::IDENTIFIER);
   BOOST_CHECK((*tokenTable)[1].getType() == TokenType::OPEN_BRACKET);
   BOOST_CHECK((*tokenTable)[2].getType() == TokenType::IDENTIFIER);
@@ -70,24 +79,9 @@ BOOST_AUTO_TEST_CASE(SimpleWithSpaces) {
 }
 
 BOOST_AUTO_TEST_CASE(TwoParams) {
+  parseData("f(x,y):=x&y");
+
   using namespace thl;
-
-  LexicalAnalyzer lexical;
-
-  auto tokenTable = std::make_unique<TokenTable>();
-  auto constTable = std::make_unique<ConstTable>();
-  auto identTable = std::make_unique<IdentTable>();
-
-  lexical.setTokenTable(std::move(tokenTable));
-  lexical.setConstTable(std::move(constTable));
-  lexical.setIdentTable(std::move(identTable));
-
-  std::string testString = "f(x,y):=x&y";
-  lexical.parse(testString);
-
-  lexical.printResult();
-
-  tokenTable = std::move(lexical.getTokenTable());
   BOOST_CHECK((*tokenTable)[0].getType() == TokenType::IDENTIFIER);
   BOOST_CHECK((*tokenTable)[1].getType() == TokenType::OPEN_BRACKET);
   BOOST_CHECK((*tokenTable)[2].getType() == TokenType::IDENTIFIER);
@@ -102,24 +96,9 @@ BOOST_AUTO_TEST_CASE(TwoParams) {
 }
 
 BOOST_AUTO_TEST_CASE(TwoParamsWithSpaces) {
+  parseData("f(x, y) := x & y");
+
   using namespace thl;
-
-  LexicalAnalyzer lexical;
-
-  auto tokenTable = std::make_unique<TokenTable>();
-  auto constTable = std::make_unique<ConstTable>();
-  auto identTable = std::make_unique<IdentTable>();
-
-  lexical.setTokenTable(std::move(tokenTable));
-  lexical.setConstTable(std::move(constTable));
-  lexical.setIdentTable(std::move(identTable));
-
-  std::string testString = "f(x, y) := x & y";
-  lexical.parse(testString);
-
-  lexical.printResult();
-
-  tokenTable = std::move(lexical.getTokenTable());
   BOOST_CHECK((*tokenTable)[0].getType() == TokenType::IDENTIFIER);
   BOOST_CHECK((*tokenTable)[1].getType() == TokenType::OPEN_BRACKET);
   BOOST_CHECK((*tokenTable)[2].getType() == TokenType::IDENTIFIER);
