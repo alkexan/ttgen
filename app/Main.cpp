@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
         break;
       }
 
-      parser.parse(sourceName, false);
+      parser.parse(sourceName);
     }
   }
 

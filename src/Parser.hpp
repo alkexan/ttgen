@@ -12,7 +12,7 @@ class Parser {
 public:
   Parser();
 
-  void parse(std::string &parseData, bool isFile);
+  void parse(std::string &parseData, bool isFile = false);
 
 private:
   std::unique_ptr<TokenTable> m_tokenTable;
