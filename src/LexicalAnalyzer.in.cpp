@@ -62,9 +62,9 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
     varname = [a-zA-Z][_a-zA-Z0-9]*;
     
     [ ]*"#"[^\000\n]*"\n" { continue; }
-    [ ]*"\r\n" { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); break; }
-    [ ]*"\n"   { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); break; }
-    nul        { m_tokenTable->push_back(Token(TokenType::ENDF, -1)); break; }
+    [ ]*"\r\n" { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); continue; }
+    [ ]*"\n"   { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); continue; }
+    nul        { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); continue; }
 
     varname       {
       m_tokenTable->push_back(Token(TokenType::IDENTIFIER,
@@ -72,38 +72,42 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
       std::string s;
       s.assign(start, p - start);
       m_identTable->push_back(s);
+      continue;
     }
 
-    ":="       { m_tokenTable->push_back(Token(TokenType::ASSIGMENT, -1)); }
-    "("        { m_tokenTable->push_back(Token(TokenType::OPEN_BRACKET, -1)); }
-    ")"        { m_tokenTable->push_back(Token(TokenType::CLOSE_BRACKET, -1)); }
-    ","        { m_tokenTable->push_back(Token(TokenType::DELIMITER, -1)); }
+    ":="       { m_tokenTable->push_back(Token(TokenType::ASSIGMENT, -1)); continue;}
+    "("        { m_tokenTable->push_back(Token(TokenType::OPEN_BRACKET, -1)); continue;}
+    ")"        { m_tokenTable->push_back(Token(TokenType::CLOSE_BRACKET, -1)); continue;}
+    ","        { m_tokenTable->push_back(Token(TokenType::DELIMITER, -1)); continue;}
 
-    "--"       { m_tokenTable->push_back(Token(TokenType::DECREMENT, -1)); }
-    "->"       { m_tokenTable->push_back(Token(TokenType::IMPLICATION, -1)); }
-    "-"        { m_tokenTable->push_back(Token(TokenType::SUB, -1)); }
+    "--"       { m_tokenTable->push_back(Token(TokenType::DECREMENT, -1)); continue;}
+    "->"       { m_tokenTable->push_back(Token(TokenType::IMPLICATION, -1)); continue;}
+    "-"        { m_tokenTable->push_back(Token(TokenType::SUB, -1)); continue;}
 
-    "++"       { m_tokenTable->push_back(Token(TokenType::DECREMENT, -1)); }
-    "+>"       { m_tokenTable->push_back(Token(TokenType::IMPLICATION, -1)); }
-    "+"        { m_tokenTable->push_back(Token(TokenType::SUB, -1)); }
+    "++"       { m_tokenTable->push_back(Token(TokenType::INCREMENT, -1)); continue;}
+    "+>"       { m_tokenTable->push_back(Token(TokenType::IMPLICATIONB, -1)); continue;}
+    "+"        { m_tokenTable->push_back(Token(TokenType::ADD, -1)); continue;}
 
-    "~"        { m_tokenTable->push_back(Token(TokenType::NOT, -1)); }
-    "*"        { m_tokenTable->push_back(Token(TokenType::MUL, -1)); }
-    "&"        { m_tokenTable->push_back(Token(TokenType::AND, -1)); }
-    "|"        { m_tokenTable->push_back(Token(TokenType::OR, -1)); }
-    "#"        { m_tokenTable->push_back(Token(TokenType::XOR, -1)); }
+    "~"        { m_tokenTable->push_back(Token(TokenType::NOT, -1)); continue;}
+    "*"        { m_tokenTable->push_back(Token(TokenType::MUL, -1)); continue;}
+    "&"        { m_tokenTable->push_back(Token(TokenType::AND, -1)); continue;}
+    "|"        { m_tokenTable->push_back(Token(TokenType::OR, -1)); continue;}
+    "#"        { m_tokenTable->push_back(Token(TokenType::XOR, -1)); continue;}
 
     "$"        {
       m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
       m_constTable->push_back(-1);
+      continue;
     }
     "0"       {
       m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
       m_constTable->push_back(0);
+      continue;
     }
     "1"        {
       m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
       m_constTable->push_back(1);
+      continue;
     }
 
     "//"       { skipLine = true; break; }
