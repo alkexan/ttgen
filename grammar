@@ -14,6 +14,11 @@
 <paren>         ::= <open-brack> <stmt> <close-brack>
 <call>          ::= <ident> <open-brack> <stmt> {<delimiter> <stmt>} <close-brack>
 <unary>         ::= <not> | <inc> | <dec>
+<impl>      	::= <cimpl> | <bimpl>
+<sum>           ::= <or> | <xor> | <add> | <sub> | <add3>
+<mul>           ::= <and> | <multiply>
+
+# tokens
 <calc-cmd>     	::= "calc"
 <tbl-cmd>	::= "table"
 <cmd-del>	::= ":"
@@ -25,8 +30,14 @@
 <open-brack>    ::= "("
 <delimiter>     ::= ","
 <close-brack>   ::= ")"
-<impl>      	::= "->" | "+>"
-<sum>           ::= "|" | "#" | "+" | "-"
-<mul>           ::= "&" | "*"
-<ident>         ::= "[a-z][_a-zA-Z0-9]*"
+<cimpl>      	::= "->"
+<bimpl>		::= "+>"
+<or> 		::= "|"
+<xor>		::= "#"
+<add>		::= "+"
+<sub>		::= "-"
+<add3>		::= "%"
+<and>		::= "&"
+<multiply>	::= "*"
+<ident>         ::= "[a-zA-Z][_a-zA-Z0-9]*"
 <digit>         ::= "$" | "-?[0-1]"
