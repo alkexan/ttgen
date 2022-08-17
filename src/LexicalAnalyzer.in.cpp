@@ -49,8 +49,7 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
   const char* start;
   size_t count = 0;
 
-  for (;;) {
-    count++;
+  for (size_t count = 0; count <= line.size(); ++count) {
     start = p;
 
     /*!re2c
@@ -60,12 +59,12 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
     re2c:yyfill:enable = 0;
     
     nul = "\000";
-    varname = [a-z][_a-zA-Z0-9]*;
+    varname = [a-zA-Z][_a-zA-Z0-9]*;
     
     [ ]*"#"[^\000\n]*"\n" { continue; }
     [ ]*"\r\n" { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); break; }
     [ ]*"\n"   { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); break; }
-    nul        { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); break; }
+    nul        { m_tokenTable->push_back(Token(TokenType::ENDF, -1)); break; }
 
     varname       {
       m_tokenTable->push_back(Token(TokenType::IDENTIFIER,
@@ -73,42 +72,38 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
       std::string s;
       s.assign(start, p - start);
       m_identTable->push_back(s);
-      break;
     }
 
-    ":="       { m_tokenTable->push_back(Token(TokenType::ASSIGMENT, -1)); break; }
-    "("        { m_tokenTable->push_back(Token(TokenType::OPEN_BRACKET, -1)); break; }
-    ")"        { m_tokenTable->push_back(Token(TokenType::CLOSE_BRACKET, -1)); break; }
-    ","        { m_tokenTable->push_back(Token(TokenType::DELIMITER, -1)); break; }
+    ":="       { m_tokenTable->push_back(Token(TokenType::ASSIGMENT, -1)); }
+    "("        { m_tokenTable->push_back(Token(TokenType::OPEN_BRACKET, -1)); }
+    ")"        { m_tokenTable->push_back(Token(TokenType::CLOSE_BRACKET, -1)); }
+    ","        { m_tokenTable->push_back(Token(TokenType::DELIMITER, -1)); }
 
-    "--"       { m_tokenTable->push_back(Token(TokenType::DECREMENT, -1)); break; }
-    "->"       { m_tokenTable->push_back(Token(TokenType::IMPLICATION, -1)); break; }
-    "-"        { m_tokenTable->push_back(Token(TokenType::SUB, -1)); break; }
+    "--"       { m_tokenTable->push_back(Token(TokenType::DECREMENT, -1)); }
+    "->"       { m_tokenTable->push_back(Token(TokenType::IMPLICATION, -1)); }
+    "-"        { m_tokenTable->push_back(Token(TokenType::SUB, -1)); }
 
-    "++"       { m_tokenTable->push_back(Token(TokenType::DECREMENT, -1)); break; }
-    "+>"       { m_tokenTable->push_back(Token(TokenType::IMPLICATION, -1)); break; }
-    "+"        { m_tokenTable->push_back(Token(TokenType::SUB, -1)); break; }
+    "++"       { m_tokenTable->push_back(Token(TokenType::DECREMENT, -1)); }
+    "+>"       { m_tokenTable->push_back(Token(TokenType::IMPLICATION, -1)); }
+    "+"        { m_tokenTable->push_back(Token(TokenType::SUB, -1)); }
 
-    "~"        { m_tokenTable->push_back(Token(TokenType::NOT, -1)); break; }
-    "*"        { m_tokenTable->push_back(Token(TokenType::MUL, -1)); break; }
-    "&"        { m_tokenTable->push_back(Token(TokenType::AND, -1)); break; }
-    "|"        { m_tokenTable->push_back(Token(TokenType::OR, -1)); break; }
-    "#"        { m_tokenTable->push_back(Token(TokenType::XOR, -1)); break; }
+    "~"        { m_tokenTable->push_back(Token(TokenType::NOT, -1)); }
+    "*"        { m_tokenTable->push_back(Token(TokenType::MUL, -1)); }
+    "&"        { m_tokenTable->push_back(Token(TokenType::AND, -1)); }
+    "|"        { m_tokenTable->push_back(Token(TokenType::OR, -1)); }
+    "#"        { m_tokenTable->push_back(Token(TokenType::XOR, -1)); }
 
     "$"        {
       m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
       m_constTable->push_back(-1);
-      break;
     }
-    "0>"       {
+    "0"       {
       m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
       m_constTable->push_back(0);
-      break;
     }
     "1"        {
       m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
       m_constTable->push_back(1);
-      break;
     }
 
     "//"       { skipLine = true; break; }
