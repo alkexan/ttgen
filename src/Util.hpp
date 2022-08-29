@@ -58,18 +58,17 @@ public:
       : m_type(TokenType::ENDF), m_attribute(-1),
         m_textPos(std::make_pair(0, 0)) {}
 
-  Token(TokenType TokenType, int attr)
-      : m_type(TokenType), m_attribute(attr), m_textPos(std::make_pair(0, 0)) {}
-
-  Token(std::pair<TokenType, int> tokenPair)
-      : m_type(tokenPair.first), m_attribute(tokenPair.second),
-        m_textPos(std::make_pair(0, 0)) {}
+  Token(TokenType TokenType, int attr, std::pair<int, int> textPos)
+      : m_type(TokenType), m_attribute(attr), m_textPos(textPos) {}
 
   inline TokenType getType() const { return m_type; }
 
   inline int getAttribute() const { return m_attribute; }
 
-  inline void setTextPosition(std::pair<int, int> textPos) {
+  inline void setAttributes(TokenType TokenType, int attr,
+                            std::pair<int, int> textPos) {
+    m_type = TokenType;
+    m_attribute = attr;
     m_textPos = textPos;
   }
 
