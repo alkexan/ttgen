@@ -40,7 +40,7 @@ std::vector<std::unique_ptr<FunctionAST>> thl::SyntaxAnalyzer::getProgramAst() {
 void thl::SyntaxAnalyzer::parse() {
   m_programAst.clear();
   m_lexIterator = m_tokenTable->begin();
-  Token token = getToken();
+  Token token = readToken();
 
   while (token.getType() != TokenType::ENDF) {
     if (token.getType() == TokenType::ENDL) {
@@ -50,11 +50,11 @@ void thl::SyntaxAnalyzer::parse() {
       if (function) {
         m_programAst.push_back(std::move(function));
       } else {
-        token = getToken();
+        token = readToken();
       }
     }
 
-    token = getToken();
+    token = readToken();
   }
 }
 
@@ -65,9 +65,9 @@ std::unique_ptr<FunctionAST> thl::SyntaxAnalyzer::parseFunction(Token token) {
   auto prototype = std::move(parsePrototype(token));
   if (prototype) {
     // create Expression Ast
-    token = getToken();
+    token = readToken();
     if (token.getType() == TokenType::ASSIGMENT) {
-      token = getToken();
+      token = readToken();
       auto exp = std::move(parseExpression(token));
       if (exp) {
         // create Function Ast
@@ -89,18 +89,18 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Token token) {
   } else {
     std::string functionName = (*m_identTable)[token.getAttribute()];
 
-    token = getToken();
+    token = readToken();
     if (token.getType() == TokenType::OPEN_BRACKET) {
       std::vector<std::string> args;
 
       do {
-        token = getToken();
+        token = readToken();
 
         if (token.getType() == TokenType::CLOSE_BRACKET) {
           break;
         } else if (token.getType() == TokenType::IDENTIFIER) {
           args.push_back((*m_identTable)[token.getAttribute()]);
-          token = getToken();
+          token = readToken();
         }
 
         if (token.getType() != TokenType::DELIMITER &&
@@ -128,11 +128,11 @@ thl::SyntaxAnalyzer::parseExpression(Token token) {
 
   auto lhs = std::move(parseImplExpression(token));
   if (lhs) {
-    token = getToken();
+    token = readToken();
     TokenType tokenType = token.getType();
     if ((tokenType == TokenType::IMPLICATION) ||
         (tokenType == TokenType::IMPLICATIONB)) {
-      token = getToken();
+      token = readToken();
       auto rhs = std::move(parseImplExpression(token));
       if (rhs) {
         result = std::make_unique<BinaryExprAST>(tokenType, std::move(lhs),
@@ -140,7 +140,7 @@ thl::SyntaxAnalyzer::parseExpression(Token token) {
       }
     } else if (token.getType() != TokenType::ENDF) {
       result = std::move(lhs);
-      token = getToken(1);
+      token = readToken(1);
     } else {
       result = std::move(lhs);
     }
@@ -155,11 +155,11 @@ thl::SyntaxAnalyzer::parseImplExpression(Token token) {
 
   auto lhs = std::move(parseTerm(token));
   if (lhs) {
-    token = getToken();
+    token = readToken();
     TokenType tokenType = token.getType();
     if ((tokenType == TokenType::ADD) || (tokenType == TokenType::SUB) ||
         (tokenType == TokenType::OR) || (tokenType == TokenType::XOR)) {
-      token = getToken();
+      token = readToken();
       auto rhs = std::move(parseTerm(token));
       if (rhs) {
         result = std::make_unique<BinaryExprAST>(tokenType, std::move(lhs),
@@ -167,7 +167,7 @@ thl::SyntaxAnalyzer::parseImplExpression(Token token) {
       }
     } else if (token.getType() != TokenType::ENDF) {
       result = std::move(lhs);
-      token = getToken(1);
+      token = readToken(1);
     } else {
       result = std::move(lhs);
     }
@@ -181,10 +181,10 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseTerm(Token token) {
 
   auto lhs = std::move(parseFactor(token));
   if (lhs) {
-    token = getToken();
+    token = readToken();
     TokenType tokenType = token.getType();
     if ((tokenType == TokenType::MUL) || (tokenType == TokenType::AND)) {
-      token = getToken();
+      token = readToken();
       auto rhs = std::move(parseFactor(token));
       if (rhs) {
         result = std::make_unique<BinaryExprAST>(tokenType, std::move(lhs),
@@ -192,7 +192,7 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseTerm(Token token) {
       }
     } else if (token.getType() != TokenType::ENDF) {
       result = std::move(lhs);
-      token = getToken(1);
+      token = readToken(1);
     } else {
       result = std::move(lhs);
     }
@@ -233,7 +233,7 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseUnary(Token token) {
   case TokenType::DECREMENT: // No Body
   case TokenType::NOT: {
     TokenType unary = token.getType();
-    token = getToken();
+    token = readToken();
     auto rhs = std::move(parseFactor(token));
 
     result = std::make_unique<UnaryExprAST>(unary, std::move(rhs));
@@ -252,10 +252,10 @@ std::unique_ptr<ExpressionAst>
 thl::SyntaxAnalyzer::parseParenExpr(Token token) {
   std::unique_ptr<ExpressionAst> result = nullptr;
 
-  token = getToken();
+  token = readToken();
   auto expression = std::move(parseExpression(token));
   if (expression) {
-    token = getToken();
+    token = readToken();
     if (token.getType() == TokenType::CLOSE_BRACKET) {
       result = std::move(expression);
     } else {
@@ -271,13 +271,13 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseName(Token token) {
 
   std::string idName = (*m_identTable)[token.getAttribute()];
 
-  token = getToken();
+  token = readToken();
   if (token.getType() == TokenType::OPEN_BRACKET) {
     // Callable
     std::vector<std::unique_ptr<ExpressionAst>> args;
 
     do {
-      token = getToken();
+      token = readToken();
 
       if (token.getType() == TokenType::CLOSE_BRACKET) {
         break;
@@ -285,7 +285,7 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseName(Token token) {
         auto arg = std::move(parseExpression(token));
         if (arg) {
           args.push_back(std::move(arg));
-          token = getToken();
+          token = readToken();
         }
       }
 
@@ -304,7 +304,7 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseName(Token token) {
   } else {
     // Variable
     result = std::make_unique<VariableExprAST>(idName);
-    token = getToken(1);
+    token = readToken(1);
   }
 
   return std::move(result);

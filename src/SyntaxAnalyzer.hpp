@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <memory>
+#include <utility>
 
 #include "AbstractSyntaxTree.hpp"
 #include "ParseException.hpp"
@@ -74,23 +75,24 @@ private:
   // <number> ::= "$" | "1" | "0"
   std::unique_ptr<ExpressionAst> parseNumber(Token lexeme);
 
-  inline Token getToken(bool previous = 0);
+  inline Token readToken(bool previous = 0);
 };
 
-inline Token SyntaxAnalyzer::getToken(bool previous) {
+inline Token SyntaxAnalyzer::readToken(bool previous) {
+  using namespace std;
   Token result;
 
   if (previous) {
     if (m_lexIterator != m_tokenTable->begin()) {
       result = *(--m_lexIterator);
     } else {
-      result = Token(TokenType::ENDL, -1);
+      result.setAttributes(TokenType::ENDL, -1, make_pair(0, 0));
     }
   } else {
     if (m_lexIterator != m_tokenTable->end()) {
       result = *(m_lexIterator++);
     } else {
-      result = Token(TokenType::ENDF, -1);
+      result.setAttributes(TokenType::ENDF, -1, make_pair(0, 0));
     }
   }
 
