@@ -52,7 +52,6 @@ void Parser::parseLine(std::string &line) {
     m_lexical.setConstTable(std::move(m_constTable));
     m_lexical.setIdentTable(std::move(m_identTable));
     m_lexical.parse(line);
-    m_lexical.printResult();
 
     m_syntax.setTokenTable(std::move(m_lexical.getTokenTable()));
     m_syntax.setConstTable(std::move(m_lexical.getConstTable()));

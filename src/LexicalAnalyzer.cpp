@@ -5,7 +5,7 @@
 using namespace thl;
 
 LexicalAnalyzer::LexicalAnalyzer()
-    : m_lineCount(0) {}
+    : m_textPos(std::make_pair(0, 0)) {}
 
 LexicalAnalyzer::~LexicalAnalyzer() {}
 
@@ -37,7 +37,7 @@ std::unique_ptr<IdentTable> thl::LexicalAnalyzer::getIdentTable() {
 }
 
 void thl::LexicalAnalyzer::parse(std::string &line) {
-  m_lineCount++;
+  m_textPos.first++;
   getTokens(line);
 }
 
@@ -48,6 +48,8 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
   int m_lastChar = istream.get();
 
   while (!istream.eof()) {
+    m_textPos.second++;
+
     // identifier: [a-z][_a-zA-Z0-9]*
     if (isspace(m_lastChar)) {
       m_lastChar = istream.get();
@@ -62,13 +64,13 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
         m_lastChar = istream.get();
       }
 
-      m_tokenTable->push_back(
-          Token(TokenType::IDENTIFIER, (int)m_identTable->size()));
+      tokenPushBack(TokenType::IDENTIFIER, (int)m_identTable->size(),
+                    m_textPos);
       m_identTable->push_back(identifierStr);
 
       continue;
     } else if (m_lastChar == '$' || m_lastChar == '0' || m_lastChar == '1') {
-      m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
+      tokenPushBack(TokenType::NUMBER, (int)m_constTable->size(), m_textPos);
 
       switch (m_lastChar) {
       case '$':
@@ -82,54 +84,54 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
         break;
       }
     } else if (m_lastChar == '(') {
-      m_tokenTable->push_back(Token(TokenType::OPEN_BRACKET, -1));
+      tokenPushBack(TokenType::OPEN_BRACKET, -1, m_textPos);
     } else if (m_lastChar == ')') {
-      m_tokenTable->push_back(Token(TokenType::CLOSE_BRACKET, -1));
+      tokenPushBack(TokenType::CLOSE_BRACKET, -1, m_textPos);
     } else if (m_lastChar == ',') {
-      m_tokenTable->push_back(Token(TokenType::DELIMITER, -1));
+      tokenPushBack(TokenType::DELIMITER, -1, m_textPos);
     } else if (m_lastChar == '\n') {
-      m_tokenTable->push_back(Token(TokenType::ENDL, -1));
+      tokenPushBack(TokenType::ENDL, -1, m_textPos);
     } else if (m_lastChar == ':') {
       m_lastChar = istream.get();
       if (m_lastChar == '=') {
-        m_tokenTable->push_back(Token(TokenType::ASSIGMENT, -1));
+        tokenPushBack(TokenType::ASSIGMENT, -1, m_textPos);
       } else {
-        throw ParseException("(" + std::to_string(m_lineCount) + "," +
-                             std::to_string(istream.tellg()) +
+        throw ParseException("(" + std::to_string(m_textPos.first) + "," +
+                             std::to_string(m_textPos.second) +
                              ") Error: " + "Unknown identifier");
       }
     } else if (m_lastChar == '-') {
       m_lastChar = istream.get();
 
       if (m_lastChar == '-') {
-        m_tokenTable->push_back(Token(TokenType::DECREMENT, -1));
+        tokenPushBack(TokenType::DECREMENT, -1, m_textPos);
       } else if (m_lastChar == '>') {
-        m_tokenTable->push_back(Token(TokenType::IMPLICATION, -1));
+        tokenPushBack(TokenType::IMPLICATION, -1, m_textPos);
       } else {
-        m_tokenTable->push_back(Token(TokenType::SUB, -1));
+        tokenPushBack(TokenType::SUB, -1, m_textPos);
         continue;
       }
     } else if (m_lastChar == '+') {
       m_lastChar = istream.get();
 
       if (m_lastChar == '+') {
-        m_tokenTable->push_back(Token(TokenType::INCREMENT, -1));
+        tokenPushBack(TokenType::INCREMENT, -1, m_textPos);
       } else if (m_lastChar == '>') {
-        m_tokenTable->push_back(Token(TokenType::IMPLICATIONB, -1));
+        tokenPushBack(TokenType::IMPLICATIONB, -1, m_textPos);
       } else {
-        m_tokenTable->push_back(Token(TokenType::ADD, -1));
+        tokenPushBack(TokenType::ADD, -1, m_textPos);
         continue;
       }
     } else if (m_lastChar == '~') {
-      m_tokenTable->push_back(Token(TokenType::NOT, -1));
+      tokenPushBack(TokenType::NOT, -1, m_textPos);
     } else if (m_lastChar == '*') {
-      m_tokenTable->push_back(Token(TokenType::MUL, -1));
+      tokenPushBack(TokenType::MUL, -1, m_textPos);
     } else if (m_lastChar == '&') {
-      m_tokenTable->push_back(Token(TokenType::AND, -1));
+      tokenPushBack(TokenType::AND, -1, m_textPos);
     } else if (m_lastChar == '|') {
-      m_tokenTable->push_back(Token(TokenType::OR, -1));
+      tokenPushBack(TokenType::OR, -1, m_textPos);
     } else if (m_lastChar == '#') {
-      m_tokenTable->push_back(Token(TokenType::XOR, -1));
+      tokenPushBack(TokenType::XOR, -1, m_textPos);
     } else if (m_lastChar == '/') {
       m_lastChar = istream.get();
       if (m_lastChar == '/') {
@@ -137,8 +139,8 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
         break;
       }
     } else {
-      throw ParseException("(" + std::to_string(m_lineCount) + "," +
-                           std::to_string(istream.tellg()) +
+      throw ParseException("(" + std::to_string(m_textPos.first) + "," +
+                           std::to_string(m_textPos.second) +
                            ") Error: " + "Unknown identifier");
     }
 
@@ -147,6 +149,6 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
 
   if (!skipLine) {
     std::cout << line << std::endl;
-    m_tokenTable->push_back(Token(TokenType::ENDL, -1));
+    tokenPushBack(TokenType::ENDL, -1, m_textPos);
   }
 }

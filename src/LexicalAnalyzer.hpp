@@ -28,12 +28,14 @@ public:
   inline void printResult();
 
 private:
-  size_t m_lineCount;
+  std::pair<int, int> m_textPos;
 
   std::unique_ptr<TokenTable> m_tokenTable;
   std::unique_ptr<ConstTable> m_constTable;
   std::unique_ptr<IdentTable> m_identTable;
 
+  inline void tokenPushBack(TokenType tokenType, int attr,
+                            std::pair<int, int> textPos);
   void getTokens(std::string &line);
 
   inline std::string getTokenAttr(Token token);
@@ -42,6 +44,12 @@ private:
 /*
 [pos] <token>: attr
 */
+
+inline void LexicalAnalyzer::tokenPushBack(TokenType tokenType, int attr,
+                                           std::pair<int, int> textPos) {
+  Token token(tokenType, attr, m_textPos);
+  m_tokenTable->push_back(token);
+}
 
 inline void LexicalAnalyzer::printResult() {
   for (Token token : *m_tokenTable) {

@@ -1,11 +1,13 @@
 #include "LexicalAnalyzer.hpp"
+#include "Util.hpp"
 
 #include <iostream>
+#include <utility>
 
 using namespace thl;
 
 LexicalAnalyzer::LexicalAnalyzer()
-    : m_lineCount(0) {}
+    : m_textPos(std::make_pair(0, 0)) {}
 
 LexicalAnalyzer::~LexicalAnalyzer() {}
 
@@ -37,19 +39,22 @@ std::unique_ptr<IdentTable> thl::LexicalAnalyzer::getIdentTable() {
 }
 
 void thl::LexicalAnalyzer::parse(std::string &line) {
-  m_lineCount++;
+  m_textPos.first++;
   getTokens(line);
 }
 
 void thl::LexicalAnalyzer::getTokens(std::string &line) {
   bool skipLine = false;
+  
+  Token token;
 
   const char* p = line.c_str();
   const char* q;
   const char* start;
   size_t count = 0;
 
-  for (size_t count = 0; count <= line.size(); ++count) {
+  for (;;) {
+    m_textPos.second++;
     start = p;
 
     /*!re2c
@@ -61,69 +66,115 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
     nul = "\000";
     varname = [a-zA-Z][_a-zA-Z0-9]*;
     
-    [ ]*"#"[^\000\n]*"\n" { continue; }
-    [ ]*"\r\n" { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); continue; }
-    [ ]*"\n"   { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); continue; }
-    nul        { m_tokenTable->push_back(Token(TokenType::ENDL, -1)); continue; }
+    [ ]+        { continue; }
+    [ ]*"//"[^\000\n]*"\n" { skipLine = true; break; }
+    nul         { 
+      tokenPushBack(TokenType::ENDL, -1, m_textPos); 
+      break; 
+    }
 
-    varname       {
-      m_tokenTable->push_back(Token(TokenType::IDENTIFIER,
-        (int)m_identTable->size()));
+    varname     {
+      tokenPushBack(TokenType::IDENTIFIER,
+        (int)m_identTable->size(), m_textPos);
+
       std::string s;
       s.assign(start, p - start);
       m_identTable->push_back(s);
       continue;
     }
 
-    ":="       { m_tokenTable->push_back(Token(TokenType::ASSIGMENT, -1)); continue;}
-    "("        { m_tokenTable->push_back(Token(TokenType::OPEN_BRACKET, -1)); continue;}
-    ")"        { m_tokenTable->push_back(Token(TokenType::CLOSE_BRACKET, -1)); continue;}
-    ","        { m_tokenTable->push_back(Token(TokenType::DELIMITER, -1)); continue;}
+    ":="        { 
+      tokenPushBack(TokenType::ASSIGMENT, -1, m_textPos);
+      continue;
+    }
+    "("         { 
+      tokenPushBack(TokenType::OPEN_BRACKET, -1, m_textPos);
+      continue;
+    }
+    ")"         { 
+      tokenPushBack(TokenType::CLOSE_BRACKET, -1, m_textPos);
+      continue;
+    }
+    ","         { 
+      tokenPushBack(TokenType::DELIMITER, -1, m_textPos);
+      continue;
+    }
 
-    "--"       { m_tokenTable->push_back(Token(TokenType::DECREMENT, -1)); continue;}
-    "->"       { m_tokenTable->push_back(Token(TokenType::IMPLICATION, -1)); continue;}
-    "-"        { m_tokenTable->push_back(Token(TokenType::SUB, -1)); continue;}
+    "--"        { 
+      tokenPushBack(TokenType::DECREMENT, -1, m_textPos);
+      continue;
+    }
+    "->"        { 
+      tokenPushBack(TokenType::IMPLICATION, -1, m_textPos);
+      continue;
+    }
+    "-"         { 
+      tokenPushBack(TokenType::SUB, -1, m_textPos);
+      continue;
+    }
 
-    "++"       { m_tokenTable->push_back(Token(TokenType::INCREMENT, -1)); continue;}
-    "+>"       { m_tokenTable->push_back(Token(TokenType::IMPLICATIONB, -1)); continue;}
-    "+"        { m_tokenTable->push_back(Token(TokenType::ADD, -1)); continue;}
+    "++"        { 
+      tokenPushBack(TokenType::INCREMENT, -1, m_textPos);
+      continue;
+    }
+    "+>"        { 
+      tokenPushBack(TokenType::IMPLICATIONB, -1, m_textPos);
+      continue;
+    }
+    "+"         { 
+      tokenPushBack(TokenType::ADD, -1, m_textPos);
+      continue;
+    }
 
-    "~"        { m_tokenTable->push_back(Token(TokenType::NOT, -1)); continue;}
-    "*"        { m_tokenTable->push_back(Token(TokenType::MUL, -1)); continue;}
-    "&"        { m_tokenTable->push_back(Token(TokenType::AND, -1)); continue;}
-    "|"        { m_tokenTable->push_back(Token(TokenType::OR, -1)); continue;}
-    "#"        { m_tokenTable->push_back(Token(TokenType::XOR, -1)); continue;}
+    "~"         { 
+      tokenPushBack(TokenType::NOT, -1, m_textPos);
+      continue;
+    }
+    "*"         { 
+      tokenPushBack(TokenType::MUL, -1, m_textPos);
+      continue;
+    }
+    "&"         { 
+      tokenPushBack(TokenType::AND, -1, m_textPos);
+      continue;
+    }
+    "|"         { 
+      tokenPushBack(TokenType::OR, -1, m_textPos);
+      continue;
+    }
+    "#"         { 
+      tokenPushBack(TokenType::XOR, -1, m_textPos);
+      continue;
+    }
 
-    "$"        {
-      m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
+    "$"         {
+      tokenPushBack(TokenType::NUMBER, (int)m_constTable->size(), m_textPos);
       m_constTable->push_back(-1);
       continue;
     }
-    "0"       {
-      m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
+    "0"         {
+      tokenPushBack(TokenType::NUMBER, (int)m_constTable->size(), m_textPos);
       m_constTable->push_back(0);
       continue;
     }
-    "1"        {
-      m_tokenTable->push_back(Token(TokenType::NUMBER, (int)m_constTable->size()));
+    "1"         {
+      tokenPushBack(TokenType::NUMBER, (int)m_constTable->size(), m_textPos);
       m_constTable->push_back(1);
       continue;
     }
 
-    "//"       { skipLine = true; break; }
-
-    [^]        {
-      throw ParseException("(" + std::to_string(m_lineCount) + "," +
-                           std::to_string(count) +
-                           ") Error: Unknown identifier");
+    [^]         {
+      std::string err = "(" + std::to_string(m_textPos.first) + "," +
+                           std::to_string(m_textPos.second) +
+                           ") Error: Unknown identifier";
+      throw ParseException(err);
       break;
     }
     */
   }
 
   if (!skipLine) {
+    tokenPushBack(TokenType::ENDL, -1, m_textPos);
     std::cout << line << std::endl;
-    m_tokenTable->push_back(Token(TokenType::ENDL, -1));
   }
-
 }
