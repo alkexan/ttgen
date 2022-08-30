@@ -98,7 +98,7 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
       } else {
         throw ParseException("(" + std::to_string(m_textPos.first) + "," +
                              std::to_string(m_textPos.second) +
-                             ") Error: " + "Unknown identifier");
+                             "] Error: " + "Unknown identifier");
       }
     } else if (m_lastChar == '-') {
       m_lastChar = istream.get();
@@ -141,7 +141,7 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
     } else {
       throw ParseException("(" + std::to_string(m_textPos.first) + "," +
                            std::to_string(m_textPos.second) +
-                           ") Error: " + "Unknown identifier");
+                           "] Error: " + "Unknown identifier");
     }
 
     m_lastChar = istream.get();

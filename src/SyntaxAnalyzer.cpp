@@ -1,4 +1,5 @@
 #include "SyntaxAnalyzer.hpp"
+#include <string>
 
 using namespace thl;
 
@@ -75,7 +76,10 @@ std::unique_ptr<FunctionAST> thl::SyntaxAnalyzer::parseFunction(Token token) {
             std::make_unique<FunctionAST>(std::move(prototype), std::move(exp));
       }
     } else {
-      throw ParseException("Exepted exeption");
+      auto textPos = token.getTextPosition();
+      throw ParseException("[" + std::to_string(textPos.first) + "," +
+                           std::to_string(textPos.second) +
+                           "] Error: " + "Exepted exeption");
     }
   }
   return std::move(result);
@@ -85,7 +89,10 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Token token) {
   std::unique_ptr<PrototypeAST> result = nullptr;
 
   if (token.getType() != TokenType::IDENTIFIER) {
-    throw ParseException("Expected function name in prototype");
+      auto textPos = token.getTextPosition();
+      throw ParseException("[" + std::to_string(textPos.first) + "," +
+                           std::to_string(textPos.second) +
+                           "] Error: " + "Expected function name in prototype");
   } else {
     std::string functionName = (*m_identTable)[token.getAttribute()];
 
@@ -105,7 +112,10 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Token token) {
 
         if (token.getType() != TokenType::DELIMITER &&
             token.getType() != TokenType::CLOSE_BRACKET) {
-          throw ParseException("Expected ')' or ',' in argument list");
+      auto textPos = token.getTextPosition();
+      throw ParseException("[" + std::to_string(textPos.first) + "," +
+                           std::to_string(textPos.second) +
+                           "] Error: " + "Expected ')' or ',' in argument list");
           break;
         }
       } while (token.getType() == TokenType::DELIMITER);
@@ -115,7 +125,10 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Token token) {
         result = std::make_unique<PrototypeAST>(functionName, args);
       }
     } else {
-      throw ParseException("Expected '(' in prototype");
+      auto textPos = token.getTextPosition();
+      throw ParseException("[" + std::to_string(textPos.first) + "," +
+                           std::to_string(textPos.second) +
+                           "] Error: " + "Expected '(' in prototype");
     }
   }
 
@@ -240,7 +253,10 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseUnary(Token token) {
     break;
   }
   default: {
-    throw ParseException("unknown TokenType when expecting an expression");
+      auto textPos = token.getTextPosition();
+      throw ParseException("[" + std::to_string(textPos.first) + "," +
+                           std::to_string(textPos.second) +
+                           "] Error: " + "Unknown TokenType when expecting an expression");
     break;
   }
   }
@@ -259,7 +275,10 @@ thl::SyntaxAnalyzer::parseParenExpr(Token token) {
     if (token.getType() == TokenType::CLOSE_BRACKET) {
       result = std::move(expression);
     } else {
-      throw ParseException("expected ')'");
+      auto textPos = token.getTextPosition();
+      throw ParseException("[" + std::to_string(textPos.first) + "," +
+                           std::to_string(textPos.second) +
+                           "] Error: " + "Expected ')'");
     }
   }
 
@@ -291,7 +310,10 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseName(Token token) {
 
       if (token.getType() != TokenType::DELIMITER &&
           token.getType() != TokenType::CLOSE_BRACKET) {
-        throw ParseException("Expected ')' or ',' in argument list");
+      auto textPos = token.getTextPosition();
+      throw ParseException("[" + std::to_string(textPos.first) + "," +
+                           std::to_string(textPos.second) +
+                           "] Error: " + "Expected ')' or ',' in argument list");
         break;
       }
 
