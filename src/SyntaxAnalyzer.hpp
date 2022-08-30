@@ -45,10 +45,10 @@ private:
   std::unique_ptr<PrototypeAST> parsePrototype(Token lexeme);
 
   // <exp> ::= <implexp> {<impl> <implexp>}
-  std::unique_ptr<ExpressionAst> parseExpression(Token lexeme);
+  std::unique_ptr<ExpressionAst> parseStatement(Token lexeme);
 
   // <implexp> ::= <term> {<sum> <term>}
-  std::unique_ptr<ExpressionAst> parseImplExpression(Token lexeme);
+  std::unique_ptr<ExpressionAst> parseExpression(Token lexeme);
 
   // <term> ::= <factor> {<mul> <factor>}
   std::unique_ptr<ExpressionAst> parseTerm(Token lexeme);

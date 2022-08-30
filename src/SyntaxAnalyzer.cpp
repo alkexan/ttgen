@@ -69,7 +69,7 @@ std::unique_ptr<FunctionAST> thl::SyntaxAnalyzer::parseFunction(Token token) {
     token = readToken();
     if (token.getType() == TokenType::ASSIGMENT) {
       token = readToken();
-      auto exp = std::move(parseExpression(token));
+      auto exp = std::move(parseStatement(token));
       if (exp) {
         // create Function Ast
         result =
@@ -136,17 +136,17 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Token token) {
 }
 
 std::unique_ptr<ExpressionAst>
-thl::SyntaxAnalyzer::parseExpression(Token token) {
+thl::SyntaxAnalyzer::parseStatement(Token token) {
   std::unique_ptr<ExpressionAst> result = nullptr;
 
-  auto lhs = std::move(parseImplExpression(token));
+  auto lhs = std::move(parseExpression(token));
   if (lhs) {
     token = readToken();
     TokenType tokenType = token.getType();
     if ((tokenType == TokenType::IMPLICATION) ||
         (tokenType == TokenType::IMPLICATIONB)) {
       token = readToken();
-      auto rhs = std::move(parseImplExpression(token));
+      auto rhs = std::move(parseExpression(token));
       if (rhs) {
         result = std::make_unique<BinaryExprAST>(tokenType, std::move(lhs),
                                                  std::move(rhs));
@@ -163,7 +163,7 @@ thl::SyntaxAnalyzer::parseExpression(Token token) {
 }
 
 std::unique_ptr<ExpressionAst>
-thl::SyntaxAnalyzer::parseImplExpression(Token token) {
+thl::SyntaxAnalyzer::parseExpression(Token token) {
   std::unique_ptr<ExpressionAst> result = nullptr;
 
   auto lhs = std::move(parseTerm(token));
@@ -269,7 +269,7 @@ thl::SyntaxAnalyzer::parseParenExpr(Token token) {
   std::unique_ptr<ExpressionAst> result = nullptr;
 
   token = readToken();
-  auto expression = std::move(parseExpression(token));
+  auto expression = std::move(parseStatement(token));
   if (expression) {
     token = readToken();
     if (token.getType() == TokenType::CLOSE_BRACKET) {
@@ -301,7 +301,7 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseName(Token token) {
       if (token.getType() == TokenType::CLOSE_BRACKET) {
         break;
       } else if (token.getType() == TokenType::IDENTIFIER) {
-        auto arg = std::move(parseExpression(token));
+        auto arg = std::move(parseStatement(token));
         if (arg) {
           args.push_back(std::move(arg));
           token = readToken();
