@@ -44,8 +44,6 @@ void thl::LexicalAnalyzer::parse(std::string &line) {
 }
 
 void thl::LexicalAnalyzer::getTokens(std::string &line) {
-  bool skipLine = false;
-  
   Token token;
 
   const char* p = line.c_str();
@@ -67,7 +65,7 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
     varname = [a-zA-Z][_a-zA-Z0-9]*;
     
     [ ]+        { continue; }
-    [ ]*"//"[^\000\n]*"\n" { skipLine = true; break; }
+    [ ]*"//"[^\000\n]*"\n" { break; }
     nul         { 
       tokenPushBack(TokenType::ENDL, -1, m_textPos); 
       break; 
@@ -171,10 +169,5 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
       break;
     }
     */
-  }
-
-  if (!skipLine) {
-    tokenPushBack(TokenType::ENDL, -1, m_textPos);
-    std::cout << line << std::endl;
   }
 }
