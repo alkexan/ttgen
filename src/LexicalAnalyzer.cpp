@@ -38,6 +38,7 @@ std::unique_ptr<IdentTable> thl::LexicalAnalyzer::getIdentTable() {
 
 void thl::LexicalAnalyzer::parse(std::string &line) {
   m_textPos.first++;
+  m_textPos.second = 0;
   getTokens(line);
 }
 
