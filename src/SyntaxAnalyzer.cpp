@@ -332,6 +332,5 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseName(Token token) {
 std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseNumber(Token token) {
   auto result =
       std::make_unique<NumberExprAST>((*m_constTable)[token.getAttribute()]);
-  std::cout << (*m_constTable)[token.getAttribute()];
   return std::move(result);
 }
