@@ -7,7 +7,8 @@ project (ttgen_project CXX)
 # generate version
 exec_program("git" "${PROJECT_SOURCE_DIR}" ARGS "describe" "--tags" OUTPUT_VARIABLE VERSION )
 message(STATUS "Version build: " ${VERSION} )
-configure_file("version.h.in" "${PROJECT_SOURCE_DIR}/version.h")
+configure_file("version.h.in" "${PROJECT_BINARY_DIR}/version.h")
+include_directories(${PROJECT_BINARY_DIR})
 
 # CXX standart
 set(CMAKE_CXX_STANDARD 17)
