@@ -89,10 +89,10 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Token token) {
   std::unique_ptr<PrototypeAST> result = nullptr;
 
   if (token.getType() != TokenType::IDENTIFIER) {
-      auto textPos = token.getTextPosition();
-      throw ParseException("[" + std::to_string(textPos.first) + "," +
-                           std::to_string(textPos.second) +
-                           "] Error: " + "Expected function name in prototype");
+    auto textPos = token.getTextPosition();
+    throw ParseException("[" + std::to_string(textPos.first) + "," +
+                         std::to_string(textPos.second) +
+                         "] Error: " + "Expected function name in prototype");
   } else {
     std::string functionName = (*m_identTable)[token.getAttribute()];
 
@@ -112,10 +112,10 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Token token) {
 
         if (token.getType() != TokenType::DELIMITER &&
             token.getType() != TokenType::CLOSE_BRACKET) {
-      auto textPos = token.getTextPosition();
-      throw ParseException("[" + std::to_string(textPos.first) + "," +
-                           std::to_string(textPos.second) +
-                           "] Error: " + "Expected ')' or ',' in argument list");
+          auto textPos = token.getTextPosition();
+          throw ParseException("[" + std::to_string(textPos.first) + "," +
+                               std::to_string(textPos.second) + "] Error: " +
+                               "Expected ')' or ',' in argument list");
           break;
         }
       } while (token.getType() == TokenType::DELIMITER);
@@ -137,81 +137,78 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Token token) {
 
 std::unique_ptr<ExpressionAst>
 thl::SyntaxAnalyzer::parseStatement(Token token) {
-  std::unique_ptr<ExpressionAst> result = nullptr;
-
   auto lhs = std::move(parseExpression(token));
   if (lhs) {
     token = readToken();
     TokenType tokenType = token.getType();
-    if ((tokenType == TokenType::IMPLICATION) ||
-        (tokenType == TokenType::IMPLICATIONB)) {
+    while ((tokenType == TokenType::IMPLICATION) ||
+           (tokenType == TokenType::IMPLICATIONB)) {
       token = readToken();
       auto rhs = std::move(parseExpression(token));
       if (rhs) {
-        result = std::make_unique<BinaryExprAST>(tokenType, std::move(lhs),
-                                                 std::move(rhs));
+        lhs = std::make_unique<BinaryExprAST>(tokenType, std::move(lhs),
+                                              std::move(rhs));
+        token = readToken();
       }
-    } else if (token.getType() != TokenType::ENDF) {
-      result = std::move(lhs);
+      tokenType = token.getType();
+    }
+
+    if (token.getType() != TokenType::ENDF) {
       token = readToken(1);
-    } else {
-      result = std::move(lhs);
     }
   }
 
-  return std::move(result);
+  return std::move(lhs);
 }
 
 std::unique_ptr<ExpressionAst>
 thl::SyntaxAnalyzer::parseExpression(Token token) {
-  std::unique_ptr<ExpressionAst> result = nullptr;
-
   auto lhs = std::move(parseTerm(token));
   if (lhs) {
     token = readToken();
     TokenType tokenType = token.getType();
-    if ((tokenType == TokenType::ADD) || (tokenType == TokenType::SUB) ||
-        (tokenType == TokenType::OR) || (tokenType == TokenType::XOR)) {
+    while ((tokenType == TokenType::ADD) || (tokenType == TokenType::SUB) ||
+           (tokenType == TokenType::OR) || (tokenType == TokenType::XOR)) {
       token = readToken();
       auto rhs = std::move(parseTerm(token));
       if (rhs) {
-        result = std::make_unique<BinaryExprAST>(tokenType, std::move(lhs),
-                                                 std::move(rhs));
+        lhs = std::make_unique<BinaryExprAST>(tokenType, std::move(lhs),
+                                              std::move(rhs));
+        token = readToken();
       }
-    } else if (token.getType() != TokenType::ENDF) {
-      result = std::move(lhs);
+      tokenType = token.getType();
+    }
+
+    if (token.getType() != TokenType::ENDF) {
       token = readToken(1);
-    } else {
-      result = std::move(lhs);
     }
   }
 
-  return std::move(result);
+  return std::move(lhs);
 }
 
 std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseTerm(Token token) {
-  std::unique_ptr<ExpressionAst> result = nullptr;
-
   auto lhs = std::move(parseFactor(token));
   if (lhs) {
     token = readToken();
     TokenType tokenType = token.getType();
-    if ((tokenType == TokenType::MUL) || (tokenType == TokenType::AND)) {
+    while ((tokenType == TokenType::MUL) || (tokenType == TokenType::AND)) {
       token = readToken();
       auto rhs = std::move(parseFactor(token));
       if (rhs) {
-        result = std::make_unique<BinaryExprAST>(tokenType, std::move(lhs),
-                                                 std::move(rhs));
+        lhs = std::make_unique<BinaryExprAST>(tokenType, std::move(lhs),
+                                              std::move(rhs));
+        token = readToken();
       }
-    } else if (token.getType() != TokenType::ENDF) {
-      result = std::move(lhs);
+      tokenType = token.getType();
+    }
+
+    if (token.getType() != TokenType::ENDF) {
       token = readToken(1);
-    } else {
-      result = std::move(lhs);
     }
   }
 
-  return std::move(result);
+  return std::move(lhs);
 }
 
 std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseFactor(Token token) {
@@ -253,10 +250,10 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseUnary(Token token) {
     break;
   }
   default: {
-      auto textPos = token.getTextPosition();
-      throw ParseException("[" + std::to_string(textPos.first) + "," +
-                           std::to_string(textPos.second) +
-                           "] Error: " + "Unknown TokenType when expecting an expression");
+    auto textPos = token.getTextPosition();
+    throw ParseException("[" + std::to_string(textPos.first) + "," +
+                         std::to_string(textPos.second) + "] Error: " +
+                         "Unknown TokenType when expecting an expression");
     break;
   }
   }
@@ -310,10 +307,10 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseName(Token token) {
 
       if (token.getType() != TokenType::DELIMITER &&
           token.getType() != TokenType::CLOSE_BRACKET) {
-      auto textPos = token.getTextPosition();
-      throw ParseException("[" + std::to_string(textPos.first) + "," +
-                           std::to_string(textPos.second) +
-                           "] Error: " + "Expected ')' or ',' in argument list");
+        auto textPos = token.getTextPosition();
+        throw ParseException("[" + std::to_string(textPos.first) + "," +
+                             std::to_string(textPos.second) + "] Error: " +
+                             "Expected ')' or ',' in argument list");
         break;
       }
 

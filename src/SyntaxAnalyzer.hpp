@@ -1,6 +1,7 @@
 #ifndef SRC__SYNTAX_ANALYZER__HPP
 #define SRC__SYNTAX_ANALYZER__HPP
 
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -37,6 +38,8 @@ private:
   std::vector<thl::Token>::iterator m_lexIterator;
 
   std::vector<std::unique_ptr<FunctionAST>> m_programAst;
+
+  // typedef std::unique_ptr<ExpressionAst> (SyntaxAnalyzer::*parse_cb)(Token lexeme);
 
   // <function> ::=  <prototype> ":=" <exp>
   std::unique_ptr<FunctionAST> parseFunction(Token lexeme);

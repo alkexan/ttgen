@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(TwoParamsSimpleWithSpaces) {
   parseData("f(x, y) := x & y");
 }
 
-BOOST_AUTO_TEST_CASE(WithConst) {
+BOOST_AUTO_TEST_CASE(ThreeOperations) {
   parseData("f(x, y) := x | y | 0");
 }
 
