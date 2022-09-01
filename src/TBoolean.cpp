@@ -177,7 +177,7 @@ TBoolean TBoolean::operator&(TBoolean y) {
       result = FALSE;
       break;
     case UNKNOWN:
-      result = UNKNOWN;
+      result = TRUE;
       break;
     case TRUE:
       result = TRUE;
