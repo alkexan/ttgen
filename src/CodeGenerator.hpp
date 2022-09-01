@@ -4,6 +4,7 @@
 #include "ParseException.hpp"
 #include "TBoolean.hpp"
 #include "Util.hpp"
+#include <vector>
 
 namespace thl {
 class CodeGenerator : public Visitor {
@@ -22,10 +23,18 @@ public:
 
   TBoolean visit(CallExprAST &ast) override;
 
+  void printTable();
+
+  std::vector<TBoolean> getResults() {
+    return m_results;
+  }
+
 private:
-  std::map<std::string, std::vector<int>> m_values;
   int m_valuePosition = 0;
   int m_valuesCount = 0;
+  
+  std::map<std::string, std::vector<int>> m_values;
+  std::vector<TBoolean> m_results;
 };
 
 } // namespace thl

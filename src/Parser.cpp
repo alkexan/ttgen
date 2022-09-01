@@ -61,10 +61,8 @@ void Parser::parseLine(std::string &line) {
     m_tokenTable = std::move(m_syntax.getTokenTable());
     m_programAst = std::move(m_syntax.getProgramAst());
 
-    for (int i = 0; i < m_programAst.size(); i++) {
-      m_codeGenerator.visit(*m_programAst[i]);
-      std::cout << "\n";
-    }
+    m_codeGenerator.visit(*m_programAst[0]);
+    m_results = m_codeGenerator.getResults();
   } catch (ParseException &exception) {
     std::cerr << exception.getError() << std::endl;
   }

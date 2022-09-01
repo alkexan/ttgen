@@ -84,6 +84,9 @@ TBoolean CodeGenerator::visit(BinaryExprAST &ast) {
 }
 
 TBoolean CodeGenerator::visit(PrototypeAST &ast) {
+  m_values.clear();
+  m_valuePosition = 0;
+  m_valuesCount = 0;
 
   auto args = ast.getArgs();
 
@@ -111,6 +114,26 @@ TBoolean CodeGenerator::visit(PrototypeAST &ast) {
 TBoolean CodeGenerator::visit(FunctionAST &ast) {
   ast.getPrototype()->accept(*this);
 
+  m_valuePosition = 0;
+  do {
+    TBoolean result = ast.getBody()->accept(*this);
+    m_results.push_back(result);
+    m_valuePosition++;
+  } while (m_valuePosition < m_valuesCount);
+  return 0;
+}
+
+TBoolean CodeGenerator::visit(CallExprAST &ast) {
+
+  auto args = ast.getArgs();
+  for (int i = 0; i < args.size(); i++) {
+    args[i]->accept(*this);
+  }
+
+  return 0;
+}
+
+void CodeGenerator::printTable() {
   std::cout << "|\t";
   for (auto i = m_values.begin(); i != m_values.end(); i++) {
     std::cout << i->first << "\t|\t";
@@ -125,23 +148,8 @@ TBoolean CodeGenerator::visit(FunctionAST &ast) {
       std::cout << mapIterator->second[m_valuePosition] << "\t|\t";
     }
 
-    TBoolean result = ast.getBody()->accept(*this);
-    std::cout << (int)result << "\t|" << std::endl;
+    std::cout << (int)m_results[m_valuePosition] << "\t|" << std::endl;
     m_valuePosition++;
   } while (m_valuePosition < m_valuesCount);
 
-  m_values.clear();
-  m_valuePosition = 0;
-  m_valuesCount = 0;
-  return 0;
-}
-
-TBoolean CodeGenerator::visit(CallExprAST &ast) {
-
-  auto args = ast.getArgs();
-  for (int i = 0; i < args.size(); i++) {
-    args[i]->accept(*this);
-  }
-
-  return 0;
 }

@@ -47,6 +47,7 @@ int main(int argc, char *argv[]) {
         break;
       } else {
         parser.parse(parseSource);
+        parser.printTable();
       }
     }
   }
