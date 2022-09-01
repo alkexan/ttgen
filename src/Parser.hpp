@@ -12,7 +12,7 @@ class Parser {
 public:
   Parser();
 
-  void parse(std::string &parseData, bool isFile = false);
+  bool parse(std::string &parseData, bool isFile = false);
 
   std::vector<TBoolean> getResults() {
     return m_results;
@@ -36,6 +36,6 @@ private:
   SyntaxAnalyzer m_syntax;
   CodeGenerator m_codeGenerator;
 
-  void parseFile(std::string &fileName);
-  void parseLine(std::string &line);
+  bool parseFile(std::string &fileName);
+  bool parseLine(std::string &line);
 };

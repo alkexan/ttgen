@@ -5,7 +5,9 @@
 
 Parser::Parser() {}
 
-void Parser::parse(std::string &parseData, bool isFile) {
+bool Parser::parse(std::string &parseData, bool isFile) {
+  bool res = false;
+
   if (!m_tokenTable) {
     m_tokenTable = std::make_unique<thl::TokenTable>();
   } else {
@@ -25,28 +27,34 @@ void Parser::parse(std::string &parseData, bool isFile) {
   }
 
   if (isFile) {
-    parseFile(parseData);
+    res = parseFile(parseData);
   } else {
-    parseLine(parseData);
+    res = parseLine(parseData);
   }
+
+  return res;
 }
 
-void Parser::parseFile(std::string &fileName) {
+bool Parser::parseFile(std::string &fileName) {
+  bool res = false;
+  
   std::ifstream ifstream(fileName);
-  bool isContinue = ifstream.is_open();
-  if (!isContinue) {
+  if (!ifstream.is_open()) {
     std::cerr << "failed to open \n";
   } else {
     while (!ifstream.eof()) {
       std::string line;
       std::getline(ifstream, line);
 
-      parseLine(line);
+      res = parseLine(line);
     }
   }
+
+  return res;
 }
 
-void Parser::parseLine(std::string &line) {
+bool Parser::parseLine(std::string &line) {
+  bool res = true;
   try {
     m_lexical.setTokenTable(std::move(m_tokenTable));
     m_lexical.setConstTable(std::move(m_constTable));
@@ -65,5 +73,8 @@ void Parser::parseLine(std::string &line) {
     m_results = m_codeGenerator.getResults();
   } catch (ParseException &exception) {
     std::cerr << exception.getError() << std::endl;
+    res = false;
   }
+
+  return res;
 }

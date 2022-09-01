@@ -46,8 +46,9 @@ int main(int argc, char *argv[]) {
       if (parseSource == "!q") {
         break;
       } else {
-        parser.parse(parseSource);
-        parser.printTable();
+        if (parser.parse(parseSource)) {
+          parser.printTable();
+        }
       }
     }
   }
