@@ -117,16 +117,18 @@ TBoolean CodeGenerator::visit(FunctionAST &ast) {
   }
   std::cout << "f\t|" << std::endl;
 
-  for (m_valuePosition = 0; m_valuePosition < m_valuesCount;
-       m_valuePosition++) {
-      std::cout << "|\t";
-      for (auto mapIterator = m_values.begin(); mapIterator != m_values.end(); mapIterator++) {
-          std::cout << mapIterator->second[m_valuePosition] << "\t|\t";
-      }
+  m_valuePosition = 0;
+  do {
+    std::cout << "|\t";
+    for (auto mapIterator = m_values.begin(); mapIterator != m_values.end();
+         mapIterator++) {
+      std::cout << mapIterator->second[m_valuePosition] << "\t|\t";
+    }
 
     TBoolean result = ast.getBody()->accept(*this);
     std::cout << (int)result << "\t|" << std::endl;
-  }
+    m_valuePosition++;
+  } while (m_valuePosition < m_valuesCount);
 
   m_values.clear();
   m_valuePosition = 0;
