@@ -112,4 +112,28 @@ BOOST_AUTO_TEST_CASE(TwoParamsWithSpaces) {
   BOOST_CHECK((*tokenTable)[10].getType() == TokenType::ENDL);
 }
 
+BOOST_AUTO_TEST_CASE(ThreeOperations_1) {
+  parseData("f(x, y) := x -> y -> 0");
+}
+
+BOOST_AUTO_TEST_CASE(ThreeOperations_2) {
+  parseData("f(x, y) := x -> y -> 0");
+}
+
+BOOST_AUTO_TEST_CASE(ThreeOperations_3) {
+  parseData("f(x, y) := x -> y -> 0");
+}
+
+BOOST_AUTO_TEST_CASE(ConstsWithoutParams) {
+  parseData("f() := 0 & 1 -> $");
+}
+
+BOOST_AUTO_TEST_CASE(VariableWithoutParams) {
+  parseData("f() := x -> y | z");
+}
+
+BOOST_AUTO_TEST_CASE(ConstAsParams) {
+  parseData("f(0, $) := 0 & 1 | $");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
