@@ -92,11 +92,15 @@ BOOST_AUTO_TEST_CASE(ConstsWithoutParams) {
 }
 
 BOOST_AUTO_TEST_CASE(VariableWithoutParams) {
-  parseData("f() := x -> y | z");
-}
+  std::string message;
 
-BOOST_AUTO_TEST_CASE(ConstAsParams) {
-  parseData("f(0, $) := 0 & 1 | $");
+  try {
+    parseData("f() := x -> y | z");
+  } catch (ParseException &exception) {
+    message = exception.getError();
+  }
+  
+  BOOST_CHECK(message.find("Undeclarated identifier"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
