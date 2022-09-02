@@ -35,6 +35,8 @@ private:
   std::unique_ptr<ConstTable> m_constTable;
   std::unique_ptr<IdentTable> m_identTable;
 
+  std::vector<std::string> m_prototypeArgs;
+
   std::vector<thl::Token>::iterator m_lexIterator;
 
   std::vector<std::unique_ptr<FunctionAST>> m_programAst;
