@@ -38,6 +38,25 @@ BOOST_AUTO_TEST_CASE(TwoParamsWithSpaces) {
   parseData("f(x, y) := x & y");
 }
 
+BOOST_AUTO_TEST_CASE(Callable) {
+  using namespace thl;
+
+  std::string fileName = "./example/example_call.txt";
+
+  Parser parser;
+  parser.parse(fileName, true);
+}
+
+BOOST_AUTO_TEST_CASE(Example) {
+  using namespace thl;
+
+  std::string fileName = "./example/example.txt";
+
+  Parser parser;
+  parser.parse(fileName, true);
+}
+
+
 BOOST_AUTO_TEST_CASE(ThreeOperations_1) {
   parseData("f(x, y) := x -> y -> 0");
 }
