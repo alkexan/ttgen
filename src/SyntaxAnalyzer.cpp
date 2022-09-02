@@ -1,4 +1,5 @@
 #include "SyntaxAnalyzer.hpp"
+#include <algorithm>
 #include <string>
 
 using namespace thl;
@@ -98,7 +99,7 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Token token) {
 
     token = readToken();
     if (token.getType() == TokenType::OPEN_BRACKET) {
-      std::vector<std::string> args;
+      m_prototypeArgs.clear();
 
       do {
         token = readToken();
@@ -106,7 +107,7 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Token token) {
         if (token.getType() == TokenType::CLOSE_BRACKET) {
           break;
         } else if (token.getType() == TokenType::IDENTIFIER) {
-          args.push_back((*m_identTable)[token.getAttribute()]);
+          m_prototypeArgs.push_back((*m_identTable)[token.getAttribute()]);
           token = readToken();
         }
 
@@ -122,7 +123,7 @@ std::unique_ptr<PrototypeAST> thl::SyntaxAnalyzer::parsePrototype(Token token) {
 
       if (token.getType() == TokenType::CLOSE_BRACKET) {
         // success.
-        result = std::make_unique<PrototypeAST>(functionName, args);
+        result = std::make_unique<PrototypeAST>(functionName, m_prototypeArgs);
       }
     } else {
       auto textPos = token.getTextPosition();
@@ -322,8 +323,17 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseName(Token token) {
     }
   } else {
     // Variable
-    result = std::make_unique<VariableExprAST>(idName);
-    token = readToken(1);
+    auto contains = std::find(m_prototypeArgs.begin(), m_prototypeArgs.end(), idName);
+    if (contains == m_prototypeArgs.end()) {
+      auto textPos = token.getTextPosition();
+      throw ParseException("[" + std::to_string(textPos.first) + "," +
+                           std::to_string(textPos.second) +
+                           "] Error: Error: Undeclarated identifier \"" +
+                           idName + "\"");
+    } else {
+      result = std::make_unique<VariableExprAST>(idName);
+      token = readToken(1);
+    }
   }
 
   return std::move(result);
