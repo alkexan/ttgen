@@ -9,7 +9,7 @@ if(RE2C)
 	# the depfile parser and ninja lexers are generated using re2c.
 	function(re2c IN OUT)
 		add_custom_command(
-			DEPENDS ${IN} OUTPUT ${OUT} COMMAND ${RE2C} -b -i --no-generation-date --no-version -o ${OUT} ${IN}
+			DEPENDS ${IN} OUTPUT ${OUT} COMMAND ${RE2C} -b -i --no-generation-date --no-version --input custom -o ${OUT} ${IN}
 		)
 	endfunction()
 	set(LexicalAnalyzerSrc ${PROJECT_BINARY_DIR}/LexicalAnalyzer.cpp)
@@ -27,8 +27,8 @@ add_library(ttgen_lib STATIC
 	"TBoolean.hpp"
 	"SyntaxAnalyzer.cpp"
 	"SyntaxAnalyzer.hpp"
-	"Parser.cpp"
-	"Parser.hpp"
+	# "Parser.cpp"
+	# "Parser.hpp"
 	${LexicalAnalyzerSrc}
 	"LexicalAnalyzer.hpp"
 	"CodeGenerator.hpp"

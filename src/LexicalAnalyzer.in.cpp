@@ -38,47 +38,51 @@ std::unique_ptr<IdentTable> thl::LexicalAnalyzer::getIdentTable() {
   return std::move(m_identTable);
 }
 
-void thl::LexicalAnalyzer::parse(std::string &line) {
+void thl::LexicalAnalyzer::parse(std::istream &dataStream) {
   m_textPos.first++;
   m_textPos.second = 0;
-  getTokens(line);
+  getTokens(dataStream);
 }
 
-void thl::LexicalAnalyzer::getTokens(std::string &line) {
+void thl::LexicalAnalyzer::getTokens(std::istream &dataStream) {
   Token token;
 
-  const char* p = line.c_str();
-  const char* q;
-  const char* start;
+  std::streampos marker;
+
   size_t count = 0;
 
   for (;;) {
     m_textPos.second++;
-    start = p;
 
     /*!re2c
+    re2c:api:style = free-form;
+
+    re2c:define:YYPEEK       = "dataStream.peek()";
+    re2c:define:YYSKIP       = "dataStream.ignore();";
+    re2c:define:YYBACKUP     = "marker = dataStream.tellg();";
+    re2c:define:YYRESTORE    = "dataStream.seekg(marker);";
+    re2c:define:YYLESSTHAN   = "YYLIMIT - dataStream.tellg() < @@{len}";
+
     re2c:define:YYCTYPE = "char";
-    re2c:define:YYCURSOR = p;
-    re2c:define:YYMARKER = q;
     re2c:yyfill:enable = 0;
     
     nul = "\000";
     varname = [a-zA-Z][_a-zA-Z0-9]*;
     
-    [ ]+        { continue; }
-    [ ]*"//"[^\000\n]*"\n" { break; }
+    [ ]+        { 
+      continue; 
+    }
+    
+    [ ]*"//"[^\000\n]*"\n" { 
+      break; 
+    }
     nul         { 
       tokenPushBack(TokenType::ENDL, -1, m_textPos); 
       break; 
     }
 
-    varname     {
-      tokenPushBack(TokenType::IDENTIFIER,
-        (int)m_identTable->size(), m_textPos);
-
-      std::string s;
-      s.assign(start, p - start);
-      m_identTable->push_back(s);
+    [a-zA-Z]    {
+      readIdent(dataStream);
       continue;
     }
 
@@ -171,4 +175,26 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
     }
     */
   }
+}
+
+void thl::LexicalAnalyzer::readIdent(std::istream &dataStream) {
+  std::streampos marker;
+
+  dataStream.unget();
+
+  /*!re2c
+    re2c:define:YYSKIP       = "m_ident += yych; dataStream.ignore();";
+    
+    varname     {
+      tokenPushBack(TokenType::IDENTIFIER,
+        (int)m_identTable->size(), m_textPos);
+
+      m_identTable->push_back(m_ident);
+      m_textPos.second += m_ident.size();
+
+      std::cout << m_ident << std::endl;
+      m_ident.clear();
+      return;
+    }
+  */
 }

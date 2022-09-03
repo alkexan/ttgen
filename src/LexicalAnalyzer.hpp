@@ -2,6 +2,7 @@
 #define SRC__LEXICAL_ANALYZER__HPP
 
 #include <iostream>
+#include <istream>
 #include <memory>
 #include <sstream>
 #include <string>
@@ -23,27 +24,27 @@ public:
   std::unique_ptr<ConstTable> getConstTable();
   std::unique_ptr<IdentTable> getIdentTable();
 
-  void parse(std::string &line);
+  void parse(std::istream &dataStream);
 
   inline void printResult();
 
 private:
   std::pair<int, int> m_textPos;
+  std::string m_ident;
 
   std::unique_ptr<TokenTable> m_tokenTable;
   std::unique_ptr<ConstTable> m_constTable;
   std::unique_ptr<IdentTable> m_identTable;
 
+  void getTokens(std::istream &dataStream);
+
+  void readIdent(std::istream &dataStream);
+ 
   inline void tokenPushBack(TokenType tokenType, int attr,
                             std::pair<int, int> textPos);
-  void getTokens(std::string &line);
 
   inline std::string getTokenAttr(Token token);
 };
-
-/*
-[pos] <token>: attr
-*/
 
 inline void LexicalAnalyzer::tokenPushBack(TokenType tokenType, int attr,
                                            std::pair<int, int> textPos) {

@@ -1,5 +1,7 @@
 #include "LexicalAnalyzer.hpp"
 #include "Util.hpp"
+#include <istream>
+#include <sstream>
 
 #define BOOST_TEST_MAIN
 #define BOOST_TEST_DYN_LINK
@@ -44,7 +46,8 @@ void parseData(std::string testString) {
   lexical.setConstTable(std::move(constTable));
   lexical.setIdentTable(std::move(identTable));
 
-  lexical.parse(testString);
+  std::istringstream stream (testString);
+  lexical.parse(stream);
   lexical.printResult();
 
   tokenTable = std::move(lexical.getTokenTable());
@@ -53,7 +56,7 @@ void parseData(std::string testString) {
 BOOST_AUTO_TEST_SUITE(TestLexical)
 
 BOOST_AUTO_TEST_CASE(Simple) {
-  parseData("f(x):=x");
+  parseData("func(x):=x");
 
   using namespace thl;
   BOOST_CHECK((*tokenTable)[0].getType() == TokenType::IDENTIFIER);
