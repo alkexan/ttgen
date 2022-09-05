@@ -115,6 +115,7 @@ TBoolean CodeGenerator::visit(FunctionAST &ast) {
   ast.getPrototype()->accept(*this);
 
   m_valuePosition = 0;
+  m_results.clear();
   do {
     TBoolean result = ast.getBody()->accept(*this);
     m_results.push_back(result);
