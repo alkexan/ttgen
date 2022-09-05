@@ -139,7 +139,7 @@ void CodeGenerator::printTable() {
   for (auto i = m_values.begin(); i != m_values.end(); i++) {
     std::cout << i->first << "\t|\t";
   }
-  std::cout << "f\t|" << std::endl;
+  std::cout << "f\t|\n";
 
   m_valuePosition = 0;
   do {
@@ -149,8 +149,9 @@ void CodeGenerator::printTable() {
       std::cout << mapIterator->second[m_valuePosition] << "\t|\t";
     }
 
-    std::cout << (int)m_results[m_valuePosition] << "\t|" << std::endl;
+    std::cout << (int)m_results[m_valuePosition] << "\t|\n";
     m_valuePosition++;
   } while (m_valuePosition < m_valuesCount);
 
+  std::cout << std::endl;
 }
