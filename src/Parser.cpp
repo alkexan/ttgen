@@ -21,10 +21,6 @@ Parser::Parser()
 bool Parser::parse(std::string &parseData, bool isFile) {
   bool res = false;
 
-  m_tokenTable->clear();
-  m_constTable->clear();
-  m_identTable->clear();
-
   if (isFile) {
     res = parseFile(parseData);
   } else {
@@ -45,7 +41,11 @@ bool Parser::parseFile(std::string &fileName) {
       std::string line;
       std::getline(ifstream, line);
 
-      res = parseLine(line);
+      std::cout << line << std::endl;
+
+      if (parseLine(line)) {
+        m_codeGenerator.printTable();
+      }
     }
   }
 
@@ -55,14 +55,22 @@ bool Parser::parseFile(std::string &fileName) {
 bool Parser::parseLine(std::string &line) {
   bool res = true;
   try {
+    m_tokenTable->clear();
+    m_constTable->clear();
+    m_identTable->clear();
+
     m_lexical.parse(line);
 
     m_syntax.parse();
 
     m_programAst = std::move(m_syntax.getProgramAst());
 
-    m_codeGenerator.visit(*m_programAst[0]);
-    m_results = m_codeGenerator.getResults();
+    if (m_programAst.size() > 0) {
+      m_codeGenerator.visit(*m_programAst[0]);
+      m_results = m_codeGenerator.getResults();
+    } else {
+      res = false;
+    }
   } catch (ParseException &exception) {
     std::cerr << exception.getError() << std::endl;
     res = false;
