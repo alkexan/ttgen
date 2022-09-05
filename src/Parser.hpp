@@ -24,9 +24,9 @@ public:
 
 private:
 
-  std::unique_ptr<TokenTable> m_tokenTable;
-  std::unique_ptr<ConstTable> m_constTable;
-  std::unique_ptr<IdentTable> m_identTable;
+  std::shared_ptr<TokenTable> m_tokenTable;
+  std::shared_ptr<ConstTable> m_constTable;
+  std::shared_ptr<IdentTable> m_identTable;
 
   std::vector<std::unique_ptr<FunctionAST>> m_programAst;
 

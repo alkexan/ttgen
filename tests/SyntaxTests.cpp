@@ -14,9 +14,12 @@
 
 #define BOOST_TEST_MODULE TestSyntax
 
-std::unique_ptr<thl::TokenTable> tokenTable;
-std::unique_ptr<thl::ConstTable> constTable;
-std::unique_ptr<thl::IdentTable> identTable;
+std::shared_ptr<thl::TokenTable> tokenTable =
+    std::make_unique<thl::TokenTable>();
+std::shared_ptr<thl::ConstTable> constTable =
+    std::make_unique<thl::ConstTable>();
+std::shared_ptr<thl::IdentTable> identTable =
+    std::make_unique<thl::IdentTable>();
 
 void parseData(std::string testString) {
   using namespace thl;
@@ -41,18 +44,18 @@ void parseData(std::string testString) {
     identTable->clear();
   }
 
-  lexical.setTokenTable(std::move(tokenTable));
-  lexical.setConstTable(std::move(constTable));
-  lexical.setIdentTable(std::move(identTable));
+  lexical.setTokenTable(tokenTable);
+  lexical.setConstTable(constTable);
+  lexical.setIdentTable(identTable);
 
   lexical.parse(testString);
   lexical.printResult();
 
   SyntaxAnalyzer syntax;
 
-  syntax.setTokenTable(std::move(lexical.getTokenTable()));
-  syntax.setConstTable(std::move(lexical.getConstTable()));
-  syntax.setIdentTable(std::move(lexical.getIdentTable()));
+  syntax.setTokenTable(tokenTable);
+  syntax.setConstTable(constTable);
+  syntax.setIdentTable(identTable);
 
   syntax.parse();
 }

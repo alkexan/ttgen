@@ -12,30 +12,18 @@ LexicalAnalyzer::LexicalAnalyzer()
 LexicalAnalyzer::~LexicalAnalyzer() {}
 
 void thl::LexicalAnalyzer::setTokenTable(
-    std::unique_ptr<TokenTable> lexemTable) {
-  m_tokenTable = std::move(lexemTable);
+    std::shared_ptr<TokenTable> lexemTable) {
+  m_tokenTable = lexemTable;
 }
 
 void thl::LexicalAnalyzer::setConstTable(
-    std::unique_ptr<ConstTable> constTable) {
-  m_constTable = std::move(constTable);
+    std::shared_ptr<ConstTable> constTable) {
+  m_constTable = constTable;
 }
 
 void thl::LexicalAnalyzer::setIdentTable(
-    std::unique_ptr<IdentTable> identTable) {
-  m_identTable = std::move(identTable);
-}
-
-std::unique_ptr<TokenTable> thl::LexicalAnalyzer::getTokenTable() {
-  return std::move(m_tokenTable);
-}
-
-std::unique_ptr<ConstTable> thl::LexicalAnalyzer::getConstTable() {
-  return std::move(m_constTable);
-}
-
-std::unique_ptr<IdentTable> thl::LexicalAnalyzer::getIdentTable() {
-  return std::move(m_identTable);
+    std::shared_ptr<IdentTable> identTable) {
+  m_identTable = identTable;
 }
 
 void thl::LexicalAnalyzer::parse(std::string &line) {

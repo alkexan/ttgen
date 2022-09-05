@@ -9,30 +9,18 @@ SyntaxAnalyzer::SyntaxAnalyzer() {}
 SyntaxAnalyzer::~SyntaxAnalyzer() {}
 
 void thl::SyntaxAnalyzer::setTokenTable(
-    std::unique_ptr<TokenTable> lexemTable) {
-  m_tokenTable = std::move(lexemTable);
+    std::shared_ptr<TokenTable> lexemTable) {
+  m_tokenTable = lexemTable;
 }
 
 void thl::SyntaxAnalyzer::setConstTable(
-    std::unique_ptr<ConstTable> constTable) {
-  m_constTable = std::move(constTable);
+    std::shared_ptr<ConstTable> constTable) {
+  m_constTable = constTable;
 }
 
 void thl::SyntaxAnalyzer::setIdentTable(
-    std::unique_ptr<IdentTable> identTable) {
-  m_identTable = std::move(identTable);
-}
-
-std::unique_ptr<TokenTable> thl::SyntaxAnalyzer::getTokenTable() {
-  return std::move(m_tokenTable);
-}
-
-std::unique_ptr<ConstTable> thl::SyntaxAnalyzer::getConstTable() {
-  return std::move(m_constTable);
-}
-
-std::unique_ptr<IdentTable> thl::SyntaxAnalyzer::getIdentTable() {
-  return std::move(m_identTable);
+    std::shared_ptr<IdentTable> identTable) {
+  m_identTable = identTable;
 }
 
 std::vector<std::unique_ptr<FunctionAST>> thl::SyntaxAnalyzer::getProgramAst() {

@@ -17,13 +17,9 @@ public:
   SyntaxAnalyzer();
   ~SyntaxAnalyzer();
 
-  void setTokenTable(std::unique_ptr<TokenTable> lexemTable);
-  void setConstTable(std::unique_ptr<ConstTable> constTable);
-  void setIdentTable(std::unique_ptr<IdentTable> identTable);
-
-  std::unique_ptr<TokenTable> getTokenTable();
-  std::unique_ptr<ConstTable> getConstTable();
-  std::unique_ptr<IdentTable> getIdentTable();
+  void setTokenTable(std::shared_ptr<TokenTable> lexemTable);
+  void setConstTable(std::shared_ptr<ConstTable> constTable);
+  void setIdentTable(std::shared_ptr<IdentTable> identTable);
 
   std::vector<std::unique_ptr<FunctionAST>> getProgramAst();
 
@@ -31,9 +27,9 @@ public:
   void parse();
 
 private:
-  std::unique_ptr<TokenTable> m_tokenTable;
-  std::unique_ptr<ConstTable> m_constTable;
-  std::unique_ptr<IdentTable> m_identTable;
+  std::shared_ptr<TokenTable> m_tokenTable;
+  std::shared_ptr<ConstTable> m_constTable;
+  std::shared_ptr<IdentTable> m_identTable;
 
   std::vector<std::string> m_prototypeArgs;
 

@@ -2,29 +2,28 @@
 #include "Util.hpp"
 #include <fstream>
 #include <iostream>
+#include <memory>
 
-Parser::Parser() {}
+Parser::Parser()
+    : m_tokenTable(std::make_shared<thl::TokenTable>()),
+      m_constTable(std::make_shared<thl::ConstTable>()),
+      m_identTable(std::make_shared<thl::IdentTable>()) {
+
+  m_lexical.setTokenTable(m_tokenTable);
+  m_lexical.setConstTable(m_constTable);
+  m_lexical.setIdentTable(m_identTable);
+
+  m_syntax.setTokenTable(m_tokenTable);
+  m_syntax.setConstTable(m_constTable);
+  m_syntax.setIdentTable(m_identTable);
+}
 
 bool Parser::parse(std::string &parseData, bool isFile) {
   bool res = false;
 
-  if (!m_tokenTable) {
-    m_tokenTable = std::make_unique<thl::TokenTable>();
-  } else {
-    m_tokenTable->clear();
-  }
-
-  if (!m_constTable) {
-    m_constTable = std::make_unique<thl::ConstTable>();
-  } else {
-    m_constTable->clear();
-  }
-
-  if (!m_identTable) {
-    m_identTable = std::make_unique<thl::IdentTable>();
-  } else {
-    m_identTable->clear();
-  }
+  m_tokenTable->clear();
+  m_constTable->clear();
+  m_identTable->clear();
 
   if (isFile) {
     res = parseFile(parseData);
@@ -37,7 +36,7 @@ bool Parser::parse(std::string &parseData, bool isFile) {
 
 bool Parser::parseFile(std::string &fileName) {
   bool res = false;
-  
+
   std::ifstream ifstream(fileName);
   if (!ifstream.is_open()) {
     std::cerr << "failed to open \n";
@@ -56,17 +55,10 @@ bool Parser::parseFile(std::string &fileName) {
 bool Parser::parseLine(std::string &line) {
   bool res = true;
   try {
-    m_lexical.setTokenTable(std::move(m_tokenTable));
-    m_lexical.setConstTable(std::move(m_constTable));
-    m_lexical.setIdentTable(std::move(m_identTable));
     m_lexical.parse(line);
 
-    m_syntax.setTokenTable(std::move(m_lexical.getTokenTable()));
-    m_syntax.setConstTable(std::move(m_lexical.getConstTable()));
-    m_syntax.setIdentTable(std::move(m_lexical.getIdentTable()));
     m_syntax.parse();
 
-    m_tokenTable = std::move(m_syntax.getTokenTable());
     m_programAst = std::move(m_syntax.getProgramAst());
 
     m_codeGenerator.visit(*m_programAst[0]);

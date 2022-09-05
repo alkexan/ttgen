@@ -13,41 +13,28 @@
 
 #define BOOST_TEST_MODULE TestLexical
 
-std::unique_ptr<thl::TokenTable> tokenTable;
-std::unique_ptr<thl::ConstTable> constTable;
-std::unique_ptr<thl::IdentTable> identTable;
+std::shared_ptr<thl::TokenTable> tokenTable =
+    std::make_unique<thl::TokenTable>();
+std::shared_ptr<thl::ConstTable> constTable =
+    std::make_unique<thl::ConstTable>();
+std::shared_ptr<thl::IdentTable> identTable =
+    std::make_unique<thl::IdentTable>();
 
 void parseData(std::string testString) {
   using namespace thl;
 
   LexicalAnalyzer lexical;
 
-  if (!tokenTable) {
-    tokenTable = std::make_unique<thl::TokenTable>();
-  } else {
-    tokenTable->clear();
-  }
+  tokenTable->clear();
+  constTable->clear();
+  identTable->clear();
 
-  if (!constTable) {
-    constTable = std::make_unique<thl::ConstTable>();
-  } else {
-    constTable->clear();
-  }
-
-  if (!identTable) {
-    identTable = std::make_unique<thl::IdentTable>();
-  } else {
-    identTable->clear();
-  }
-
-  lexical.setTokenTable(std::move(tokenTable));
-  lexical.setConstTable(std::move(constTable));
-  lexical.setIdentTable(std::move(identTable));
+  lexical.setTokenTable(tokenTable);
+  lexical.setConstTable(constTable);
+  lexical.setIdentTable(identTable);
 
   lexical.parse(testString);
   lexical.printResult();
-
-  tokenTable = std::move(lexical.getTokenTable());
 }
 
 BOOST_AUTO_TEST_SUITE(TestLexical)
