@@ -67,6 +67,16 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
     
     [ ]+        { continue; }
     [ ]*"//"[^\000\n]*"\n" { break; }
+
+    [ ]*"\r\n" { 
+      tokenPushBack(TokenType::ENDL, -1, m_textPos); 
+      break; 
+    }
+    [ ]*"\n"   { 
+      tokenPushBack(TokenType::ENDL, -1, m_textPos); 
+      break; 
+    }
+
     nul         { 
       tokenPushBack(TokenType::ENDL, -1, m_textPos); 
       break; 
