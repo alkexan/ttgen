@@ -54,7 +54,7 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
     varname = [a-zA-Z][_a-zA-Z0-9]*;
     
     [ ]+        { continue; }
-    [ ]*"//"[^\000\n]*"\n" { break; }
+    [ ]*"//"[^\000\n]* { break; }
 
     [ ]*"\r\n" { 
       tokenPushBack(TokenType::ENDL, -1, m_textPos); 
