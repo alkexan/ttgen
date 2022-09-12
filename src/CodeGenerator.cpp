@@ -1,4 +1,5 @@
 #include "CodeGenerator.hpp"
+#include "Util.hpp"
 
 #include <iostream>
 #include <math.h>
@@ -68,6 +69,10 @@ TBoolean CodeGenerator::visit(BinaryExprAST &ast) {
   }
   case TokenType::MUL: {
     result = ast.getLhs()->accept(*this) * ast.getRhs()->accept(*this);
+    break;
+  }
+  case TokenType::DIF: {
+    result = ast.getLhs()->accept(*this) / ast.getRhs()->accept(*this);
     break;
   }
   case TokenType::ASSIGMENT: {

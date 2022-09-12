@@ -1,4 +1,5 @@
 #include "SyntaxAnalyzer.hpp"
+#include "Util.hpp"
 #include <algorithm>
 #include <string>
 
@@ -181,7 +182,8 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseTerm(Token token) {
   if (lhs) {
     token = readToken();
     TokenType tokenType = token.getType();
-    while ((tokenType == TokenType::MUL) || (tokenType == TokenType::AND)) {
+    while ((tokenType == TokenType::MUL) || (tokenType == TokenType::AND) ||
+           tokenType == TokenType::DIF) {
       token = readToken();
       auto rhs = std::move(parseFactor(token));
       if (rhs) {

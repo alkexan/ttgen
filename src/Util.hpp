@@ -31,6 +31,7 @@ enum class TokenType {
   ADD,
   AND,
   MUL,
+  DIF,
 };
 
 static std::map<std::string, TokenType> operators = {
@@ -50,6 +51,7 @@ static std::map<std::string, TokenType> operators = {
     {"+", TokenType::ADD},
     {"&", TokenType::AND},
     {"*", TokenType::MUL},
+    {"*", TokenType::DIF},
 };
 
 class Token {
@@ -146,6 +148,8 @@ inline std::string Token::toString() {
   case thl::TokenType::XOR:
     result = "XOR";
     break;
+  case thl::TokenType::DIF:
+    result = "DIF";
   default:
     result = "";
     break;

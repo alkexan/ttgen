@@ -143,6 +143,10 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
       tokenPushBack(TokenType::XOR, -1, m_textPos);
       continue;
     }
+    "/"         {
+      tokenPushBack(TokenType::DIF, -1, m_textPos);
+      continue;
+    }
 
     "$"         {
       tokenPushBack(TokenType::NUMBER, (int)m_constTable->size(), m_textPos);
