@@ -67,6 +67,46 @@ public:
   TBoolean operator+();
 
   /**
+   * @brief Unary function for ternary logic y = -sqrt(1 - x).
+   *
+   * Truth table:
+   *
+   * |  x  |  f  |
+   * |:---:|:---:|
+   * |  $  |  0  |
+   * |  0  |  $  |
+   * |  1  |  0  |
+   *
+   * # $ - -1 or false;
+   * # x - operand;
+   * # f - function result;
+   *
+   * x unary operand.
+   * @return result of the operation.
+   */
+  TBoolean zneg();
+
+  /**
+   * @brief Unary function for ternary logic y = sqrt(1 - x).
+   *
+   * Truth table:
+   *
+   * |  x  |  f  |
+   * |:---:|:---:|
+   * |  $  |  0  |
+   * |  0  |  1  |
+   * |  1  |  0  |
+   *
+   * # $ - -1 or false;
+   * # x - operand;
+   * # f - function result;
+   *
+   * x unary operand.
+   * @return result of the operation.
+   */
+  TBoolean zpos();
+
+  /**
    * @brief The "Not" unary function for ternary logic.
    *
    * Truth table:

@@ -22,6 +22,8 @@ enum class TokenType {
   ASSIGMENT,
   IMPLICATION,
   IMPLICATIONB,
+  ZNEG,
+  ZPOS,
   NOT,
   DECREMENT,
   INCREMENT,

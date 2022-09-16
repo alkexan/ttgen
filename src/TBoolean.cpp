@@ -33,6 +33,38 @@ TBoolean TBoolean::operator-() { return TBoolean(-m_value); }
 
 TBoolean TBoolean::operator+() { return TBoolean(+m_value); }
 
+TBoolean TBoolean::zneg() {
+  signed char result = m_value;
+  switch (result) {
+  case FALSE:
+    result = UNKNOWN;
+    break;
+  case UNKNOWN:
+    result = FALSE;
+    break;
+  case TRUE:
+    result = UNKNOWN;
+    break;
+  }
+  return TBoolean(result);
+}
+
+TBoolean TBoolean::zpos() {
+  signed char result = m_value;
+  switch (result) {
+  case FALSE:
+    result = UNKNOWN;
+    break;
+  case UNKNOWN:
+    result = TRUE;
+    break;
+  case TRUE:
+    result = UNKNOWN;
+    break;
+  }
+  return TBoolean(result);
+}
+
 TBoolean TBoolean::operator~() {
   signed char result = m_value;
   switch (result) {

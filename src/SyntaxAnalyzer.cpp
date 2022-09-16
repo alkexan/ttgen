@@ -230,6 +230,8 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseUnary(Token token) {
   std::unique_ptr<ExpressionAst> result = nullptr;
 
   switch (token.getType()) {
+  case TokenType::ZNEG: // No Body
+  case TokenType::ZPOS: // No Body
   case TokenType::INCREMENT: // No Body
   case TokenType::DECREMENT: // No Body
   case TokenType::NOT: {
