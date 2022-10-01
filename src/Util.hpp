@@ -53,7 +53,7 @@ static std::map<std::string, TokenType> operators = {
     {"+", TokenType::ADD},
     {"&", TokenType::AND},
     {"*", TokenType::MUL},
-    {"*", TokenType::DIF},
+    {"/", TokenType::DIF},
 };
 
 class Token {

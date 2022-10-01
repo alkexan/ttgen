@@ -16,7 +16,7 @@
 <inc>         	::= "++"
 <dec>         	::= "--"
 <zero-to-neg>   ::= "?"
-<zero-to-neg>   ::= "!"
+<zero-to-pos>   ::= "!"
 <endl>          ::= "\n"
 <assert>        ::= ":="
 <open-brack>    ::= "("
