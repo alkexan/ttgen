@@ -59,6 +59,10 @@ TBoolean CodeGenerator::visit(BinaryExprAST &ast) {
     result = ast.getLhs()->accept(*this).limpl(ast.getRhs()->accept(*this));
     break;
   }
+  case TokenType::IMPLM: {
+    result = ast.getLhs()->accept(*this).implm(ast.getRhs()->accept(*this));
+    break;
+  }
   case TokenType::OR: {
     result = ast.getLhs()->accept(*this) | ast.getRhs()->accept(*this);
     break;

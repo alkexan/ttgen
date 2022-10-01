@@ -23,6 +23,7 @@ enum class TokenType {
   IMPL,
   IMPLB,
   LIMPL,
+  IMPLM,
   ZNEG,
   ZPOS,
   NOT,
@@ -46,6 +47,7 @@ static std::map<std::string, TokenType> operators = {
     {"->", TokenType::IMPL},
     {"+>", TokenType::IMPLB},
     {"|-", TokenType::LIMPL},
+    {"|=", TokenType::IMPLM},
     {"~", TokenType::NOT},
     {"--", TokenType::DECREMENT},
     {"++", TokenType::INCREMENT},
@@ -127,6 +129,10 @@ inline std::string Token::toString() {
     break;
   case thl::TokenType::LIMPL:
     result = "LIMPL";
+    break;
+  case thl::TokenType::IMPLM:
+    result = "IMPLM";
+    break;
   case thl::TokenType::DECREMENT:
     result = "DECREMENT";
     break;

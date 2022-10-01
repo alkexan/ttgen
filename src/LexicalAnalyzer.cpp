@@ -304,6 +304,7 @@ yy41:
 yy44:
 	yych = *++p;
 	if (yych == '-') goto yy66;
+	if (yych == '=') goto yy68;
 	{ 
       tokenPushBack(TokenType::OR, -1, m_textPos);
       continue;
@@ -370,6 +371,12 @@ yy66:
 	++p;
 	{ 
       tokenPushBack(TokenType::LIMPL, -1, m_textPos);
+      continue;
+    }
+yy68:
+	++p;
+	{ 
+      tokenPushBack(TokenType::IMPLM, -1, m_textPos);
       continue;
     }
 }

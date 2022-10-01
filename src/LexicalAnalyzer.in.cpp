@@ -144,6 +144,10 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
       tokenPushBack(TokenType::LIMPL, -1, m_textPos);
       continue;
     }
+    "|="        { 
+      tokenPushBack(TokenType::IMPLM, -1, m_textPos);
+      continue;
+    }
 
     "#"         { 
       tokenPushBack(TokenType::XOR, -1, m_textPos);

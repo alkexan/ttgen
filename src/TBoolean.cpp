@@ -666,3 +666,51 @@ TBoolean TBoolean::limpl(TBoolean y) {  TBoolean result = UNKNOWN;
   }
   return result;
 }
+
+TBoolean TBoolean::implm(TBoolean y) {  TBoolean result = UNKNOWN;
+  switch (m_value) {
+  case FALSE: {
+    switch (y.getValue()) {
+    case FALSE:
+      result = TRUE;
+      break;
+    case UNKNOWN:
+      result = TRUE;
+      break;
+    case TRUE:
+      result = TRUE;
+      break;
+    }
+    break;
+  }
+  case UNKNOWN: {
+    switch (y.getValue()) {
+    case FALSE:
+      result = TRUE;
+      break;
+    case UNKNOWN:
+      result = TRUE;
+      break;
+    case TRUE:
+      result = TRUE;
+      break;
+    }
+    break;
+  }
+  case TRUE: {
+    switch (y.getValue()) {
+    case FALSE:
+      result = FALSE;
+      break;
+    case UNKNOWN:
+      result = TRUE;
+      break;
+    case TRUE:
+      result = TRUE;
+      break;
+    }
+    break;
+  }
+  }
+  return result;
+}
