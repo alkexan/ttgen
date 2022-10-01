@@ -47,12 +47,16 @@ TBoolean CodeGenerator::visit(UnaryExprAST &ast) {
 TBoolean CodeGenerator::visit(BinaryExprAST &ast) {
   TBoolean result = 0;
   switch (ast.getOperator()) {
-  case TokenType::IMPLICATION: {
+  case TokenType::IMPL: {
     result = ast.getLhs()->accept(*this).impl(ast.getRhs()->accept(*this));
     break;
   }
-  case TokenType::IMPLICATIONB: {
+  case TokenType::IMPLB: {
     result = ast.getLhs()->accept(*this).implb(ast.getRhs()->accept(*this));
+    break;
+  }
+  case TokenType::LIMPL: {
+    result = ast.getLhs()->accept(*this).limpl(ast.getRhs()->accept(*this));
     break;
   }
   case TokenType::OR: {

@@ -302,7 +302,8 @@ yy41:
       continue;
     }
 yy44:
-	++p;
+	yych = *++p;
+	if (yych == '-') goto yy66;
 	{ 
       tokenPushBack(TokenType::OR, -1, m_textPos);
       continue;
@@ -338,7 +339,7 @@ yy53:
 yy55:
 	++p;
 	{ 
-      tokenPushBack(TokenType::IMPLICATIONB, -1, m_textPos);
+      tokenPushBack(TokenType::IMPLB, -1, m_textPos);
       continue;
     }
 yy57:
@@ -350,7 +351,7 @@ yy57:
 yy59:
 	++p;
 	{ 
-      tokenPushBack(TokenType::IMPLICATION, -1, m_textPos);
+      tokenPushBack(TokenType::IMPL, -1, m_textPos);
       continue;
     }
 yy61:
@@ -363,6 +364,12 @@ yy64:
 	++p;
 	{ 
       tokenPushBack(TokenType::ASSIGMENT, -1, m_textPos);
+      continue;
+    }
+yy66:
+	++p;
+	{ 
+      tokenPushBack(TokenType::LIMPL, -1, m_textPos);
       continue;
     }
 }

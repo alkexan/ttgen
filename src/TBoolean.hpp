@@ -535,6 +535,35 @@ public:
    */
   TBoolean implb(TBoolean y);
 
+  /**
+   * @brief The Lukasiewicz "Implication" binary function for ternary logic.
+   *
+   * This function was taken from the site
+   * Truth table:
+   *
+   * |  x  |  y  |  f  |
+   * |:---:|:---:|:---:|
+   * |  $  |  $  |  1  |
+   * |  $  |  0  |  1  |
+   * |  $  |  1  |  1  |
+   * |  0  |  $  |  0  |
+   * |  0  |  0  |  1  |
+   * |  0  |  1  |  1  |
+   * |  1  |  $  |  $  |
+   * |  1  |  0  |  0  |
+   * |  1  |  1  |  1  |
+   *
+   * # $ - -1 or false;
+   * # x - operand;
+   * # y - operand;
+   * # f - function result.
+   *
+   * @param x first binary operand.
+   * @param y second binary operand.
+   * @return result of the operation.
+   */
+  TBoolean limpl(TBoolean y);
+
 private:
   signed char m_value;
 };

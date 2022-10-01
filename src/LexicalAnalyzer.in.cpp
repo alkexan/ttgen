@@ -102,7 +102,7 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
       continue;
     }
     "->"        { 
-      tokenPushBack(TokenType::IMPLICATION, -1, m_textPos);
+      tokenPushBack(TokenType::IMPL, -1, m_textPos);
       continue;
     }
     "-"         { 
@@ -115,7 +115,7 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
       continue;
     }
     "+>"        { 
-      tokenPushBack(TokenType::IMPLICATIONB, -1, m_textPos);
+      tokenPushBack(TokenType::IMPLB, -1, m_textPos);
       continue;
     }
     "+"         { 
@@ -136,24 +136,30 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
       continue;
     }
 
-    "*"         { 
-      tokenPushBack(TokenType::MUL, -1, m_textPos);
-      continue;
-    }
-    "&"         { 
-      tokenPushBack(TokenType::AND, -1, m_textPos);
-      continue;
-    }
     "|"         { 
       tokenPushBack(TokenType::OR, -1, m_textPos);
       continue;
     }
+    "|-"        { 
+      tokenPushBack(TokenType::LIMPL, -1, m_textPos);
+      continue;
+    }
+
     "#"         { 
       tokenPushBack(TokenType::XOR, -1, m_textPos);
       continue;
     }
     "/"         {
       tokenPushBack(TokenType::DIF, -1, m_textPos);
+      continue;
+    }
+
+    "*"         { 
+      tokenPushBack(TokenType::MUL, -1, m_textPos);
+      continue;
+    }
+    "&"         { 
+      tokenPushBack(TokenType::AND, -1, m_textPos);
       continue;
     }
 

@@ -131,8 +131,9 @@ thl::SyntaxAnalyzer::parseStatement(Token token) {
   if (lhs) {
     token = readToken();
     TokenType tokenType = token.getType();
-    while ((tokenType == TokenType::IMPLICATION) ||
-           (tokenType == TokenType::IMPLICATIONB)) {
+    while ((tokenType == TokenType::IMPL) ||
+           (tokenType == TokenType::IMPLB) ||
+           (tokenType == TokenType::LIMPL)) {
       token = readToken();
       auto rhs = std::move(parseExpression(token));
       if (rhs) {

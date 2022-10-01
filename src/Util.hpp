@@ -20,8 +20,9 @@ enum class TokenType {
   ENDL,
   // not null operators
   ASSIGMENT,
-  IMPLICATION,
-  IMPLICATIONB,
+  IMPL,
+  IMPLB,
+  LIMPL,
   ZNEG,
   ZPOS,
   NOT,
@@ -42,8 +43,9 @@ static std::map<std::string, TokenType> operators = {
     {",", TokenType::DELIMITER},
     {"/n", TokenType::ENDL},
     {":=", TokenType::ASSIGMENT},
-    {"->", TokenType::IMPLICATION},
-    {"+>", TokenType::IMPLICATIONB},
+    {"->", TokenType::IMPL},
+    {"+>", TokenType::IMPLB},
+    {"|-", TokenType::LIMPL},
     {"~", TokenType::NOT},
     {"--", TokenType::DECREMENT},
     {"++", TokenType::INCREMENT},
@@ -117,12 +119,14 @@ inline std::string Token::toString() {
   case thl::TokenType::ASSIGMENT:
     result = "ASSIGMENT";
     break;
-  case thl::TokenType::IMPLICATION:
-    result = "IMPLICATION";
+  case thl::TokenType::IMPL:
+    result = "IMPL";
     break;
-  case thl::TokenType::IMPLICATIONB:
-    result = "IMPLICATIONB";
+  case thl::TokenType::IMPLB:
+    result = "IMPLB";
     break;
+  case thl::TokenType::LIMPL:
+    result = "LIMPL";
   case thl::TokenType::DECREMENT:
     result = "DECREMENT";
     break;
