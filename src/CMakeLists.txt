@@ -12,8 +12,7 @@ if(RE2C)
 			DEPENDS ${IN} OUTPUT ${OUT} COMMAND ${RE2C} -b -i --no-generation-date --no-version -o ${OUT} ${IN}
 		)
 	endfunction()
-	set(LexicalAnalyzerSrc ${PROJECT_BINARY_DIR}/LexicalAnalyzer.cpp)
-	re2c(${CMAKE_CURRENT_SOURCE_DIR}/LexicalAnalyzer.in.cpp ${LexicalAnalyzerSrc})
+	re2c(${CMAKE_CURRENT_SOURCE_DIR}/LexicalAnalyzer.in.cpp ${CMAKE_CURRENT_SOURCE_DIR}/LexicalAnalyzer.cpp)
 else()
 	message(WARNING "re2c was not found; changes to src/*.in.cc will not affect your build.")
 	set(LexicalAnalyzerSrc "LexicalAnalyzer.cpp")
@@ -29,7 +28,7 @@ add_library(ttgen_lib STATIC
 	"SyntaxAnalyzer.hpp"
 	"Parser.cpp"
 	"Parser.hpp"
-	${LexicalAnalyzerSrc}
+	"LexicalAnalyzer.cpp"
 	"LexicalAnalyzer.hpp"
 	"CodeGenerator.hpp"
 	"CodeGenerator.cpp"
