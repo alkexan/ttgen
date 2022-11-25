@@ -127,17 +127,8 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
       tokenPushBack(TokenType::NOT, -1, m_textPos);
       continue;
     }
-    "!"         { 
-      tokenPushBack(TokenType::ZPOS, -1, m_textPos);
-      continue;
-    }
-    "?"         { 
-      tokenPushBack(TokenType::ZNEG, -1, m_textPos);
-      continue;
-    }
-
-    "|"         { 
-      tokenPushBack(TokenType::OR, -1, m_textPos);
+    "*"         { 
+      tokenPushBack(TokenType::MUL, -1, m_textPos);
       continue;
     }
     "|-"        { 

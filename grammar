@@ -11,12 +11,10 @@
                     <digit>
 <paren>         ::= <open-brack> <stmt> <close-brack>
 <call>          ::= <ident> <open-brack> <stmt> {<delimiter> <stmt>} <close-brack>
-<unary>         ::= <not> | <inc> | <dec> | <zero-to-neg> | <zero-to-pos>
+<unary>         ::= <not> | <inc> | <dec>
 <not>         	::= "~"
 <inc>         	::= "++"
 <dec>         	::= "--"
-<zero-to-neg>   ::= "?"
-<zero-to-pos>   ::= "!"
 <endl>          ::= "\n"
 <assert>        ::= ":="
 <open-brack>    ::= "("

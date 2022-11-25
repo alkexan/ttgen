@@ -24,8 +24,6 @@ enum class TokenType {
   IMPLB,
   LIMPL,
   IMPLM,
-  ZNEG,
-  ZPOS,
   NOT,
   DECREMENT,
   INCREMENT,

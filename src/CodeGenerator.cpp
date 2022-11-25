@@ -27,14 +27,6 @@ TBoolean CodeGenerator::visit(UnaryExprAST &ast) {
     result = ++ast.getRhs()->accept(*this);
     break;
   }
-  case TokenType::ZNEG: {
-    result = ast.getRhs()->accept(*this).zneg();
-    break;
-  }
-  case TokenType::ZPOS: {
-    result = ast.getRhs()->accept(*this).zpos();
-    break;
-  }
   default: {
     throw ParseException("Invalid unary operator");
     break;
