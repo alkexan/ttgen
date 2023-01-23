@@ -20,22 +20,9 @@ Parser::Parser()
   m_syntax.setIdentTable(m_identTable);
 }
 
-bool Parser::parse(std::string &parseData, bool isFile) {
+bool Parser::parse(std::ifstream &ifstream) {
   bool res = false;
 
-  if (isFile) {
-    res = parseFile(parseData);
-  } else {
-    res = parseLine(parseData);
-  }
-
-  return res;
-}
-
-bool Parser::parseFile(std::string &fileName) {
-  bool res = false;
-
-  std::ifstream ifstream(fileName);
   if (!ifstream.is_open()) {
     std::cerr << "failed to open \n";
   } else {
@@ -45,7 +32,7 @@ bool Parser::parseFile(std::string &fileName) {
 
       std::cout << line << std::endl;
 
-      if (parseLine(line)) {
+      if (parse(line)) {
         m_codeGenerator.printTable();
       }
     }
@@ -54,7 +41,7 @@ bool Parser::parseFile(std::string &fileName) {
   return res;
 }
 
-bool Parser::parseLine(std::string &line) {
+bool Parser::parse(std::string &line) {
   bool res = true;
   try {
     m_tokenTable->clear();

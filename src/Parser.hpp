@@ -12,7 +12,8 @@ class Parser {
 public:
   Parser();
 
-  bool parse(std::string &parseData, bool isFile = false);
+  bool parse(std::string &line);
+  bool parse(std::ifstream &ifstream);
 
   std::vector<TBoolean> getResults() {
     return m_results;
@@ -35,9 +36,6 @@ private:
   LexicalAnalyzer m_lexical;
   SyntaxAnalyzer m_syntax;
   CodeGenerator m_codeGenerator;
-
-  bool parseFile(std::string &fileName);
-  bool parseLine(std::string &line);
 };
 
 }
