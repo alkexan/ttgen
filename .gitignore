@@ -2,6 +2,7 @@
 /build/
 /out/
 /install/
+/doc/
 
 # Temp files
 version.h
