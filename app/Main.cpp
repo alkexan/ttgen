@@ -14,7 +14,6 @@
 namespace po = boost::program_options;
 
 static thl::Parser parser;
-static std::string parseSource;
 
 void printFunctions() {
   std::cout << "This program supported this logical funcions.\n"
@@ -166,22 +165,24 @@ int main(int argc, char* argv[]) {
   } else if (vm.count("version")) {
     std::cout << VERSION << std::endl;
   } else if (vm.count("source")) {
-    parseSource = vm["source"].as<std::string>();
-    if (parseSource.size() == 0) {
+    std::string fileName = vm["source"].as<std::string>();
+    if (fileName.size() == 0) {
       std::cout << "The source file is not set. Use --help for more information"
                 << std::endl;
     } else {
-      parser.parse(parseSource, true);
+      std::ifstream ifstream(fileName);
+      parser.parse(ifstream);
     }
   } else {
+    std::string line;
     while (true) {
       std::cout << ">> ";
-      std::getline(std::cin, parseSource);
+      std::getline(std::cin, line);
 
-      if (parseSource == "!q") {
+      if (line == "!q") {
         break;
       } else {
-        if (parser.parse(parseSource)) {
+        if (parser.parse(line)) {
           parser.printTable();
         }
       }
