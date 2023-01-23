@@ -33,7 +33,7 @@ bool Parser::parse(std::ifstream &ifstream) {
       std::cout << line << std::endl;
 
       if (parse(line)) {
-        m_codeGenerator.printTable();
+        m_TableCalculator.printTable();
       }
     }
   }
@@ -55,8 +55,8 @@ bool Parser::parse(std::string &line) {
     m_programAst = std::move(m_syntax.getProgramAst());
 
     if (m_programAst.size() > 0) {
-      m_codeGenerator.visit(*m_programAst[0]);
-      m_results = m_codeGenerator.getResults();
+      m_TableCalculator.visit(*m_programAst[0]);
+      m_results = m_TableCalculator.getResults();
     } else {
       res = false;
     }

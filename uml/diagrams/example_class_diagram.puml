@@ -185,7 +185,7 @@ class C_0000573966208009477367 {
 -m_lexIterator : std::vector<thl::Token>::iterator
 -m_programAst : std::vector<std::unique_ptr<FunctionAST>>
 }
-class "thl::CodeGenerator" as C_0001530908698160943040
+class "thl::TableCalculator" as C_0001530908698160943040
 class C_0001530908698160943040 {
 +visit(thl::NumberExprAST & ast) : thl::TBoolean
 +visit(thl::VariableExprAST & ast) : thl::TBoolean
@@ -233,7 +233,7 @@ class C_0001554936472979366330 {
 -m_results : std::vector<TBoolean>
 -m_lexical : thl::LexicalAnalyzer
 -m_syntax : thl::SyntaxAnalyzer
--m_codeGenerator : thl::CodeGenerator
+-m_TableCalculator : thl::TableCalculator
 }
 C_0001256497913759837815 ..> C_0000547864749498012895
 C_0001256497913759837815 o-- C_0000547864749498012895 : -m_type
@@ -295,5 +295,5 @@ C_0001554936472979366330 o-- C_0000696098587337849809 : -m_programAst
 C_0001554936472979366330 o-- C_0001953457053675824472 : -m_results
 C_0001554936472979366330 o-- C_0002096797560665741695 : -m_lexical
 C_0001554936472979366330 o-- C_0000573966208009477367 : -m_syntax
-C_0001554936472979366330 o-- C_0001530908698160943040 : -m_codeGenerator
+C_0001554936472979366330 o-- C_0001530908698160943040 : -m_TableCalculator
 @enduml

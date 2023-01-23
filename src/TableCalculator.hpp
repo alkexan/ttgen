@@ -7,7 +7,11 @@
 #include <vector>
 
 namespace thl {
-class CodeGenerator : public Visitor {
+  /**
+   * @brief Class for calculating truth table from AST
+   * 
+   */
+class TableCalculator : public Visitor {
 public:
   TBoolean visit(NumberExprAST &ast) override;
 

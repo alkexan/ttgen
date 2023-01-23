@@ -1,4 +1,4 @@
-#include "CodeGenerator.hpp"
+#include "TableCalculator.hpp"
 #include "Token.hpp"
 
 #include <iostream>
@@ -6,13 +6,13 @@
 
 using namespace thl;
 
-TBoolean CodeGenerator::visit(NumberExprAST &ast) { return ast.getValue(); }
+TBoolean TableCalculator::visit(NumberExprAST &ast) { return ast.getValue(); }
 
-TBoolean CodeGenerator::visit(VariableExprAST &ast) {
+TBoolean TableCalculator::visit(VariableExprAST &ast) {
   return m_values[ast.getName()][m_valuePosition];
 }
 
-TBoolean CodeGenerator::visit(UnaryExprAST &ast) {
+TBoolean TableCalculator::visit(UnaryExprAST &ast) {
   TBoolean result = 0;
   switch (ast.getOperator()) {
   case TokenType::NOT: {
@@ -36,7 +36,7 @@ TBoolean CodeGenerator::visit(UnaryExprAST &ast) {
   return result;
 }
 
-TBoolean CodeGenerator::visit(BinaryExprAST &ast) {
+TBoolean TableCalculator::visit(BinaryExprAST &ast) {
   TBoolean result = 0;
   switch (ast.getOperator()) {
   case TokenType::IMPL: {
@@ -96,7 +96,7 @@ TBoolean CodeGenerator::visit(BinaryExprAST &ast) {
   return result;
 }
 
-TBoolean CodeGenerator::visit(PrototypeAST &ast) {
+TBoolean TableCalculator::visit(PrototypeAST &ast) {
   m_values.clear();
   m_valuePosition = 0;
   m_valuesCount = 0;
@@ -124,7 +124,7 @@ TBoolean CodeGenerator::visit(PrototypeAST &ast) {
   return 0;
 }
 
-TBoolean CodeGenerator::visit(FunctionAST &ast) {
+TBoolean TableCalculator::visit(FunctionAST &ast) {
   ast.getPrototype()->accept(*this);
 
   m_valuePosition = 0;
@@ -137,7 +137,7 @@ TBoolean CodeGenerator::visit(FunctionAST &ast) {
   return 0;
 }
 
-TBoolean CodeGenerator::visit(CallExprAST &ast) {
+TBoolean TableCalculator::visit(CallExprAST &ast) {
 
   auto args = ast.getArgs();
   for (int i = 0; i < args.size(); i++) {
@@ -147,7 +147,7 @@ TBoolean CodeGenerator::visit(CallExprAST &ast) {
   return 0;
 }
 
-void CodeGenerator::printTable() {
+void TableCalculator::printTable() {
   std::cout << "|\t";
   for (auto i = m_values.begin(); i != m_values.end(); i++) {
     std::cout << i->first << "\t|\t";

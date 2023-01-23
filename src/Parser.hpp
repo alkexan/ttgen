@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CodeGenerator.hpp"
+#include "TableCalculator.hpp"
 #include "LexicalAnalyzer.hpp"
 #include "SyntaxAnalyzer.hpp"
 #include <memory>
@@ -20,7 +20,7 @@ public:
   }
 
   void printTable() {
-    m_codeGenerator.printTable();
+    m_TableCalculator.printTable();
   }
 
 private:
@@ -35,7 +35,7 @@ private:
 
   LexicalAnalyzer m_lexical;
   SyntaxAnalyzer m_syntax;
-  CodeGenerator m_codeGenerator;
+  TableCalculator m_TableCalculator;
 };
 
 }

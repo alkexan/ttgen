@@ -29,8 +29,8 @@ add_library(ttgen_lib STATIC
 	"Parser.hpp"
 	"LexicalAnalyzer.cpp"
 	"LexicalAnalyzer.hpp"
-	"CodeGenerator.hpp"
-	"CodeGenerator.cpp"
+	"TableCalculator.hpp"
+	"TableCalculator.cpp"
  )
 
 # Include folders
