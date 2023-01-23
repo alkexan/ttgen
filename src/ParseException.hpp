@@ -3,7 +3,10 @@
 #include <string>
 
 namespace thl {
-
+/**
+ * @brief Parse Exception class
+ * 
+ */
 class ParseException {
 public:
   ParseException(std::string error) : m_error(error) {}

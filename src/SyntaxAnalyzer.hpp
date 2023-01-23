@@ -12,6 +12,10 @@
 
 namespace thl {
 
+/**
+ * @brief Syntax Analyzer class
+ * 
+ */
 class SyntaxAnalyzer {
 public:
   SyntaxAnalyzer();

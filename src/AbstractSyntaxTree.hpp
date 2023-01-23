@@ -15,6 +15,10 @@ class PrototypeAST;
 class FunctionAST;
 class CallExprAST;
 
+/**
+ * @brief Template Visitor class
+ * 
+ */
 class Visitor {
 public:
   virtual ~Visitor() = default;

@@ -10,6 +10,10 @@
 #include "Token.hpp"
 
 namespace thl {
+  /**
+   * @brief Lexical Analyzer class
+   * 
+   */
 class LexicalAnalyzer {
 public:
   LexicalAnalyzer();

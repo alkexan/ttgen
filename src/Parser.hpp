@@ -8,6 +8,10 @@
 
 namespace thl {
 
+/**
+ * @brief Class for parsing file or string inputs
+ * 
+ */
 class Parser {
 public:
   Parser();

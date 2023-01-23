@@ -36,6 +36,10 @@ enum class TokenType {
   DIF,
 };
 
+/**
+ * @brief Language token class
+ * 
+ */
 class Token {
 public:
   Token()
