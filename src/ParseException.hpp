@@ -2,6 +2,8 @@
 #define SRC__PARSE_EXCEPTION__HPP
 #include <string>
 
+namespace thl {
+
 class ParseException {
 public:
   ParseException(std::string error) : m_error(error) {}
@@ -11,5 +13,6 @@ public:
 private:
   std::string m_error;
 };
+}
 
 #endif // SRC__PARSE_EXCEPTION__HPP

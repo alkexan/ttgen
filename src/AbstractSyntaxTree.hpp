@@ -2,7 +2,7 @@
 #define SRC__ABSTRACT_SYNTAX_TREE__HPP
 
 #include "TBoolean.hpp"
-#include "Util.hpp"
+#include "Token.hpp"
 
 #include <memory>
 

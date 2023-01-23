@@ -1,5 +1,5 @@
 #include "SyntaxAnalyzer.hpp"
-#include "Util.hpp"
+#include "Token.hpp"
 #include <algorithm>
 #include <string>
 

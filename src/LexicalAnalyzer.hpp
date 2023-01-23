@@ -7,7 +7,7 @@
 #include <string>
 
 #include "ParseException.hpp"
-#include "Util.hpp"
+#include "Token.hpp"
 
 namespace thl {
 class LexicalAnalyzer {

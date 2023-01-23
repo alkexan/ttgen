@@ -3,7 +3,7 @@
 #include "AbstractSyntaxTree.hpp"
 #include "ParseException.hpp"
 #include "TBoolean.hpp"
-#include "Util.hpp"
+#include "Token.hpp"
 #include <vector>
 
 namespace thl {

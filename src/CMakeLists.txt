@@ -20,8 +20,7 @@ endif()
 
 # Compile library
 add_library(ttgen_lib STATIC 
-	"Util.hpp"
-	"Util.cpp"
+	"Token.hpp"
 	"TBoolean.cpp"
 	"TBoolean.hpp"
 	"SyntaxAnalyzer.cpp"

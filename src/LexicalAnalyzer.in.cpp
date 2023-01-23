@@ -1,5 +1,5 @@
 #include "LexicalAnalyzer.hpp"
-#include "Util.hpp"
+#include "Token.hpp"
 
 #include <iostream>
 #include <utility>

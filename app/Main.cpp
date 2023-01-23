@@ -13,7 +13,7 @@
 
 namespace po = boost::program_options;
 
-static Parser parser;
+static thl::Parser parser;
 static std::string parseSource;
 
 void printFunctions() {

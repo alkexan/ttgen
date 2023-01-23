@@ -1,6 +1,6 @@
 #include "LexicalAnalyzer.hpp"
 #include "SyntaxAnalyzer.hpp"
-#include "Util.hpp"
+#include "Token.hpp"
 
 #define BOOST_TEST_MAIN
 #define BOOST_TEST_DYN_LINK
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(VariableWithoutParams) {
 
   try {
     parseData("f() := x -> y | z");
-  } catch (ParseException &exception) {
+  } catch (thl::ParseException &exception) {
     message = exception.getError();
   }
   

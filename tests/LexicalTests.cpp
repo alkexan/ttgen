@@ -1,5 +1,5 @@
 #include "LexicalAnalyzer.hpp"
-#include "Util.hpp"
+#include "Token.hpp"
 
 #define BOOST_TEST_MAIN
 #define BOOST_TEST_DYN_LINK

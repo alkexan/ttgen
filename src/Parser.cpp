@@ -1,8 +1,10 @@
 #include "Parser.hpp"
-#include "Util.hpp"
+#include "Token.hpp"
 #include <fstream>
 #include <iostream>
 #include <memory>
+
+using namespace thl;
 
 Parser::Parser()
     : m_tokenTable(std::make_shared<thl::TokenTable>()),

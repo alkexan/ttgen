@@ -1,5 +1,5 @@
 #include "Parser.hpp"
-#include "Util.hpp"
+#include "Token.hpp"
 #include <iostream>
 
 #define BOOST_TEST_MAIN

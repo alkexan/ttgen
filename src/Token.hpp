@@ -36,28 +36,6 @@ enum class TokenType {
   DIF,
 };
 
-static std::map<std::string, TokenType> operators = {
-    {"(", TokenType::OPEN_BRACKET},
-    {")", TokenType::CLOSE_BRACKET},
-    {",", TokenType::DELIMITER},
-    {"/n", TokenType::ENDL},
-    {":=", TokenType::ASSIGMENT},
-    {"->", TokenType::IMPL},
-    {"+>", TokenType::IMPLB},
-    {"|-", TokenType::LIMPL},
-    {"|=", TokenType::IMPLM},
-    {"~", TokenType::NOT},
-    {"--", TokenType::DECREMENT},
-    {"++", TokenType::INCREMENT},
-    {"|", TokenType::OR},
-    {"#", TokenType::XOR},
-    {"-", TokenType::SUB},
-    {"+", TokenType::ADD},
-    {"&", TokenType::AND},
-    {"*", TokenType::MUL},
-    {"/", TokenType::DIF},
-};
-
 class Token {
 public:
   Token()
@@ -167,9 +145,6 @@ inline std::string Token::toString() {
   return result;
 }
 
-template <typename Base, typename T> inline bool instanceof (const T *) {
-  return std::is_base_of<Base, T>::value;
-}
 } // namespace thl
 
 #endif // SRC__LEXICAL_ANALYZER__HPP

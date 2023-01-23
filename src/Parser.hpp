@@ -6,7 +6,7 @@
 #include <memory>
 #include <string>
 
-using namespace thl;
+namespace thl {
 
 class Parser {
 public:
@@ -39,3 +39,5 @@ private:
   bool parseFile(std::string &fileName);
   bool parseLine(std::string &line);
 };
+
+}
