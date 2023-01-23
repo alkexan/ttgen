@@ -1,0 +1,299 @@
+@startuml
+class "thl::TBoolean" as C_0001953457053675824472
+class C_0001953457053675824472 {
++TBoolean() : void
++~TBoolean() : void
++getValue() const : signed char
++operator basic_string() : std::string
++operator=(thl::TBoolean y) : thl::TBoolean &
++operator-() : thl::TBoolean
++operator+() : thl::TBoolean
++operator~() : thl::TBoolean
++operator--() : thl::TBoolean &
++operator--(int ) : thl::TBoolean
++operator++() : thl::TBoolean &
++operator++(int ) : thl::TBoolean
++operator|(thl::TBoolean y) : thl::TBoolean
++operator&(thl::TBoolean y) : thl::TBoolean
++operator/(thl::TBoolean y) : thl::TBoolean
++operator^(thl::TBoolean y) : thl::TBoolean
++operator%(thl::TBoolean y) : thl::TBoolean
++operator+(thl::TBoolean y) : thl::TBoolean
++operator*(thl::TBoolean y) : thl::TBoolean
++operator-(thl::TBoolean y) : thl::TBoolean
++comp(thl::TBoolean y) : thl::TBoolean
++nand(thl::TBoolean y) : thl::TBoolean
++nor(thl::TBoolean y) : thl::TBoolean
++impl(thl::TBoolean y) : thl::TBoolean
++implb(thl::TBoolean y) : thl::TBoolean
++limpl(thl::TBoolean y) : thl::TBoolean
++implm(thl::TBoolean y) : thl::TBoolean
++TBoolean(N y) : void
++operator=(N y) : class thl::TBoolean &
++operator==(N n) : _Bool
++operator type-parameter-0-0() : N
+-m_value : signed char
+{static} +FALSE : const signed char
+{static} +UNKNOWN : const signed char
+{static} +TRUE : const signed char
+}
+enum "thl::TokenType" as C_0000547864749498012895
+enum C_0000547864749498012895 {
+ENDF
+IDENTIFIER
+NUMBER
+OPEN_BRACKET
+CLOSE_BRACKET
+DELIMITER
+ENDL
+ASSIGMENT
+IMPL
+IMPLB
+LIMPL
+IMPLM
+NOT
+DECREMENT
+INCREMENT
+OR
+XOR
+SUB
+ADD
+AND
+MUL
+DIF
+}
+class "thl::Token" as C_0001256497913759837815
+class C_0001256497913759837815 {
++Token() : void
++Token(thl::TokenType TokenType, int attr, std::pair<int,int> textPos) : void
++getType() const : thl::TokenType
++getAttribute() const : int
++setAttributes(thl::TokenType TokenType, int attr, std::pair<int,int> textPos) : void
++toString() : std::string
++getTextPosition() const : std::pair<int,int>
+-m_type : thl::TokenType
+-m_attribute : int
+-m_textPos : std::pair<int,int>
+}
+abstract "thl::Visitor" as C_0001327273079456333720
+abstract C_0001327273079456333720 {
++~Visitor() = default : void
+{abstract} +visit(thl::NumberExprAST & ast) = 0 : thl::TBoolean
+{abstract} +visit(thl::VariableExprAST & ast) = 0 : thl::TBoolean
+{abstract} +visit(thl::UnaryExprAST & ast) = 0 : thl::TBoolean
+{abstract} +visit(thl::BinaryExprAST & ast) = 0 : thl::TBoolean
+{abstract} +visit(thl::PrototypeAST & ast) = 0 : thl::TBoolean
+{abstract} +visit(thl::FunctionAST & ast) = 0 : thl::TBoolean
+{abstract} +visit(thl::CallExprAST & ast) = 0 : thl::TBoolean
+}
+abstract "thl::ExpressionAst" as C_0001579752990539937612
+abstract C_0001579752990539937612 {
++~ExpressionAst() = default : void
+{abstract} +accept(thl::Visitor & visitor) = 0 : thl::TBoolean
+}
+class "thl::NumberExprAST" as C_0000332919104882374484
+class C_0000332919104882374484 {
++NumberExprAST(int val) : void
++accept(thl::Visitor & visitor) : thl::TBoolean
++getValue() const : int
+-m_val : int
+}
+class "thl::VariableExprAST" as C_0001850833899230177928
+class C_0001850833899230177928 {
++VariableExprAST(const std::string & name) : void
++accept(thl::Visitor & visitor) : thl::TBoolean
++getName() const : std::string
+-m_name : std::string
+}
+class "thl::UnaryExprAST" as C_0000064097710659204288
+class C_0000064097710659204288 {
++UnaryExprAST(thl::TokenType op, std::unique_ptr<ExpressionAst> rhs) : void
++accept(thl::Visitor & visitor) : thl::TBoolean
++getOperator() const : thl::TokenType
++getRhs() const : thl::ExpressionAst *
+-m_op : thl::TokenType
+-m_rhs : std::unique_ptr<ExpressionAst>
+}
+class "thl::BinaryExprAST" as C_0001786655663887794501
+class C_0001786655663887794501 {
++BinaryExprAST(thl::TokenType op, std::unique_ptr<ExpressionAst> lhs, std::unique_ptr<ExpressionAst> rhs) : void
++accept(thl::Visitor & visitor) : thl::TBoolean
++getOperator() const : thl::TokenType
++getLhs() const : thl::ExpressionAst *
++getRhs() const : thl::ExpressionAst *
+-m_op : thl::TokenType
+-m_lhs : std::unique_ptr<ExpressionAst>
+-m_rhs : std::unique_ptr<ExpressionAst>
+}
+class "thl::PrototypeAST" as C_0000213006485765509743
+class C_0000213006485765509743 {
++PrototypeAST(const std::string & name, const std::vector<std::string> & args) : void
++accept(thl::Visitor & visitor) : thl::TBoolean
++getName() const : std::string
++getArgs() const : std::vector<std::string>
+-m_name : std::string
+-m_args : std::vector<std::string>
+}
+class "thl::FunctionAST" as C_0000696098587337849809
+class C_0000696098587337849809 {
++FunctionAST(std::unique_ptr<PrototypeAST> prototype, std::unique_ptr<ExpressionAst> body) : void
++accept(thl::Visitor & visitor) : thl::TBoolean
++getPrototype() const : thl::ExpressionAst *
++getBody() const : thl::ExpressionAst *
+-m_prototype : std::unique_ptr<PrototypeAST>
+-m_body : std::unique_ptr<ExpressionAst>
+}
+class "thl::CallExprAST" as C_0000664610893086593088
+class C_0000664610893086593088 {
++CallExprAST(const std::string & callee, std::vector<std::unique_ptr<ExpressionAst>> args) : void
++accept(thl::Visitor & visitor) : thl::TBoolean
++getName() const : std::string
++getArgs() : std::vector<std::unique_ptr<ExpressionAst>>
+-m_name : std::string
+-m_args : std::vector<std::unique_ptr<ExpressionAst>>
+}
+class "thl::ParseException" as C_0001256716677651242650
+class C_0001256716677651242650 {
++ParseException(std::string error) : void
++getError() const : std::string
+-m_error : std::string
+}
+class "thl::SyntaxAnalyzer" as C_0000573966208009477367
+class C_0000573966208009477367 {
++SyntaxAnalyzer() : void
++~SyntaxAnalyzer() : void
++setTokenTable(std::shared_ptr<TokenTable> lexemTable) : void
++setConstTable(std::shared_ptr<ConstTable> constTable) : void
++setIdentTable(std::shared_ptr<IdentTable> identTable) : void
++getProgramAst() : std::vector<std::unique_ptr<FunctionAST>>
++parse() : void
+-parseFunction(thl::Token lexeme) : std::unique_ptr<FunctionAST>
+-parsePrototype(thl::Token lexeme) : std::unique_ptr<PrototypeAST>
+-parseStatement(thl::Token lexeme) : std::unique_ptr<ExpressionAst>
+-parseExpression(thl::Token lexeme) : std::unique_ptr<ExpressionAst>
+-parseTerm(thl::Token lexeme) : std::unique_ptr<ExpressionAst>
+-parseFactor(thl::Token lexeme) : std::unique_ptr<ExpressionAst>
+-parseUnary(thl::Token lexeme) : std::unique_ptr<ExpressionAst>
+-parseParenExpr(thl::Token lexeme) : std::unique_ptr<ExpressionAst>
+-parseName(thl::Token lexeme) : std::unique_ptr<ExpressionAst>
+-parseNumber(thl::Token lexeme) : std::unique_ptr<ExpressionAst>
+-readToken(bool previous = 0) : thl::Token
+-m_tokenTable : std::shared_ptr<TokenTable>
+-m_constTable : std::shared_ptr<ConstTable>
+-m_identTable : std::shared_ptr<IdentTable>
+-m_prototypeArgs : std::vector<std::string>
+-m_lexIterator : std::vector<thl::Token>::iterator
+-m_programAst : std::vector<std::unique_ptr<FunctionAST>>
+}
+class "thl::CodeGenerator" as C_0001530908698160943040
+class C_0001530908698160943040 {
++visit(thl::NumberExprAST & ast) : thl::TBoolean
++visit(thl::VariableExprAST & ast) : thl::TBoolean
++visit(thl::UnaryExprAST & ast) : thl::TBoolean
++visit(thl::BinaryExprAST & ast) : thl::TBoolean
++visit(thl::PrototypeAST & ast) : thl::TBoolean
++visit(thl::FunctionAST & ast) : thl::TBoolean
++visit(thl::CallExprAST & ast) : thl::TBoolean
++printTable() : void
++getResults() : std::vector<TBoolean>
+-m_valuePosition : int
+-m_valuesCount : int
+-m_values : std::map<std::string,std::vector<int>>
+-m_results : std::vector<TBoolean>
+}
+class "thl::LexicalAnalyzer" as C_0002096797560665741695
+class C_0002096797560665741695 {
++LexicalAnalyzer() : void
++~LexicalAnalyzer() : void
++setTokenTable(std::shared_ptr<TokenTable> lexemTable) : void
++setConstTable(std::shared_ptr<ConstTable> constTable) : void
++setIdentTable(std::shared_ptr<IdentTable> identTable) : void
++parse(std::string & line) : void
++printResult() : void
+-tokenPushBack(thl::TokenType tokenType, int attr, std::pair<int,int> textPos) : void
+-getTokens(std::string & line) : void
+-getTokenAttr(thl::Token token) : std::string
+-m_textPos : std::pair<int,int>
+-m_tokenTable : std::shared_ptr<TokenTable>
+-m_constTable : std::shared_ptr<ConstTable>
+-m_identTable : std::shared_ptr<IdentTable>
+}
+class "thl::Parser" as C_0001554936472979366330
+class C_0001554936472979366330 {
++Parser() : void
++parse(std::string & parseData, bool isFile = false) : bool
++getResults() : std::vector<TBoolean>
++printTable() : void
+-parseFile(std::string & fileName) : bool
+-parseLine(std::string & line) : bool
+-m_tokenTable : std::shared_ptr<TokenTable>
+-m_constTable : std::shared_ptr<ConstTable>
+-m_identTable : std::shared_ptr<IdentTable>
+-m_programAst : std::vector<std::unique_ptr<FunctionAST>>
+-m_results : std::vector<TBoolean>
+-m_lexical : thl::LexicalAnalyzer
+-m_syntax : thl::SyntaxAnalyzer
+-m_codeGenerator : thl::CodeGenerator
+}
+C_0001256497913759837815 ..> C_0000547864749498012895
+C_0001256497913759837815 o-- C_0000547864749498012895 : -m_type
+C_0001327273079456333720 ..> C_0000332919104882374484
+C_0001327273079456333720 ..> C_0001850833899230177928
+C_0001327273079456333720 ..> C_0000064097710659204288
+C_0001327273079456333720 ..> C_0001786655663887794501
+C_0001327273079456333720 ..> C_0000213006485765509743
+C_0001327273079456333720 ..> C_0000696098587337849809
+C_0001327273079456333720 ..> C_0000664610893086593088
+C_0001579752990539937612 ..> C_0001327273079456333720
+C_0000332919104882374484 ..> C_0001327273079456333720
+C_0001579752990539937612 <|-- C_0000332919104882374484
+C_0001850833899230177928 ..> C_0001327273079456333720
+C_0001579752990539937612 <|-- C_0001850833899230177928
+C_0000064097710659204288 ..> C_0000547864749498012895
+C_0000064097710659204288 ..> C_0001579752990539937612
+C_0000064097710659204288 ..> C_0001327273079456333720
+C_0000064097710659204288 o-- C_0000547864749498012895 : -m_op
+C_0000064097710659204288 o-- C_0001579752990539937612 : -m_rhs
+C_0001579752990539937612 <|-- C_0000064097710659204288
+C_0001786655663887794501 ..> C_0000547864749498012895
+C_0001786655663887794501 ..> C_0001579752990539937612
+C_0001786655663887794501 ..> C_0001327273079456333720
+C_0001786655663887794501 o-- C_0000547864749498012895 : -m_op
+C_0001786655663887794501 o-- C_0001579752990539937612 : -m_lhs
+C_0001786655663887794501 o-- C_0001579752990539937612 : -m_rhs
+C_0001579752990539937612 <|-- C_0001786655663887794501
+C_0000213006485765509743 ..> C_0001327273079456333720
+C_0001579752990539937612 <|-- C_0000213006485765509743
+C_0000696098587337849809 ..> C_0000213006485765509743
+C_0000696098587337849809 ..> C_0001579752990539937612
+C_0000696098587337849809 ..> C_0001327273079456333720
+C_0000696098587337849809 o-- C_0000213006485765509743 : -m_prototype
+C_0000696098587337849809 o-- C_0001579752990539937612 : -m_body
+C_0001579752990539937612 <|-- C_0000696098587337849809
+C_0000664610893086593088 ..> C_0001579752990539937612
+C_0000664610893086593088 ..> C_0001327273079456333720
+C_0000664610893086593088 o-- C_0001579752990539937612 : -m_args
+C_0001579752990539937612 <|-- C_0000664610893086593088
+C_0000573966208009477367 ..> C_0001256497913759837815
+C_0000573966208009477367 --> C_0001256497913759837815 : -m_tokenTable
+C_0000573966208009477367 --> C_0001256497913759837815 : -m_lexIterator
+C_0000573966208009477367 o-- C_0000696098587337849809 : -m_programAst
+C_0001530908698160943040 ..> C_0000332919104882374484
+C_0001530908698160943040 ..> C_0001850833899230177928
+C_0001530908698160943040 ..> C_0000064097710659204288
+C_0001530908698160943040 ..> C_0001786655663887794501
+C_0001530908698160943040 ..> C_0000213006485765509743
+C_0001530908698160943040 ..> C_0000696098587337849809
+C_0001530908698160943040 ..> C_0000664610893086593088
+C_0001530908698160943040 o-- C_0001953457053675824472 : -m_results
+C_0001327273079456333720 <|-- C_0001530908698160943040
+C_0002096797560665741695 ..> C_0001256497913759837815
+C_0002096797560665741695 ..> C_0000547864749498012895
+C_0002096797560665741695 --> C_0001256497913759837815 : -m_tokenTable
+C_0001554936472979366330 --> C_0001256497913759837815 : -m_tokenTable
+C_0001554936472979366330 o-- C_0000696098587337849809 : -m_programAst
+C_0001554936472979366330 o-- C_0001953457053675824472 : -m_results
+C_0001554936472979366330 o-- C_0002096797560665741695 : -m_lexical
+C_0001554936472979366330 o-- C_0000573966208009477367 : -m_syntax
+C_0001554936472979366330 o-- C_0001530908698160943040 : -m_codeGenerator
+@enduml
