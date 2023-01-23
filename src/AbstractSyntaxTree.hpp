@@ -29,7 +29,7 @@ public:
 };
 
 /**
- * @brief ������� ����� ��� ���� ����� ���������.
+ * @brief Base Exception AST lead class.
  */
 class ExpressionAst {
 public:
@@ -38,7 +38,7 @@ public:
 };
 
 /**
- * @brief ����� ���� ��������� �������� ��������� (�������� {-1, 0, 1}).
+ * @brief AST leaf class for Number constants in ternary logic (constants {-1, 0, 1}).
  */
 class NumberExprAST : public ExpressionAst {
 public:
@@ -53,7 +53,7 @@ private:
 };
 
 /**
- * @brief ����� ���� ��������� ����������.
+ * @brief AST leaf class for Variable when must calculate.
  */
 class VariableExprAST : public ExpressionAst {
 public:
@@ -68,7 +68,7 @@ private:
 };
 
 /**
- * @brief ����� ���� ��������� ������� ����������.
+ * @brief AST Leaf class for unary functions ternary logic.
  */
 class UnaryExprAST : public ExpressionAst {
 public:
@@ -87,7 +87,7 @@ private:
 };
 
 /**
- * @brief ����� ���� ��������� �������� ����������.
+ * @brief AST Leaf class for binary functions ternary logic.
  */
 class BinaryExprAST : public ExpressionAst {
 public:
@@ -110,8 +110,7 @@ private:
 };
 
 /**
- * @brief ����� "���������" �������, ������� ������ � ��� �
- * ����� ����������.
+ * @brief AST leaf class for any function prototype.
  */
 class PrototypeAST : public ExpressionAst {
 public:
@@ -130,7 +129,7 @@ private:
 };
 
 /**
- * @brief ����� ����������� ����� �������
+ * @brief AST leaf for any function. Full function description
  */
 class FunctionAST : public ExpressionAst {
 public:
@@ -150,7 +149,9 @@ private:
 };
 
 /**
- * @brief ����� ���� ��������� ������ �������.
+ * @brief AST leaf fot call function.
+ *
+ * @todo needs to be finalized
  */
 class CallExprAST : public ExpressionAst {
 public:
