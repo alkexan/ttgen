@@ -10,6 +10,7 @@
 #include <boost/test/unit_test.hpp>
 #include <memory>
 #include <string>
+#include <fstream>
 #include <utility>
 
 #define BOOST_TEST_MODULE TestLexical
@@ -38,36 +39,40 @@ BOOST_AUTO_TEST_CASE(NoOpen) {
   using namespace thl;
 
   std::string fileName = "./example/noopen_example.txt";
+  std::ifstream ifstream(fileName);
 
   Parser parser;
-  parser.parse(fileName, true);
+  parser.parse(ifstream);
 }
 
 BOOST_AUTO_TEST_CASE(Example) {
   using namespace thl;
 
   std::string fileName = "./example/example.txt";
+  std::ifstream ifstream(fileName);
 
   Parser parser;
-  parser.parse(fileName, true);
+  parser.parse(ifstream);
 }
 
 BOOST_AUTO_TEST_CASE(Example2) {
   using namespace thl;
 
   std::string fileName = "./example/example2.txt";
+  std::ifstream ifstream(fileName);
 
   Parser parser;
-  parser.parse(fileName, true);
+  parser.parse(ifstream);
 }
 
 BOOST_AUTO_TEST_CASE(Callable) {
   using namespace thl;
 
   std::string fileName = "./example/example_call.txt";
+  std::ifstream ifstream(fileName);
 
   Parser parser;
-  parser.parse(fileName, true);
+  parser.parse(ifstream);
 }
 
 BOOST_AUTO_TEST_CASE(ThreeOperations_1) { parseData("f(x, y) := x -> y -> 0"); }
