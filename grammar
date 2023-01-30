@@ -6,21 +6,19 @@
 <term>          ::= <factor> {<mul> <factor>}
 <factor>        ::= <unary> <factor> |
                     <paren> |
-                    <call>  | 
                     <ident> |
                     <digit>
 <paren>         ::= <open-brack> <stmt> <close-brack>
-<call>          ::= <ident> <open-brack> <stmt> {<delimiter> <stmt>} <close-brack>
 <unary>         ::= <not> | <inc> | <dec>
-<not>         	::= "~"
-<inc>         	::= "++"
-<dec>         	::= "--"
+<not>           ::= "~"
+<inc>           ::= "++"
+<dec>           ::= "--"
 <endl>          ::= "\n"
 <assert>        ::= ":="
 <open-brack>    ::= "("
 <delimiter>     ::= ","
 <close-brack>   ::= ")"
-<impl>      	::= "->" | "+>"
+<impl>          ::= "->" | "+>"
 <sum>           ::= "|" | "#" | "+" | "-"
 <mul>           ::= "&" | "*"
 <ident>         ::= "[a-z][_a-zA-Z0-9]*"
