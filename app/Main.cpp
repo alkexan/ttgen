@@ -1,4 +1,4 @@
-﻿#include <cstdlib>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <ostream>
@@ -16,7 +16,9 @@ namespace po = boost::program_options;
 static thl::Parser parser;
 
 void printFunctions() {
-  std::cout << "This program supported this logical funcions.\n"
+  std::cout << "Syntax of the entered formula\n"
+            << "<fname>(<params>):=<expression>\n\n"
+            << "This program supported this logical funcions.\n"
             << "Not - \"~\" for use\n"
             << "|   x   |   f   |\n"
             << "|:-----:|:-----:|\n"
@@ -150,7 +152,7 @@ int main(int argc, char* argv[]) {
   std::string task_type;
   desc.add_options()
     ("help,h", "Show help")
-    ("functions", "Show a description of all supported logical functions")
+    ("functions,f", "Show a description of all supported logical functions")
     ("version,v", "Show version")
     ("source,S", po::value<std::string>(), "Source file");
 
