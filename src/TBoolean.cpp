@@ -52,7 +52,7 @@ TBoolean TBoolean::operator~() {
 TBoolean &TBoolean::operator--() {
   switch (m_value) {
   case FALSE:
-    m_value = TRUE;
+    m_value = UNKNOWN;
     break;
   case UNKNOWN:
     m_value = FALSE;
@@ -79,7 +79,7 @@ TBoolean &TBoolean::operator++() {
     m_value = TRUE;
     break;
   case TRUE:
-    m_value = FALSE;
+    m_value = UNKNOWN;
     break;
   }
   return *this;
