@@ -130,7 +130,7 @@ void thl::LexicalAnalyzer::getTokens(std::string &line) {
 				goto yy4;
 			} else {
 				if (yych <= '|') goto yy40;
-				if (yych == '~') goto yy41;
+				if (yych == '~') goto yy42;
 				goto yy4;
 			}
 		}
@@ -159,7 +159,7 @@ yy6:
     }
 yy8:
 	yych = *++p;
-	if (yych == '\n') goto yy43;
+	if (yych == '\n') goto yy44;
 	goto yy5;
 yy9:
 	yych = *(q = ++p);
@@ -169,8 +169,8 @@ yy9:
 	if (yych <= '\f') {
 		if (yych == '\n') goto yy6;
 	} else {
-		if (yych <= '\r') goto yy45;
-		if (yych == '/') goto yy47;
+		if (yych <= '\r') goto yy46;
+		if (yych == '/') goto yy48;
 	}
 yy11:
 	{ continue; }
@@ -213,8 +213,8 @@ yy22:
     }
 yy24:
 	yych = *++p;
-	if (yych == '+') goto yy48;
-	if (yych == '>') goto yy50;
+	if (yych == '+') goto yy49;
+	if (yych == '>') goto yy51;
 	{ 
       tokenPushBack(TokenType::ADD, -1, m_textPos);
       continue;
@@ -227,15 +227,15 @@ yy26:
     }
 yy28:
 	yych = *++p;
-	if (yych == '-') goto yy52;
-	if (yych == '>') goto yy54;
+	if (yych == '-') goto yy53;
+	if (yych == '>') goto yy55;
 	{ 
       tokenPushBack(TokenType::SUB, -1, m_textPos);
       continue;
     }
 yy30:
 	yych = *++p;
-	if (yych == '/') goto yy56;
+	if (yych == '/') goto yy57;
 	{
       tokenPushBack(TokenType::DIF, -1, m_textPos);
       continue;
@@ -256,7 +256,7 @@ yy34:
     }
 yy36:
 	yych = *++p;
-	if (yych == '=') goto yy59;
+	if (yych == '=') goto yy60;
 	goto yy5;
 yy37:
 	yych = *++p;
@@ -274,74 +274,77 @@ yy37:
     }
 yy40:
 	yych = *++p;
-	if (yych == '-') goto yy61;
-	if (yych == '=') goto yy63;
-	goto yy5;
-yy41:
+	if (yych == '-') goto yy62;
+	if (yych == '=') goto yy64;
+	{
+      tokenPushBack(TokenType::OR, -1, m_textPos);
+      continue;
+    }
+yy42:
 	++p;
 	{ 
       tokenPushBack(TokenType::NOT, -1, m_textPos);
       continue;
     }
-yy43:
+yy44:
 	++p;
 	{ 
       tokenPushBack(TokenType::ENDL, -1, m_textPos); 
       break; 
     }
-yy45:
-	yych = *++p;
-	if (yych == '\n') goto yy43;
 yy46:
+	yych = *++p;
+	if (yych == '\n') goto yy44;
+yy47:
 	p = q;
 	goto yy11;
-yy47:
-	yych = *++p;
-	if (yych == '/') goto yy56;
-	goto yy46;
 yy48:
+	yych = *++p;
+	if (yych == '/') goto yy57;
+	goto yy47;
+yy49:
 	++p;
 	{ 
       tokenPushBack(TokenType::INCREMENT, -1, m_textPos);
       continue;
     }
-yy50:
+yy51:
 	++p;
 	{ 
       tokenPushBack(TokenType::IMPLB, -1, m_textPos);
       continue;
     }
-yy52:
+yy53:
 	++p;
 	{ 
       tokenPushBack(TokenType::DECREMENT, -1, m_textPos);
       continue;
     }
-yy54:
+yy55:
 	++p;
 	{ 
       tokenPushBack(TokenType::IMPL, -1, m_textPos);
       continue;
     }
-yy56:
+yy57:
 	yych = *++p;
 	if (yybm[0+yych] & 128) {
-		goto yy56;
+		goto yy57;
 	}
 	{ break; }
-yy59:
+yy60:
 	++p;
 	{ 
       tokenPushBack(TokenType::ASSIGMENT, -1, m_textPos);
       continue;
     }
-yy61:
+yy62:
 	++p;
 	{ 
       tokenPushBack(TokenType::LIMPL, -1, m_textPos);
       continue;
     }
-yy63:
+yy64:
 	++p;
 	{ 
       tokenPushBack(TokenType::IMPLM, -1, m_textPos);
