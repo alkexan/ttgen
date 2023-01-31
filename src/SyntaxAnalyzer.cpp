@@ -160,7 +160,8 @@ thl::SyntaxAnalyzer::parseExpression(Token token) {
     token = readToken();
     TokenType tokenType = token.getType();
     while ((tokenType == TokenType::ADD) || (tokenType == TokenType::SUB) ||
-           (tokenType == TokenType::OR) || (tokenType == TokenType::XOR)) {
+           (tokenType == TokenType::OR) || (tokenType == TokenType::XOR) || 
+           (tokenType == TokenType::LEFT_OR) || (tokenType == TokenType::RIGHT_OR)) {
       token = readToken();
       auto rhs = std::move(parseTerm(token));
       if (rhs) {
@@ -185,7 +186,7 @@ std::unique_ptr<ExpressionAst> thl::SyntaxAnalyzer::parseTerm(Token token) {
     token = readToken();
     TokenType tokenType = token.getType();
     while ((tokenType == TokenType::MUL) || (tokenType == TokenType::AND) ||
-           tokenType == TokenType::DIF) {
+           tokenType == TokenType::DIF || (tokenType == TokenType::LEFT_AND) || (tokenType == TokenType::RIGHT_AND)) {
       token = readToken();
       auto rhs = std::move(parseFactor(token));
       if (rhs) {

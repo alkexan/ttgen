@@ -34,6 +34,10 @@ enum class TokenType {
   AND,
   MUL,
   DIF,
+  LEFT_AND,
+  RIGHT_OR,
+  RIGHT_AND,
+  LEFT_OR
 };
 
 /**
@@ -142,6 +146,19 @@ inline std::string Token::toString() {
     break;
   case thl::TokenType::DIF:
     result = "DIF";
+    break;
+  case thl::TokenType::LEFT_AND:
+    result = "LEFT_AND";
+    break;
+  case thl::TokenType::RIGHT_OR:
+    result = "RIGHT_OR";
+    break;
+  case thl::TokenType::LEFT_OR:
+    result = "LEFT_OR";
+    break;
+  case thl::TokenType::RIGHT_AND:
+    result = "RIGHT_AND";
+    break;
   default:
     result = "";
     break;

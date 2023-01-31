@@ -87,6 +87,22 @@ TBoolean TableCalculator::visit(BinaryExprAST &ast) {
     throw ParseException("ASSIGMENT operation");
     break;
   }
+  case TokenType::LEFT_OR: {
+    result = ast.getLhs()->accept(*this).left_or(ast.getRhs()->accept(*this));
+    break;
+  }
+  case TokenType::RIGHT_OR: {
+    result = ast.getLhs()->accept(*this).right_or(ast.getRhs()->accept(*this));
+    break;
+  }
+  case TokenType::LEFT_AND: {
+    result = ast.getLhs()->accept(*this).left_and(ast.getRhs()->accept(*this));
+    break;
+  }
+  case TokenType::RIGHT_AND: {
+    result = ast.getLhs()->accept(*this).right_and(ast.getRhs()->accept(*this));
+    break;
+  }
   default: {
     throw ParseException("Invalid binary operator");
     break;

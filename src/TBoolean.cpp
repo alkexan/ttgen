@@ -587,7 +587,8 @@ TBoolean TBoolean::implb(TBoolean y) {
   return result;
 }
 
-TBoolean TBoolean::limpl(TBoolean y) {  TBoolean result = UNKNOWN;
+TBoolean TBoolean::limpl(TBoolean y) {  
+  TBoolean result = UNKNOWN;
   switch (m_value) {
   case FALSE: {
     switch (y.getValue()) {
@@ -635,7 +636,8 @@ TBoolean TBoolean::limpl(TBoolean y) {  TBoolean result = UNKNOWN;
   return result;
 }
 
-TBoolean TBoolean::implm(TBoolean y) {  TBoolean result = UNKNOWN;
+TBoolean TBoolean::implm(TBoolean y) { 
+  TBoolean result = UNKNOWN;
   switch (m_value) {
   case FALSE: {
     switch (y.getValue()) {
@@ -682,3 +684,24 @@ TBoolean TBoolean::implm(TBoolean y) {  TBoolean result = UNKNOWN;
   }
   return result;
 }
+
+TBoolean TBoolean::left_and(TBoolean y) {
+  TBoolean x = this->getValue(); 
+  return --(--x & --y);
+}
+
+TBoolean TBoolean::right_and(TBoolean y) {
+  TBoolean x = this->getValue(); 
+  return ++(++x & ++y);
+}
+
+TBoolean TBoolean::right_or(TBoolean y) {
+  TBoolean x = this->getValue(); 
+  return ++(++x | ++y);
+}
+
+TBoolean TBoolean::left_or(TBoolean y) {
+  TBoolean x = this->getValue(); 
+  return --(--x | --y);
+}
+

@@ -552,6 +552,118 @@ public:
    */
   TBoolean implm(TBoolean y);
 
+  /**
+   * @brief Conjunct with unknown or Left And. It is --(--x & --y)
+   *
+   * Truth table:
+   *
+   * |  x  |  y  |  f  |
+   * |:---:|:---:|:---:|
+   * |  $  |  $  |  0  |
+   * |  $  |  0  |  1  |
+   * |  $  |  1  |  $  |
+   * |  0  |  $  |  1  |
+   * |  0  |  0  |  1  |
+   * |  0  |  1  |  1  |
+   * |  1  |  $  |  $  |
+   * |  1  |  0  |  1  |
+   * |  1  |  1  |  $  |
+   *
+   * # $ - -1 or false;
+   * # x - operand;
+   * # y - operand;
+   * # f - function result.
+   *
+   * @param x first binary operand.
+   * @param y second binary operand.
+   * @return result of the operation.
+   */
+  TBoolean left_and(TBoolean y);
+
+  /**
+   * @brief Unknown Conjunct or Right And. It is ++(++x & ++y)
+   *
+   * Truth table:
+   *
+   * |  x  |  y  |  f  |
+   * |:---:|:---:|:---:|
+   * |  $  |  $  |  1  |
+   * |  $  |  0  |  1  |
+   * |  $  |  1  |  0  |
+   * |  0  |  $  |  1  |
+   * |  0  |  0  |  $  |
+   * |  0  |  1  |  0  |
+   * |  1  |  $  |  0  |
+   * |  1  |  0  |  0  |
+   * |  1  |  1  |  0  |
+   *
+   * # $ - -1 or false;
+   * # x - operand;
+   * # y - operand;
+   * # f - function result.
+   *
+   * @param x first binary operand.
+   * @param y second binary operand.
+   * @return result of the operation.
+   */
+  TBoolean right_and(TBoolean y);
+
+  /**
+   * @brief Disjunct with unknown or Right Or. It is ++(++x | ++y)
+   *
+   * Truth table:
+   *
+   * |  x  |  y  |  f  |
+   * |:---:|:---:|:---:|
+   * |  $  |  $  |  1  |
+   * |  $  |  0  |  $  |
+   * |  $  |  1  |  1  |
+   * |  0  |  $  |  $  |
+   * |  0  |  0  |  $  |
+   * |  0  |  1  |  $  |
+   * |  1  |  $  |  1  |
+   * |  1  |  0  |  $  |
+   * |  1  |  1  |  0  |
+   *
+   * # $ - -1 or false;
+   * # x - operand;
+   * # y - operand;
+   * # f - function result.
+   *
+   * @param x first binary operand.
+   * @param y second binary operand.
+   * @return result of the operation.
+   */
+  TBoolean right_or(TBoolean y);
+
+  /**
+   * @brief Unknown Disjunct or Left And. It is --(--x | --y)
+   *
+   * Truth table:
+   *
+   * |  x  |  y  |  f  |
+   * |:---:|:---:|:---:|
+   * |  $  |  $  |  0  |
+   * |  $  |  0  |  0  |
+   * |  $  |  1  |  0  |
+   * |  0  |  $  |  0  |
+   * |  0  |  0  |  1  |
+   * |  0  |  1  |  $  |
+   * |  1  |  $  |  0  |
+   * |  1  |  0  |  $  |
+   * |  1  |  1  |  $  |
+   *
+   * # $ - -1 or false;
+   * # x - operand;
+   * # y - operand;
+   * # f - function result.
+   *
+   * @param x first binary operand.
+   * @param y second binary operand.
+   * @return result of the operation.
+   */
+  TBoolean left_or(TBoolean y);
+
 private:
   signed char m_value;
 };
